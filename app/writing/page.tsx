@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+
 import { SchemaGraph } from '@/components/Schema';
 import PageWrapper from '@/components/Template/PageWrapper';
-import SectionNav from '@/components/Template/SectionNav';
 import { createPageMetadata } from '@/lib/metadata';
 import {
   blogNode,
@@ -10,9 +10,6 @@ import {
   sectionPageNodes,
   WRITING_DESCRIPTION,
 } from '@/lib/schema';
-import { smartQuotes } from '@/lib/typography';
-import { formatDate, withBasePath } from '@/lib/utils';
-import { getWritingItems, type WritingItem as Item } from '@/lib/writing';
 
 const writingMetadata = createPageMetadata({
   title: 'Writing',
@@ -22,143 +19,37 @@ const writingMetadata = createPageMetadata({
 
 export const metadata: Metadata = {
   ...writingMetadata,
-  // Spread rather than replace: `alternates` also carries the canonical,
-  // which a new object would drop from this page.
   alternates: {
     ...writingMetadata.alternates,
-    types: {
-      'application/rss+xml': '/feed.xml',
-    },
+    types: { 'application/rss+xml': '/feed.xml' },
   },
 };
 
-/**
- * One row of the writing register: the same row as /projects and /speaking,
- * with the date and source in the gutter and the title in the reading face.
- */
-function WritingItem({ item }: { item: Item }) {
-  const content = (
-    <>
-      <div className="project-entry-meta">
-        {item.date && (
-          <time className="project-dates" dateTime={item.date}>
-            {formatDate(item.date)}
-          </time>
-        )}
-        {item.isExternal && (
-          <span className="project-entry-role">{item.source}</span>
-        )}
-      </div>
-      <div className="project-entry-body">
-        <h3 className="project-entry-title">
-          {smartQuotes(item.title)}
-          {item.isExternal && (
-            <span className="project-entry-external" aria-hidden="true">
-              ↗
-            </span>
-          )}
-        </h3>
-        <p className="project-entry-desc">{smartQuotes(item.description)}</p>
-        {item.isExternal && (
-          // The arrow is decorative, so the warning has to be spoken.
-          <span className="sr-only"> (opens in a new tab)</span>
-        )}
-      </div>
-    </>
-  );
-
-  if (item.isExternal) {
-    return (
-      <a
-        href={item.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="project-entry"
-      >
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <Link href={item.url} className="project-entry">
-      {content}
-    </Link>
-  );
-}
-
 export default function WritingPage() {
-  const allItems = getWritingItems();
-  const latestDatedItem = allItems.find((item) => item.date);
   const [page, breadcrumb] = sectionPageNodes(
     collectionPageNode,
     '/writing/',
     'Writing',
     WRITING_DESCRIPTION,
   );
-  const sections = [
-    {
-      id: 'writing-here',
-      label: 'Essays on this site',
-      short: 'Essays',
-      items: allItems.filter((item) => !item.isExternal),
-    },
-    {
-      id: 'writing-elsewhere',
-      label: 'Selected writing elsewhere',
-      short: 'Elsewhere',
-      items: allItems.filter((item) => item.isExternal && item.date),
-    },
-    {
-      id: 'writing-guides',
-      label: 'Guides',
-      short: 'Guides',
-      items: allItems.filter((item) => item.isExternal && !item.date),
-    },
-  ].filter(({ items }) => items.length > 0);
 
   return (
     <PageWrapper>
-      <SchemaGraph
-        nodes={[page, blogNode(latestDatedItem?.date), breadcrumb]}
-      />
+      <SchemaGraph nodes={[page, blogNode(), breadcrumb]} />
       <article className="writing-page">
         <header className="page-header">
           <h1 className="page-title">Writing</h1>
-          <a
-            href={withBasePath('/feed.xml')}
-            className="button button-secondary button-compact writing-rss-link"
-          >
-            RSS
-          </a>
         </header>
-
-        {/* The guides start a long scroll down on a phone, so each list is
-            one plain link away, with or without scripts. */}
-        {sections.length > 1 ? (
-          <SectionNav
-            label="Writing sections"
-            className="writing-nav"
-            sections={sections.map(({ id, short }) => ({ id, title: short }))}
-          />
-        ) : null}
-
-        {sections.map(({ id, label, items }) => (
-          <section className="projects-group" aria-labelledby={id} key={id}>
-            <div className="section-header">
-              <h2 id={id} className="section-heading">
-                {label}
-              </h2>
-            </div>
-            <ol className="projects-register">
-              {items.map((item) => (
-                <li key={item.url}>
-                  <WritingItem item={item} />
-                </li>
-              ))}
-            </ol>
-          </section>
-        ))}
+        <section className="projects-group">
+          <p className="page-subtitle">
+            I’m preparing original essays, research notes, and project updates.
+            They’ll appear here when they’re ready.
+          </p>
+          <p className="page-prose">
+            For now, you can explore my current work on the{' '}
+            <Link href="/projects/">Projects page</Link>.
+          </p>
+        </section>
       </article>
     </PageWrapper>
   );

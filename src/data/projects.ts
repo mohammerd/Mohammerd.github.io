@@ -1,191 +1,127 @@
-/**
- * The register of things I have built.
- *
- * Two groups, both kept deliberately:
- *
- * - `shipped` — selected production work Michael built, led, or contributed
- *   to, and can be pointed at.
- * - `archive` — student-era experiments. A register that deletes its own
- *   history is a brochure, so these stay, stepped down rather than removed.
- *
- * Shipped entries cite either a role in `src/data/resume/work.ts` or the
- * source repository for a personal project. Résumé-backed dates and numeric
- * claims are cross-checked; repository evidence is reviewed when adding or
- * updating an entry. Archive entries are maintained here directly. Public
- * destinations still need live-link review.
- */
-type ProjectStatus = 'shipped' | 'archive';
-
-export interface Project {
-  title: string;
-  /** Role, venue, or one-line positioning. Rendered as a mono label. */
-  subtitle?: string;
-  /**
-   * Public destination for the work. Entries without one are rendered as
-   * visibly inert rather than as cards that look clickable and are not.
-   */
-  link?: string;
-  /** Résumé role that backs a shipped entry's dates and numeric claims. */
-  sourceWork?: string;
-  /** Source repository backing a personal project's dates and description. */
-  sourceRepository?: string;
-  /**
-   * Screenshot, where one exists. Optional: the card and the register row are
-   * both designed to read on type and rules alone, so a new entry does not
-   * need art invented for it.
-   */
-  image?: string;
-  /**
-   * ISO date Michael's work on the project started, or a one-off shipped.
-   * This is project activity, not necessarily a public launch date.
-   */
-  date: string;
-  /** ISO date project activity ended. Omitted on one-offs and live work. */
-  endDate?: string;
-  /**
-   * The project is still active. This is deliberately independent of the
-   * historical role named by `subtitle`: a project can continue after an
-   * acquisition or employment transition. Drives the amber `Present` reading
-   * and is mutually exclusive with `endDate`.
-   */
-  ongoing?: boolean;
-  desc: string;
-  /** Technologies named by the résumé or source repository. */
-  tech?: string[];
-  status: ProjectStatus;
+export interface ProjectSection {
+  heading: string;
+  paragraphs: string[];
 }
 
-/**
- * Hand-ordered, most recent activity first within each group. Live work leads,
- * then sorts by its own start date; finished work sorts by its end (or one-off)
- * date. `projects.test.ts` pins the complete comparator, including ties.
- */
-const data: Project[] = [
+export interface Project {
+  slug: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  stage: string;
+  link: string;
+  image?: string;
+  sections: ProjectSection[];
+}
+
+export const projects: Project[] = [
   {
-    title: 'SF Run Club Index',
-    subtitle: 'Personal project',
-    link: 'https://mldangelo.github.io/run/',
-    sourceRepository: 'https://github.com/mldangelo/run',
-    // Repository created on November 8, 2026; dates render at month precision.
-    date: '2026-11-08',
-    ongoing: true,
-    desc: 'A searchable directory of running clubs, group runs, and races in San Francisco and nearby Bay Area communities. Filter by day, neighborhood, distance, and experience, with meeting details and links to organizer sources.',
-    status: 'shipped',
-  },
-  {
-    title: 'Codex Security',
-    subtitle: 'OpenAI',
-    link: 'https://openai.com/business/solutions/cybersecurity/',
-    sourceWork: 'OpenAI',
-    // Michael's involvement began with his OpenAI role. The public research
-    // preview launched three days earlier; month-precision UI shows Mar 2026.
-    date: '2026-03-09',
-    ongoing: true,
-    desc: 'Securing AI systems and applying AI to software security at OpenAI — using models to find and fix vulnerabilities in code.',
-    status: 'shipped',
-  },
-  {
-    title: 'Promptfoo',
-    subtitle: 'Co-founder & CTO through acquisition · Continued at OpenAI',
-    link: 'https://promptfoo.dev',
-    sourceWork: 'Promptfoo',
-    date: '2024-07-01',
-    ongoing: true,
-    desc: 'Started as a developer-first eval tool and grew into a platform for AI security, red-teaming, and compliance: evaluation framework, vulnerability scanning, static analysis, and automated red-teaming. Reached more than 350,000 developers, 130,000 monthly active users, and teams at more than 25% of the Fortune 500 before joining OpenAI in 2026.',
-    status: 'shipped',
-  },
-  {
-    title: 'Smile ID',
-    subtitle: 'VP Engineering & Head of AI',
-    link: 'https://smile.id',
-    sourceWork: 'Smile ID',
-    date: '2022-01-01',
-    endDate: '2024-07-01',
-    desc: 'ML-powered identity verification APIs used by banks, fintechs, and telcos across Africa. Re-architected inference to scale from 1,000 to more than 1M users per day, cutting job time from over 30 seconds to 7 seconds, and shipped a fraud detection product built on 1-N facial recognition.',
-    tech: ['AWS Lambda', 'Computer vision', 'Embeddings', 'Vector search'],
-    status: 'shipped',
-  },
-  {
-    title: 'Arthena',
-    subtitle: 'Co-founder & CTO',
-    link: 'https://www.ycombinator.com/companies/arthena',
-    sourceWork: 'Arthena',
-    date: '2014-01-01',
-    endDate: '2022-01-01',
-    desc: 'Quantitative art-investment platform backed by Anthemis, Foundation Capital, and Y Combinator. Built valuation models over irregularly sampled time series, plus the data pipelines and research tools behind them. Masterworks later acquired the company in 2023.',
-    tech: [
-      'Graph embeddings',
-      'Probabilistic forecasting',
-      'Online learning',
-      'Microservices',
+    slug: 'agroguardai',
+    title: 'AgroGuardAI',
+    subtitle: 'Agricultural AI safety research',
+    desc: 'Researching how AI systems can better understand local agriculture, languages, and farming conditions — and provide safer, more grounded support.',
+    stage: 'Early research and dataset development',
+    link: 'https://agroguardai.com',
+    sections: [
+      {
+        heading: 'Why this project exists',
+        paragraphs: [
+          'General-purpose AI systems can produce confident but inaccurate answers when asked agricultural questions. That becomes especially serious when advice concerns crop disease, pesticide application, chemical handling, soil treatment, or other decisions that affect a farmer’s livelihood and the surrounding environment.',
+          'A model may also misunderstand a farmer’s language, local crop variety, growing conditions, or the context behind a question. A fluent answer is not necessarily a safe or useful agricultural answer.',
+        ],
+      },
+      {
+        heading: 'The mission',
+        paragraphs: [
+          'AgroGuardAI is an AI safety research initiative focused on building a stronger agricultural context for AI systems. The long-term goal is to help AI understand local farming practices, African languages, crops, pests and diseases, soil conditions, and weather-related context before it gives guidance.',
+          'The project aims to make agricultural AI more useful to farmers while reducing hallucinations and unsafe recommendations. It places particular emphasis on knowing when information is uncertain, avoiding unsupported chemical advice, and directing users toward qualified agricultural support when a question requires expert judgement.',
+        ],
+      },
+      {
+        heading: 'Research direction',
+        paragraphs: [
+          'Current work includes building and evaluating an agricultural question-and-answer dataset covering 25 crops and eight Nigerian languages: Hausa, Yoruba, Igbo, Fulfulde, Kanuri, Tiv, Ibibio, and Nigerian Pidgin. The first research collection contains 1,004 question-and-answer pairs and is being used as a starting point for model adaptation and safety evaluation.',
+          'The broader research direction includes multilingual understanding, crop and disease knowledge, pest management, soil nutrition, safer chemical-use guidance, and better use of local environmental and weather context. Expert agronomist and native-speaker review are important parts of the validation work.',
+        ],
+      },
+      {
+        heading: 'What AgroGuardAI is — and is not',
+        paragraphs: [
+          'AgroGuardAI is the research and technology foundation for agricultural AI products. It is still an early-stage research effort; the dataset and evaluation work are being developed. The project does not claim that a model can replace an agronomist, extension officer, or local agricultural expert.',
+        ],
+      },
     ],
-    status: 'shipped',
   },
   {
-    title: 'Matroid',
-    subtitle: 'Co-founder',
-    link: 'https://matroid.com',
-    sourceWork: 'Matroid',
-    date: '2015-09-01',
-    endDate: '2016-06-01',
-    desc: 'Computer vision platform for creating and deploying detectors. Architected and built the initial platform for identifying objects, events, and patterns in video, and carried it through the seed round.',
-    tech: ['Computer vision'],
-    status: 'shipped',
+    slug: 'hypervisor-zero',
+    title: 'Hypervisor-Zero',
+    subtitle: 'AI control efficacy research',
+    desc: 'An open-source research effort exploring how to test whether autonomous AI agents can be monitored, constrained, and reliably interrupted.',
+    stage: 'Research and prototype development',
+    link: 'https://hypervisorzero.xyz',
+    sections: [
+      {
+        heading: 'The problem',
+        paragraphs: [
+          'As AI systems become more autonomous and gain access to tools, files, networks, and other resources, it becomes increasingly important to know whether their actions can be kept within defined limits. It is not enough to check whether an agent gives an acceptable answer in a conversation. We also need to test what it does when it can take actions.',
+          'A system may behave correctly in ordinary evaluations but attempt to bypass restrictions, misuse a tool, or continue an action after it should have stopped. Those are control questions that require testing in realistic, adversarial conditions.',
+        ],
+      },
+      {
+        heading: 'The research goal',
+        paragraphs: [
+          'Hypervisor-Zero explores how to measure the control efficacy of autonomous AI systems: whether the system remains within its permitted boundaries, whether monitoring detects important violations, and whether an operator can intervene effectively when needed.',
+          'The project is being developed as open-source research infrastructure, independent of the teams building frontier AI models. The aim is to make control claims more measurable and easier for other researchers to inspect and reproduce.',
+        ],
+      },
+      {
+        heading: 'How it is being approached',
+        paragraphs: [
+          'The intended test environment uses simulated computers, networks, files, data, tools, and other resources. Agents can be placed in controlled scenarios and subjected to adversarial tests while their actions, attempted boundary violations, and responses to intervention are monitored.',
+          'The central question is practical: before an AI system is given access to a consequential capability, what evidence shows that it can be kept under control under defined test conditions?',
+        ],
+      },
+      {
+        heading: 'Research status',
+        paragraphs: [
+          'Hypervisor-Zero is under active research and prototype development. It should be understood as an effort to build and validate evaluation infrastructure, not as a claim that complete containment or guaranteed safety has already been achieved.',
+        ],
+      },
+    ],
   },
   {
-    title: 'Nearest Dollar',
-    subtitle: 'BVP Hackathon',
-    image: '/images/projects/nearestdollar.webp',
-    date: '2015-11-20',
-    desc: 'Connected to bank accounts to round up purchases and donate spare change to charity.',
-    tech: ['React', 'Node.js', 'Plaid API', 'MongoDB'],
-    status: 'archive',
-  },
-  {
-    title: 'Harvest',
-    subtitle: '3rd place at TechCrunch Disrupt SF',
-    link: 'https://devpost.com/software/harvest',
-    image: '/images/projects/harvest.webp',
-    date: '2015-09-20',
-    desc: 'Low-cost crop monitoring to catch irrigation leaks and nutrient deficiencies.',
-    tech: ['Python', 'Arduino', 'Computer vision', 'AWS'],
-    status: 'archive',
-  },
-  {
-    title: 'Space Potato',
-    subtitle: 'Kickstarter-funded weather balloon',
-    image: '/images/projects/spacepotato.webp',
-    date: '2015-06-28',
-    desc: 'Potato-powered weather balloon with cameras. Photos published in a coffee table book.',
-    tech: ['Hardware', 'GPS', 'Photography'],
-    status: 'archive',
-  },
-  {
-    title: 'Cat Detector',
-    subtitle: 'CNN for cat breed classification',
-    image: '/images/projects/catdetector.webp',
-    date: '2015-05-15',
-    desc: 'Classified 60,000+ cats across 80 breeds before server costs shut it down.',
-    // TensorFlow was not open-sourced until November 2015, six months after
-    // this project date. No primary source establishes a later port.
-    tech: ['Python', 'CNN', 'AWS'],
-    status: 'archive',
-  },
-  {
-    title: 'UB Nanosatellite Program',
-    subtitle: 'AFRL University Nanosatellite Program',
-    link: 'https://ubnl.space/glados/',
-    date: '2011-06-01',
-    endDate: '2012-05-01',
-    desc: 'Co-authored the grant to design and build a multi-spectral imaging satellite, designed its attitude determination and control, and led a 60-person student team through the development lifecycle.',
-    status: 'archive',
+    slug: 'agromind',
+    title: 'AgroMind',
+    subtitle: 'Farmer-facing agricultural AI assistant',
+    desc: 'A planned multilingual consumer chatbot designed to bring AgroGuardAI’s agricultural knowledge and safety work into a simple farmer-facing experience.',
+    stage: 'Product development direction',
+    link: 'https://agromind.chat',
+    sections: [
+      {
+        heading: 'The idea',
+        paragraphs: [
+          'AgroMind is the farmer-facing product being developed on top of the AgroGuardAI ecosystem. The idea is to make agricultural knowledge easier to access through a simple assistant that farmers can interact with in languages they are comfortable using.',
+          'Rather than building another general-purpose chatbot and hoping it understands farming, AgroMind is intended to draw on the agricultural context and safety research developed through AgroGuardAI.',
+        ],
+      },
+      {
+        heading: 'How farmers should be able to use it',
+        paragraphs: [
+          'The product direction is voice-first and multilingual, with text and voice conversations for asking practical farming questions. A farmer should be able to describe a crop problem naturally, ask follow-up questions, and receive guidance that takes local agricultural context into account.',
+          'The planned experience also includes image-based crop problem reporting, with richer visual or live-video context as a longer-term direction. These capabilities are intended to help the assistant understand what the farmer is describing, rather than relying only on a short text prompt.',
+        ],
+      },
+      {
+        heading: 'Why it belongs in the AgroGuardAI ecosystem',
+        paragraphs: [
+          'AgroMind is the product layer; AgroGuardAI is the research and safety foundation. The goal is for improvements in language coverage, agricultural knowledge, uncertainty handling, and safer recommendations to inform the farmer-facing assistant.',
+          'AgroMind is still being developed. The capabilities described here are the product direction, not a statement that every feature is currently available or production-ready.',
+        ],
+      },
+    ],
   },
 ];
 
-export default data;
-
-/** The register: production work, most recent first. */
-export const shipped = data.filter((project) => project.status === 'shipped');
-
-/** Student-era history, most recent first. */
-export const archive = data.filter((project) => project.status === 'archive');
+export function getProject(slug: string): Project | undefined {
+  return projects.find((project) => project.slug === slug);
+}

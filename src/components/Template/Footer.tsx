@@ -1,14 +1,10 @@
 import Link from 'next/link';
 
 import ContactIcons from '@/components/Contact/ContactIcons';
-import work from '@/data/resume/work';
 import routes from '@/data/routes';
-import { currentPosition } from '@/lib/career';
 import { SOURCE_REPOSITORY } from '@/lib/source-repository';
 import { smartQuotes } from '@/lib/typography';
 import { AUTHOR_NAME } from '@/lib/utils';
-
-import Portrait from './Portrait';
 
 interface FooterProps {
   /** Only the site's routes: for a page that already shows the rest. */
@@ -16,10 +12,6 @@ interface FooterProps {
 }
 
 export default function Footer({ linksOnly = false }: FooterProps) {
-  const current = currentPosition(work);
-
-  // Every route, including the ones the header leaves out. Without scripts it
-  // is the only way around the site on a phone, whose menu needs them.
   const siteLinks = (
     <nav className="footer-links" aria-label="Site">
       {routes
@@ -44,14 +36,11 @@ export default function Footer({ linksOnly = false }: FooterProps) {
     <footer className="site-footer-new">
       <div className="footer-content">
         <div className="footer-identity">
-          <Link href="/" className="footer-avatar">
-            <Portrait width={80} height={80} />
+          <Link href="/" className="footer-avatar footer-avatar--monogram">
+            MZ
           </Link>
           <div className="footer-info">
             <span className="footer-name">{smartQuotes(AUTHOR_NAME)}</span>
-            {current ? (
-              <p className="footer-role">{`${current.position} at ${current.name}`}</p>
-            ) : null}
             <p className="footer-copyright">
               &copy; {new Date().getFullYear()} ·{' '}
               <a

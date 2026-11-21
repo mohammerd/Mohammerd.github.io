@@ -84,9 +84,9 @@ await requireSharp();
  * makes a later edit to a published post require regeneration.
  */
 const READOUT = [
-  { label: 'Countries visited', value: String(profile.countriesVisited) },
-  { label: 'Computing since', value: String(profile.computingSince) },
-  { label: 'Based in', value: profile.currentCity },
+  { label: 'Research focus', value: 'AI safety' },
+  { label: 'Agricultural AI', value: 'AgroGuardAI' },
+  { label: 'Agent control', value: 'Hypervisor-Zero' },
 ];
 
 const [FIRST_NAME, ...REST_OF_NAME] = profile.name.split(' ');
@@ -205,7 +205,7 @@ function siteCard() {
       h('span', {}, FIRST_NAME),
       h('span', {}, REST_OF_NAME.join(' ').replace("'", '’')),
     ),
-    monoLine(profile.employer, profile.focus, { marginTop: 34 }),
+    monoLine('Student', 'Independent AI safety researcher', { marginTop: 34 }),
   );
 }
 
@@ -319,11 +319,11 @@ const rendered = [
       text: [
         '—',
         AUTHOR,
-        profile.employer,
-        profile.focus,
+        'Student',
+        'Independent AI safety researcher',
         ...readoutText(READOUT),
       ],
-      remedy: 'shorten the name, employer, or focus in src/data/profile.json',
+      remedy: 'shorten the name or role in src/data/profile.json',
     }),
   },
 ];

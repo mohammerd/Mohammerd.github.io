@@ -15,8 +15,18 @@ export default function Education({ data }: { data: Degree[] }) {
           <header>
             <h3 className="degree">{smartQuotes(degree.degree)}</h3>
             <p className="school">
-              <a href={degree.link}>{smartQuotes(degree.school)}</a>,{' '}
-              <time dateTime={String(degree.year)}>{degree.year}</time>
+              {degree.link ? (
+                <a href={degree.link}>{smartQuotes(degree.school)}</a>
+              ) : (
+                smartQuotes(degree.school)
+              )}
+              {degree.current ? (
+                <span>, Currently studying</span>
+              ) : degree.year ? (
+                <>
+                  , <time dateTime={String(degree.year)}>{degree.year}</time>
+                </>
+              ) : null}
             </p>
           </header>
         </article>

@@ -1,13 +1,6 @@
 import profile from './profile.json';
 
-export type ContactId =
-  | 'linkedin'
-  | 'github'
-  | 'x'
-  | 'wellfound'
-  | 'instagram'
-  | 'facebook'
-  | 'email';
+export type ContactId = 'linkedin' | 'github' | 'x' | 'instagram' | 'email';
 
 interface ContactItem {
   id: ContactId;
@@ -16,11 +9,10 @@ interface ContactItem {
   icon: { viewBox: string; path: string };
 }
 
-// Glyphs: Font Awesome Free 7.3.1 (CC BY 4.0, https://fontawesome.com/license/free); Wellfound from Simple Icons (CC0).
 const data: ContactItem[] = [
   {
     id: 'linkedin',
-    link: 'https://www.linkedin.com/in/michaelldangelo',
+    link: 'https://www.linkedin.com/in/muhammad-z-75a73831a',
     label: 'LinkedIn',
     icon: {
       viewBox: '0 0 448 512',
@@ -29,7 +21,7 @@ const data: ContactItem[] = [
   },
   {
     id: 'github',
-    link: 'https://github.com/mldangelo',
+    link: 'https://github.com/mohammerd',
     label: 'GitHub',
     icon: {
       viewBox: '0 0 512 512',
@@ -38,7 +30,7 @@ const data: ContactItem[] = [
   },
   {
     id: 'x',
-    link: 'https://x.com/dangelosaurus',
+    link: 'https://x.com/mohammerdzakari',
     label: 'X',
     icon: {
       viewBox: '0 0 448 512',
@@ -46,17 +38,8 @@ const data: ContactItem[] = [
     },
   },
   {
-    id: 'wellfound',
-    link: 'https://wellfound.com/p/michael-d-angelo',
-    label: 'Wellfound',
-    icon: {
-      viewBox: '0 0 24 24',
-      path: 'M23.998 8.128c.063-1.379-1.612-2.376-2.795-1.664-1.23.598-1.322 2.52-.156 3.234 1.2.862 2.995-.09 2.951-1.57zm0 7.748c.063-1.38-1.612-2.377-2.795-1.665-1.23.598-1.322 2.52-.156 3.234 1.2.863 2.995-.09 2.951-1.57zm-20.5 1.762L0 6.364h3.257l2.066 8.106 2.245-8.106h3.267l2.244 8.106 2.065-8.106h3.257l-3.54 11.274H11.39c-.73-2.713-1.46-5.426-2.188-8.14l-2.233 8.14H3.5z',
-    },
-  },
-  {
     id: 'instagram',
-    link: 'https://www.instagram.com/dangelosaurus/',
+    link: 'https://www.instagram.com/mohammerdzakari/',
     label: 'Instagram',
     icon: {
       viewBox: '0 0 448 512',
@@ -64,17 +47,7 @@ const data: ContactItem[] = [
     },
   },
   {
-    id: 'facebook',
-    link: 'https://facebook.com/d',
-    label: 'Facebook',
-    icon: {
-      viewBox: '0 0 320 512',
-      path: 'M80 299.3l0 212.7 116 0 0-212.7 86.5 0 18-97.8-104.5 0 0-34.6c0-51.7 20.3-71.5 72.7-71.5 16.3 0 29.4 .4 37 1.2l0-88.7C291.4 4 256.4 0 236.2 0 129.3 0 80 50.5 80 159.4l0 42.1-66 0 0 97.8 66 0z',
-    },
-  },
-  {
     id: 'email',
-    // One public address, shared with the contact CTA and JSON-LD.
     link: `mailto:${profile.email}`,
     label: 'Email',
     icon: {

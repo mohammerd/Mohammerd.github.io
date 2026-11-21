@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import routes from '@/data/routes';
+import { projects } from '@/data/projects';
 import { getAllPosts } from '@/lib/posts';
 import { canonicalPostUrl, SITE_URL } from '@/lib/utils';
 
@@ -11,23 +12,27 @@ type CrawlHints = Pick<
   'changeFrequency' | 'priority'
 >;
 
-/** A page is monthly at 0.8 unless it is listed here. */
 const CRAWL_HINTS: Record<string, CrawlHints> = {
   '/': { priority: 1 },
+  '/projects': { changeFrequency: 'monthly', priority: 0.9 },
   '/writing': { changeFrequency: 'weekly' },
-  '/speaking': { priority: 0.7 },
-  '/stats': { changeFrequency: 'weekly', priority: 0.5 },
   '/contact': { changeFrequency: 'yearly', priority: 0.5 },
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages: MetadataRoute.Sitemap = routes.map(({ path }) => ({
-    // `trailingSlash: true` exports every page as a directory.
     url: `${SITE_URL}${path.endsWith('/') ? path : `${path}/`}`,
     changeFrequency: 'monthly',
     priority: 0.8,
     ...CRAWL_HINTS[path],
   }));
+
+  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: `${SITE_URL}/projects/${project.slug}/`,
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }));
+
   const posts: MetadataRoute.Sitemap = getAllPosts().map((post) => ({
     url: canonicalPostUrl(post.slug),
     lastModified: new Date(post.updated ?? post.date),
@@ -35,5 +40,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...pages, ...posts];
+  return [...pages, ...projectPages, ...posts];
 }

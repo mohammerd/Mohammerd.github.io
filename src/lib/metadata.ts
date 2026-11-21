@@ -10,21 +10,8 @@ interface PageMetadataOptions {
   path?: `/${string}`;
 }
 
-/**
- * The share card is a fixed design that does not render the page title, so
- * the alt text describes the card rather than claiming the title appears in
- * the image. Role and employer come from the profile so they change in one
- * place, just as the stats page and OG script read shared profile facts.
- */
-const SHARE_IMAGE_ALT = `${AUTHOR_NAME} — ${profile.role} at ${profile.employer}`;
+const SHARE_IMAGE_ALT = `${AUTHOR_NAME} — ${profile.role}`;
 
-/**
- * The OpenGraph and Twitter blocks every page needs.
- *
- * A route-level `openGraph` object replaces the inherited one wholesale
- * rather than merging, so anything omitted here vanishes from that page.
- * Callers that build their own metadata (blog posts) should spread these.
- */
 export const sharedOpenGraph: Metadata['openGraph'] = {
   locale: 'en_US',
   siteName: AUTHOR_NAME,
@@ -50,15 +37,12 @@ export function createPageMetadata({
   description,
   path,
 }: PageMetadataOptions): Metadata {
-  // Joined, not resolved: `new URL('/about/', SITE_URL)` drops a base path.
   const absoluteUrl = path ? `${SITE_URL}${path}` : undefined;
   const pageTitle = `${title} | ${AUTHOR_NAME}`;
 
   return {
     title,
     description,
-    // Canonical is emitted wherever the page has a stable URL. `not-found`
-    // passes no path, because a 404 has no canonical route in a static export.
     ...(absoluteUrl ? { alternates: { canonical: absoluteUrl } } : {}),
     openGraph: {
       ...sharedOpenGraph,

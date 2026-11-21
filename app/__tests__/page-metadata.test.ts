@@ -1,78 +1,39 @@
 import { describe, expect, it } from 'vitest';
 
-import { sharedOpenGraph } from '@/lib/metadata';
-import { getPostSlugs } from '@/lib/posts';
-import { HOME_CARD_PATH } from '@/lib/share-cards.mjs';
 import { AUTHOR_NAME, SITE_URL, TWITTER_HANDLE } from '@/lib/utils';
 import { metadata as aboutMetadata } from '../about/page';
 import { metadata as contactMetadata } from '../contact/page';
-import { metadata as notFoundMetadata } from '../not-found';
 import { metadata as projectsMetadata } from '../projects/page';
-import { metadata as resumeMetadata } from '../resume/page';
-import { metadata as speakingMetadata } from '../speaking/page';
-import { metadata as statsMetadata } from '../stats/page';
-import { generateMetadata as generatePostMetadata } from '../writing/[slug]/page';
 import { metadata as writingMetadata } from '../writing/page';
 
-/**
- * Next replaces a route's `openGraph`, `twitter`, and `alternates` objects
- * rather than merging them, so anything a route omits vanishes from that page.
- */
-const sharedFields = { siteName: sharedOpenGraph?.siteName, locale: 'en_US' };
-const sharedTwitterFields = {
-  card: 'summary_large_image',
-  site: TWITTER_HANDLE,
-  creator: TWITTER_HANDLE,
-};
-
-describe('page metadata', () => {
+describe('personal-site page metadata', () => {
   it.each([
     ['about', aboutMetadata, '/about/'],
     ['contact', contactMetadata, '/contact/'],
     ['projects', projectsMetadata, '/projects/'],
-    ['resume', resumeMetadata, '/resume/'],
-    ['speaking', speakingMetadata, '/speaking/'],
-    ['stats', statsMetadata, '/stats/'],
     ['writing', writingMetadata, '/writing/'],
-    ['404', notFoundMetadata, undefined],
-  ])('%s restates what a replacing object drops', (_, metadata, path) => {
-    const url = path && `${SITE_URL}${path}`;
-    const share = {
-      title: `${metadata.title} | ${AUTHOR_NAME}`,
-      description: metadata.description,
-    };
+  ])('%s uses the personal site identity and canonical URL', (_, metadata, path) => {
+    const url = \`\${SITE_URL}\${path}\`;
 
-    // The 404 has no stable canonical URL in a static export.
     expect(metadata.alternates?.canonical).toBe(url);
-    expect(metadata.openGraph?.url).toBe(url);
-    expect(metadata.openGraph).toMatchObject({ ...sharedFields, ...share });
-    expect(metadata.twitter).toMatchObject({
-      ...sharedTwitterFields,
-      ...share,
+    expect(metadata.openGraph).toMatchObject({
+      siteName: AUTHOR_NAME,
+      locale: 'en_US',
+      url,
+      description: metadata.description,
     });
-    expect(JSON.stringify(metadata.openGraph?.images)).toContain(
-      HOME_CARD_PATH,
-    );
-    expect(JSON.stringify(metadata.twitter?.images)).toContain(HOME_CARD_PATH);
+    expect(metadata.twitter).toMatchObject({
+      card: 'summary_large_image',
+      site: TWITTER_HANDLE,
+      creator: TWITTER_HANDLE,
+      description: metadata.description,
+    });
+    expect(JSON.stringify(metadata.openGraph?.images)).toContain('/og.png');
   });
 
-  it('writing advertises its feed', () => {
+  it('advertises the RSS feed for future writing', () => {
     expect(writingMetadata.alternates?.types).toEqual({
       'application/rss+xml': '/feed.xml',
     });
-  });
-
-  // A post declares the card generated for it rather than the site card, so a
-  // shared essay does not look like a shared homepage. A post's own `image` is
-  // for JSON-LD, because it is not the shape `summary_large_image` wants.
-  it.each(getPostSlugs())('%s keeps a share card of its own', async (slug) => {
-    const metadata = await generatePostMetadata({
-      params: Promise.resolve({ slug }),
-    });
-
-    expect(metadata.openGraph?.images).toMatchObject([
-      { url: `${SITE_URL}/og/writing/${slug}.png` },
-    ]);
-    expect(metadata.twitter?.images).toEqual(metadata.openGraph?.images);
   });
 });

@@ -24,7 +24,6 @@ import { publishedMarkdown } from '@/lib/published-markdown.mjs';
 import {
   AUTHOR_NAME,
   SITE_DESCRIPTION,
-  SITE_IMAGE_PATH,
   SITE_URL,
 } from '@/lib/utils';
 
@@ -57,11 +56,11 @@ interface ResumeLocation {
 interface ResumeBasics {
   name: string;
   label: string;
-  image: string;
+  image?: string;
   email: string;
   url: string;
   summary: string;
-  location: ResumeLocation;
+  location?: ResumeLocation;
   profiles: ResumeProfile[];
 }
 
@@ -79,10 +78,10 @@ interface ResumeWork {
 
 interface ResumeEducation {
   institution: string;
-  url: string;
+  url?: string;
   studyType?: string;
   area?: string;
-  endDate: string;
+  endDate?: string;
   courses?: string[];
 }
 
@@ -199,19 +198,6 @@ function textOf(nodes: MarkdownToJSX.ASTNode[]): string {
     .join('');
 }
 
-/**
- * `profile.currentCity` is a single display string ("San Francisco"), optionally with a region after a comma. It is
- * split rather than duplicated, and `countryCode` is left off because the data
- * does not state a country — a hardcoded `US` here would silently outlive a
- * move abroad.
- */
-function buildLocation(): ResumeLocation {
-  const [city, region] = profile.currentCity
-    .split(',')
-    .map((part) => part.trim());
-  return { city, ...(region ? { region } : {}) };
-}
-
 /** The trailing path segment of a profile URL is the handle on every network here. */
 function usernameFrom(link: string): string {
   const { pathname } = new URL(link);
@@ -224,11 +210,9 @@ function buildBasics(): ResumeBasics {
     label: profile.role,
     // The portrait, not the share card: JSON Resume renderers show this as a
     // photograph of the person.
-    image: `${SITE_URL}${SITE_IMAGE_PATH}`,
     email: profile.email,
     url: `${SITE_URL}/`,
     summary: SITE_DESCRIPTION,
-    location: buildLocation(),
     profiles: profiles.map((item) => ({
       network: item.label,
       username: usernameFrom(item.link),
@@ -295,9 +279,9 @@ function buildEducation(): ResumeEducation[] {
 
     return {
       institution: degree.school,
-      url: degree.link,
+      ...(degree.link ? { url: degree.link } : {}),
       ...splitDegree(degree.degree),
-      endDate: String(degree.year),
+      ...(degree.year ? { endDate: String(degree.year) } : {}),
       ...(schoolCourses.length > 0 ? { courses: schoolCourses } : {}),
     };
   });

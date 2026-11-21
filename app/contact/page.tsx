@@ -14,14 +14,13 @@ export const metadata: Metadata = createPageMetadata({
 
 export default function ContactPage() {
   return (
-    // The page is the contact details, so its footer keeps only the links.
     <PageWrapper footer="links">
       <section className="contact-page">
         <h1 className="page-title">Get in touch</h1>
         <EmailLink />
         <p className="contact-hint page-prose">
-          I usually respond within 24 hours. For speaking invitations, email is
-          best.
+          For research discussions, project enquiries, or collaboration, email
+          is the best way to reach me.
         </p>
         <ContactIcons includeEmail={false} labelled />
       </section>
