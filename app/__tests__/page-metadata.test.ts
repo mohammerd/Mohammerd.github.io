@@ -4,6 +4,7 @@ import { AUTHOR_NAME, SITE_URL, TWITTER_HANDLE } from '@/lib/utils';
 import { metadata as aboutMetadata } from '../about/page';
 import { metadata as contactMetadata } from '../contact/page';
 import { metadata as projectsMetadata } from '../projects/page';
+import { metadata as resumeMetadata } from '../resume/page';
 import { metadata as writingMetadata } from '../writing/page';
 
 describe('personal-site page metadata', () => {
@@ -11,6 +12,7 @@ describe('personal-site page metadata', () => {
     ['about', aboutMetadata, '/about/'],
     ['contact', contactMetadata, '/contact/'],
     ['projects', projectsMetadata, '/projects/'],
+    ['resume', resumeMetadata, '/resume/'],
     ['writing', writingMetadata, '/writing/'],
   ])(
     '%s uses the personal site identity and canonical URL',
