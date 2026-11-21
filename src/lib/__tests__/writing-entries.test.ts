@@ -57,7 +57,7 @@ it.each([
   [
     'an external entry duplicating an on-site post address',
     () => [entry(SITE_URL + '/writing/sample-research-note/')],
-    /lists https:\/\/mohammerd\.github\.io\/writing\/sample-research-note\/ twice/,
+    /lists .*\/writing\/sample-research-note\/ twice/,
   ],
 ])('stops the build on %s', (_, entries, message) => {
   state.entries = entries();
