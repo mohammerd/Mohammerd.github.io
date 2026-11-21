@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
-import routes from '@/data/routes';
 import { projects } from '@/data/projects';
+import routes from '@/data/routes';
 import { getAllPosts } from '@/lib/posts';
 import { canonicalPostUrl, SITE_URL } from '@/lib/utils';
 
