@@ -136,9 +136,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-      - name: Generate profile-specific artwork for deployment
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == env.DEPLOY_NODE
-        run: npm run icons && npm run og
+      # Every matrix leg runs the export verifier, which checks that each
+      # published post's generated OpenGraph image is present in out/. The
+      # image is generated from the Markdown source, so it must exist in each
+      # runner's workspace, not only the Ubuntu deployment candidate.
+      - name: Generate profile-specific share cards
+        run: npm run og
 
       # Everything except this job takes its Node from .nvmrc, but a matrix
       # needs literals. If the two drift, the deploy leg stops being built and
