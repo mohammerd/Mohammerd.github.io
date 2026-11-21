@@ -1,4 +1,4 @@
-export const aboutMarkdown = `# About
+export const aboutMarkdown = `# Intro
 
 I’m Muhammad Zakari, a student and independent AI safety researcher. I’m interested in building AI systems that are more reliable, controllable, and useful in the real world. My current work explores AI safety in different settings, including agricultural AI systems and the evaluation and control of autonomous AI agents.
 
