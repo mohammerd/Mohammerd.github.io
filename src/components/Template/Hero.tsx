@@ -1,7 +1,9 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import profile from '@/data/profile.json';
 import { smartQuotes } from '@/lib/typography';
+import { withBasePath } from '@/lib/utils';
 
 export default function Hero() {
   return (
@@ -32,7 +34,14 @@ export default function Hero() {
         </div>
 
         <figure className="hero-portrait">
-          <div className="hero-monogram" aria-hidden="true">MZ</div>
+          <Image
+            src={withBasePath('/images/muhammad-zakari.webp')}
+            alt="Portrait of Muhammad Zakari"
+            width={384}
+            height={384}
+            priority
+            sizes="(max-width: 640px) 11rem, 17.5rem"
+          />
           <figcaption>AI safety · Independent research</figcaption>
         </figure>
       </div>
