@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import courses from '@/data/resume/courses';
 import degrees from '@/data/resume/degrees';
 import work from '@/data/resume/work';
-import courses from '@/data/resume/courses';
 
 describe('published education and experience data', () => {
   it('lists the current KSITM programme without inventing a graduation year', () => {
