@@ -50,9 +50,7 @@ export function GET() {
   const items = getWritingItems();
   const posts = items
     .filter((item) => !item.isExternal)
-    .map((item) =>
-      entry(item.title, SITE_URL + item.url, item.description),
-    );
+    .map((item) => entry(item.title, SITE_URL + item.url, item.description));
   const elsewhere = items
     .filter((item) => item.isExternal)
     .map((item) => entry(item.title, item.url, item.description));
@@ -83,7 +81,11 @@ export function GET() {
       RESUME_JSON_URL,
       'The supplied education and contact details in the JSON Resume v1.0.0 schema',
     ),
-    entry('RSS feed', SITE_URL + '/feed.xml', 'Original writing when published'),
+    entry(
+      'RSS feed',
+      SITE_URL + '/feed.xml',
+      'Original writing when published',
+    ),
     entry('Sitemap', SITE_URL + '/sitemap.xml'),
     '',
     '## Optional',
