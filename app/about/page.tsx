@@ -4,32 +4,18 @@ import AboutContent from '@/components/About/Sections';
 import { SchemaGraph } from '@/components/Schema';
 import PageWrapper from '@/components/Template/PageWrapper';
 import { aboutMarkdown } from '@/data/about';
-import profile from '@/data/profile.json';
 import { createPageMetadata } from '@/lib/metadata';
 import { publishedMarkdown } from '@/lib/published-markdown.mjs';
 import { profilePageNode, sectionPageNodes } from '@/lib/schema';
 import { AUTHOR_NAME } from '@/lib/utils';
 
-const ABOUT_DESCRIPTION = `Learn about ${AUTHOR_NAME} - ${profile.role} at ${profile.employer} and builder across AI, security, and infrastructure.`;
+const ABOUT_DESCRIPTION = `Learn about ${AUTHOR_NAME}, a student and independent AI safety researcher working on agricultural AI and autonomous-agent control.`;
 
-const pageMetadata = createPageMetadata({
+export const metadata: Metadata = createPageMetadata({
   title: 'About',
   description: ABOUT_DESCRIPTION,
   path: '/about/',
 });
-const [firstName, ...lastNames] = AUTHOR_NAME.split(' ');
-
-// The page posts name as their author, so it is a profile, as Open Graph's
-// `article:author` expects.
-export const metadata: Metadata = {
-  ...pageMetadata,
-  openGraph: {
-    ...pageMetadata.openGraph,
-    type: 'profile',
-    firstName,
-    lastName: lastNames.join(' '),
-  },
-};
 
 export default function AboutPage() {
   return (
