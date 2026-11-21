@@ -21,7 +21,7 @@ describe('createHeadingId', () => {
     ).filter((title) => title !== 'Intro');
 
     expect(createUniqueHeadingIds(titles).join(' ')).toBe(
-      'some-history i-like travel-geography fun-facts i-dream-of websites-from-people-i-admire',
+      'education independent-learning current-interests',
     );
   });
 });
