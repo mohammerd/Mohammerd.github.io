@@ -89,6 +89,11 @@ export default function WritingPage() {
           <h1 className="page-title">Writing</h1>
         </header>
         <section className="projects-group" aria-labelledby="writing-essays">
+          <div className="section-header">
+            <h2 id="writing-essays" className="section-heading">
+              Essays &amp; research notes
+            </h2>
+          </div>
           <p className="page-subtitle">
             Essays, research notes, and updates on AI safety, agricultural AI,
             and building.
@@ -102,7 +107,7 @@ export default function WritingPage() {
               ))}
             </ol>
           ) : (
-            <p className="page-prose" id="writing-essays">
+            <p className="page-prose">
               My original essays and research notes will appear here.
             </p>
           )}
