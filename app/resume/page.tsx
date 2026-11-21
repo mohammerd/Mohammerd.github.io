@@ -3,14 +3,13 @@ import Link from 'next/link';
 
 import Education from '@/components/Resume/Education';
 import PageWrapper from '@/components/Template/PageWrapper';
-import degrees from '@/data/resume/degrees';
 import profile from '@/data/profile.json';
+import degrees from '@/data/resume/degrees';
 import { createPageMetadata } from '@/lib/metadata';
 import { RESUME_JSON_URL } from '@/lib/resumeJson';
 import { AUTHOR_NAME } from '@/lib/utils';
 
-const description =
-  `Education and independent learning background for ${AUTHOR_NAME}, a student and independent AI safety researcher.`;
+const description = `Education and independent learning background for ${AUTHOR_NAME}, a student and independent AI safety researcher.`;
 
 const resumeMetadata = createPageMetadata({
   title: 'Resume',
@@ -46,8 +45,8 @@ export default function ResumePage() {
           </div>
           <p className="resume-summary">{profile.role}</p>
           <p className="resume-summary">
-            I’m studying software engineering while building my understanding
-            of AI safety through independent research, practical experiments,
+            I’m studying software engineering while building my understanding of
+            AI safety through independent research, practical experiments,
             software projects, technical documentation, and research papers.
           </p>
         </header>
@@ -64,8 +63,8 @@ export default function ResumePage() {
             <p className="resume-note">
               Alongside formal study, I’m largely self-taught in the areas I
               work on. My learning is centred on software engineering, AI
-              safety, machine learning, autonomous AI systems, and security.
-              I develop this knowledge by building, testing ideas, reading
+              safety, machine learning, autonomous AI systems, and security. I
+              develop this knowledge by building, testing ideas, reading
               technical material, and studying how systems behave in practice.
             </p>
           </section>
