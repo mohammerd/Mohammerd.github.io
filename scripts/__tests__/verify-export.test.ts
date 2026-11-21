@@ -551,6 +551,14 @@ describe('machine-readable resume', () => {
       'angle-bracket comparisons and generic types in prose',
       inSummary('latency < 50ms and throughput > 1k with Map<string, number>'),
     ],
+    [
+      'an empty work history when no employment has been supplied',
+      replaceIn(
+        RESUME,
+        '"work":[{"url":"https://work.example/","summary":"Did the work."}]',
+        '"work":[]',
+      ),
+    ],
   ]);
 });
 
