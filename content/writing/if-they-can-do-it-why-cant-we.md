@@ -1,7 +1,7 @@
 ---
 title: "If They Can Do It, Why Can't We?"
-date: "2026-11-21"
-description: "How growing up around farming and my first agricultural chatbot led me to build AgroGuardAI."
+date: '2026-11-21'
+description: 'How growing up around farming and my first agricultural chatbot led me to build AgroGuardAI.'
 ---
 
 I grew up around farming. When I was young, I remember following my father to the farm and seeing the work that went into growing crops. I also saw the challenges farmers had to deal with, especially pests and diseases that could damage their crops.
