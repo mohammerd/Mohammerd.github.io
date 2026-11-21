@@ -12,7 +12,7 @@ describe('project entry', () => {
       name: 'Read more about AgroGuardAI',
     });
 
-    expect(link).toHaveAttribute('href', '/projects/agroguardai/');
+    expect(link).toHaveAttribute('href', '/projects/agroguardai');
     expect(link).toHaveTextContent('AgroGuardAI');
     expect(link).toHaveTextContent('Agricultural AI safety research');
     expect(link).toHaveTextContent('Researching how AI systems');
@@ -32,7 +32,7 @@ describe('project entry', () => {
         screen.getByRole('link', {
           name: `Read more about ${project.title}`,
         }),
-      ).toHaveAttribute('href', `/projects/${project.slug}/`);
+      ).toHaveAttribute('href', `/projects/${project.slug}`);
     }
 
     unmount();
