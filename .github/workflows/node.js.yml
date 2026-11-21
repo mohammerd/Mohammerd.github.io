@@ -226,16 +226,18 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.node-version == env.DEPLOY_NODE
         run: npm run check-reflow
 
-      - name: Upload build artifacts
+      # Upload Pages content from the build job. Deployment runs in a
+      # separate job so the artifact service has completed the build-job
+      # artifact listing before deploy-pages asks for it.
+      - name: Upload site for GitHub Pages
         if: >-
           matrix.os == 'ubuntu-latest' &&
           matrix.node-version == env.DEPLOY_NODE &&
           github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
-          name: build-output
+          name: github-pages-${{ github.run_attempt }}
           path: out/
-          retention-days: 7
 
   # Summary job to ensure all checks pass
   ci-success:
@@ -275,21 +277,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download validated build
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
-        with:
-          name: build-output
-          path: out
-
-      # Artifacts outlive the attempt that uploaded them, and deploy-pages
-      # refuses a run holding two of the same name, so each attempt packages
-      # under its own. Re-running a failed deploy then deploys its own upload.
-      - name: Package GitHub Pages artifact
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
-        with:
-          name: github-pages-${{ github.run_attempt }}
-          path: out
-
+      # The Pages artifact is uploaded by the build job, not here. This
+      # cross-job boundary avoids querying the artifact service immediately
+      # after an upload in the same job.
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
