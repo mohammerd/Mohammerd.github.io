@@ -8,6 +8,7 @@ import { getWritingItems } from '@/lib/writing';
 import { metadata as about } from '../about/page';
 import { metadata as contact } from '../contact/page';
 import { metadata as projectIndex } from '../projects/page';
+import { metadata as resume } from '../resume/page';
 import { metadata as writing } from '../writing/page';
 
 export const dynamic = 'force-static';
@@ -16,6 +17,7 @@ const PAGES: Record<string, Metadata> = {
   '/about': about,
   '/contact': contact,
   '/projects': projectIndex,
+  '/resume': resume,
   '/writing': writing,
 };
 
