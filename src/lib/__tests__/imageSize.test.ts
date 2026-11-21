@@ -52,14 +52,11 @@ describe('readImageSize', () => {
     expect(readImageSize('/og.png?version=1#card')).toEqual(OG['/og.png']);
   });
 
-  // An image the site renders. Deleting it reddens this test as well as the
-  // export, so it must not point at a file no page uses.
-  it('reads the WebP encoding used by article assets', () => {
-    expect(
-      readImageSize(
-        '/images/writing/codex-desktop-app-post/codex-dark-mode-review.webp',
-      ),
-    ).toEqual({ width: 1166, height: 656 });
+  it('reads the WebP portrait used by the personal site', () => {
+    expect(readImageSize('/images/muhammad-zakari.webp')).toEqual({
+      width: 384,
+      height: 384,
+    });
   });
 
   it('refuses an encoded path out of public/', () => {
