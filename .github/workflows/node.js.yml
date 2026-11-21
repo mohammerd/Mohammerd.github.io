@@ -52,9 +52,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Show Prettier output for the essay
-        run: npx prettier content/writing/if-they-can-do-it-why-cant-we.md
-
       - name: Format Check
         run: npm run format:check
 
