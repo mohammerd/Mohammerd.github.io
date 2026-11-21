@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import { sharedOpenGraph } from '@/lib/metadata';
 import { AUTHOR_NAME, SITE_URL, TWITTER_HANDLE } from '@/lib/utils';
 import { metadata as aboutMetadata } from '../about/page';
 import { metadata as contactMetadata } from '../contact/page';
@@ -14,7 +13,7 @@ describe('personal-site page metadata', () => {
     ['projects', projectsMetadata, '/projects/'],
     ['writing', writingMetadata, '/writing/'],
   ])('%s uses the personal site identity and canonical URL', (_, metadata, path) => {
-    const url = `${SITE_URL}${path}`;
+    const url = \`\${SITE_URL}\${path}\`;
 
     expect(metadata.alternates?.canonical).toBe(url);
     expect(metadata.openGraph).toMatchObject({
@@ -29,9 +28,7 @@ describe('personal-site page metadata', () => {
       creator: TWITTER_HANDLE,
       description: metadata.description,
     });
-    expect(JSON.stringify(metadata.openGraph?.images)).toContain(
-      sharedOpenGraph?.images?.[0] && 'og.png',
-    );
+    expect(JSON.stringify(metadata.openGraph?.images)).toContain('/og.png');
   });
 
   it('advertises the RSS feed for future writing', () => {
