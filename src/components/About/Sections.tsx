@@ -95,12 +95,9 @@ const LOG_MARKDOWN_OPTIONS: MarkdownToJSX.Options = {
  * that is derived case-insensitively, so the deep links hold.
  */
 const sectionVariants: Record<string, string> = {
-  'Some history': LOG_VARIANT,
-  'Travel / geography': LOG_VARIANT,
-  'Fun facts': 'about-section--compact',
-  'I like': 'about-section--compact',
-  'I dream of': 'about-section--compact',
-  'Websites from people I admire': 'about-section--links',
+  Education: 'about-section--compact',
+  'Independent learning': 'about-section--compact',
+  'Current interests': 'about-section--compact',
 };
 
 interface AboutChunk {
