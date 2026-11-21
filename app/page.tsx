@@ -21,7 +21,10 @@ export default function HomePage() {
         nodes={[profilePageNode({ url: `${SITE_URL}/`, name: AUTHOR_NAME })]}
       />
       <Hero />
-      <section className="home-writing projects-home" aria-labelledby="home-projects-title">
+      <section
+        className="home-writing projects-home"
+        aria-labelledby="home-projects-title"
+      >
         <div className="home-writing-header">
           <h2 id="home-projects-title" className="section-heading">
             Current projects
