@@ -26,7 +26,7 @@ One problem became clear when we tried using Hausa. The chatbot struggled to com
 
 I realised that connecting general-purpose models to an agricultural interface did not automatically make them understand agriculture or the people I wanted to serve. Farmers need systems that can communicate in their languages and take local farming conditions seriously.
 
-I also wanted the chatbot to work offline. Many rural communities have limited connectivity, and I didn't want access to depend on a constant internet connection. That goal brings its own engineering challenges: the system must run on suitable local hardware and account for limited power and charging.
+I also wanted the chatbot to work offline because many villages have unreliable electricity and limited internet access. Offline AI could reduce dependence on a constant connection, but it would not solve the power problem. The model would still need suitable local hardware, low power consumption, and a practical way to recharge it. These are constraints I want to design around from the beginning.
 
 ## From a chatbot to a bigger vision
 
