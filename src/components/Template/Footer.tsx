@@ -1,10 +1,11 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import ContactIcons from '@/components/Contact/ContactIcons';
 import routes from '@/data/routes';
 import { SOURCE_REPOSITORY } from '@/lib/source-repository';
 import { smartQuotes } from '@/lib/typography';
-import { AUTHOR_NAME } from '@/lib/utils';
+import { AUTHOR_NAME, withBasePath } from '@/lib/utils';
 
 interface FooterProps {
   /** Only the site's routes: for a page that already shows the rest. */
@@ -36,8 +37,17 @@ export default function Footer({ linksOnly = false }: FooterProps) {
     <footer className="site-footer-new">
       <div className="footer-content">
         <div className="footer-identity">
-          <Link href="/" className="footer-avatar footer-avatar--monogram">
-            MZ
+          <Link
+            href="/"
+            className="footer-avatar"
+            aria-label={`${AUTHOR_NAME} — home`}
+          >
+            <Image
+              src={withBasePath('/images/muhammad-zakari.webp')}
+              alt=""
+              width={48}
+              height={48}
+            />
           </Link>
           <div className="footer-info">
             <span className="footer-name">{smartQuotes(AUTHOR_NAME)}</span>
