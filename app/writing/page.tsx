@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { SchemaGraph } from '@/components/Schema';
 import PageWrapper from '@/components/Template/PageWrapper';
-import type { WritingItem } from '@/lib/writing';
+import { getWritingItems, type WritingItem } from '@/lib/writing';
 import { createPageMetadata } from '@/lib/metadata';
 import {
   blogNode,
@@ -13,7 +13,6 @@ import {
 } from '@/lib/schema';
 import { formatDate } from '@/lib/utils';
 import { smartQuotes } from '@/lib/typography';
-import { getWritingItems } from '@/lib/writing';
 
 const writingMetadata = createPageMetadata({
   title: 'Writing',
@@ -36,9 +35,11 @@ function WritingEntry({ item }: { item: WritingItem }) {
   const content = (
     <>
       <div className="project-entry-meta">
-        <time className="project-dates" dateTime={item.date}>
-          {formatDate(item.date)}
-        </time>
+        {item.date && (
+          <time className="project-dates" dateTime={item.date}>
+            {formatDate(item.date)}
+          </time>
+        )}
         <span className="project-entry-role">
           {item.isExternal ? item.source : 'Essay'}
         </span>
