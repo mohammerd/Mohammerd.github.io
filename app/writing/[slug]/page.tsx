@@ -2,22 +2,19 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { SchemaGraph } from '@/components/Schema';
+import PageWrapper from '@/components/Template/PageWrapper';
 import PostContent from '@/components/Writing/PostContent';
 import PostPager from '@/components/Writing/PostPager';
 import ReadingProgress from '@/components/Writing/ReadingProgress';
-import PageWrapper from '@/components/Template/PageWrapper';
-import { CARD_SIZE, postCardPath } from '@/lib/share-cards.mjs';
-import { breadcrumbNode, blogPostingNode, webPageNode } from '@/lib/schema';
-import { createPageMetadata } from '@/lib/metadata';
 import { readPostImageSizes, leadImageSource } from '@/lib/imageSize';
+import { createPageMetadata } from '@/lib/metadata';
 import { getPostBySlug, getPostSlugs } from '@/lib/posts';
+import { breadcrumbNode, blogPostingNode, webPageNode } from '@/lib/schema';
+import { CARD_SIZE, postCardPath } from '@/lib/share-cards.mjs';
+import { canonicalPostUrl, formatDate, SITE_URL } from '@/lib/utils';
 import { getAdjacentPosts } from '@/lib/writing';
-import {
-  canonicalPostUrl,
-  formatDate,
-  SITE_URL,
-} from '@/lib/utils';
-import { SchemaGraph } from '@/components/Schema';
+import { smartQuotes } from '@/lib/typography';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -110,7 +107,7 @@ export default async function WritingPostPage({ params }: PageProps) {
           <time className="post-date" dateTime={post.date}>
             {formatDate(post.date)}
           </time>
-          <h1 className="post-title">{post.title}</h1>
+          <h1 className="post-title">{smartQuotes(post.title)}</h1>
           <p className="post-description">{post.description}</p>
         </header>
         <div className="prose">
