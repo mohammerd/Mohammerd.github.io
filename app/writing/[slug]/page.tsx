@@ -12,9 +12,9 @@ import { createPageMetadata } from '@/lib/metadata';
 import { getPostBySlug, getPostSlugs } from '@/lib/posts';
 import { breadcrumbNode, blogPostingNode, webPageNode } from '@/lib/schema';
 import { CARD_SIZE, postCardPath } from '@/lib/share-cards.mjs';
+import { smartQuotes } from '@/lib/typography';
 import { canonicalPostUrl, formatDate, SITE_URL } from '@/lib/utils';
 import { getAdjacentPosts } from '@/lib/writing';
-import { smartQuotes } from '@/lib/typography';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
