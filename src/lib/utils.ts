@@ -17,10 +17,10 @@ export function withBasePath(path: string): string {
 
 export const AUTHOR_NAME = profile.name;
 export const TWITTER_HANDLE = '@mohammerdzakari';
-export const SITE_IMAGE_PATH = '/images/me.jpg';
+export const SITE_IMAGE_PATH = '/images/muhammad-zakari.webp';
 export const SITE_IMAGE_DIMENSIONS = {
-  width: 1024,
-  height: 1024,
+  width: 384,
+  height: 384,
 } as const;
 
 export const SITE_DESCRIPTION =
