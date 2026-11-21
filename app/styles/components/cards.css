@@ -580,7 +580,6 @@ a.project-entry:focus-visible .project-entry-external {
   color: var(--color-fg);
 }
 
-
 /* Supplied project identity mark on the individual project page. */
 .project-detail-brand {
   width: clamp(9rem, 22vw, 13rem);
