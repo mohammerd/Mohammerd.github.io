@@ -1,30 +1,45 @@
 import { afterEach, expect, it, vi } from 'vitest';
 
 import type { WritingEntry } from '@/data/writing';
-import { getAllPosts } from '@/lib/posts';
 import { SITE_URL } from '@/lib/utils';
 import { getWritingItems } from '../writing';
 
-const data = vi.hoisted(() => ({ entries: [] as WritingEntry[] }));
+const state = vi.hoisted(() => ({
+  entries: [] as WritingEntry[],
+  posts: [
+    {
+      slug: 'sample-research-note',
+      title: 'Sample research note',
+      date: '2026-01-14',
+      description: 'A fixture used to verify duplicate writing URLs.',
+      content: 'A small test fixture.',
+    },
+  ],
+}));
+
 vi.mock('@/data/writing', () => ({
   get default() {
-    return data.entries;
+    return state.entries;
+  },
+}));
+
+vi.mock('@/lib/posts', () => ({
+  getAllPosts() {
+    return state.posts;
   },
 }));
 
 const entry = (url: string, date = '2026-01-15'): WritingEntry => ({
-  title: `Entry at ${url}`,
+  title: 'External entry',
   url,
   date,
   description: 'A description.',
 });
 
 afterEach(() => {
-  data.entries = [];
+  state.entries = [];
 });
 
-// Each would publish wrong: a date rolled into March, or two feed items with
-// one guid.
 it.each([
   [
     'an impossible date',
@@ -32,7 +47,7 @@ it.each([
     /real YYYY-MM-DD/,
   ],
   [
-    'one address twice',
+    'one external address twice',
     () => [
       entry('https://a.example/'),
       entry('https://a.example/', '2025-01-01'),
@@ -40,12 +55,12 @@ it.each([
     /lists https:\/\/a\.example\/ twice/,
   ],
   [
-    "a post's own address",
-    () => [entry(`${SITE_URL}/writing/${getAllPosts()[0]?.slug}/`)],
-    /twice/,
+    'an external entry duplicating an on-site post address',
+    () => [entry(SITE_URL + '/writing/sample-research-note/')],
+    /lists https:\/\/mohammerd\.github\.io\/writing\/sample-research-note\/ twice/,
   ],
 ])('stops the build on %s', (_, entries, message) => {
-  data.entries = entries();
+  state.entries = entries();
 
   expect(() => getWritingItems()).toThrow(message);
 });
