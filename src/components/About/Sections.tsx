@@ -95,6 +95,7 @@ const LOG_MARKDOWN_OPTIONS: MarkdownToJSX.Options = {
  * that is derived case-insensitively, so the deep links hold.
  */
 const sectionVariants: Record<string, string> = {
+  'Some history': LOG_VARIANT,
   Education: 'about-section--compact',
   'Independent learning': 'about-section--compact',
   'Current interests': 'about-section--compact',
