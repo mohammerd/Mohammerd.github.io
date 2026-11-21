@@ -1,7 +1,10 @@
-import type { Project } from '@/data/projects';
 import { formatMonthYear } from '@/lib/utils';
 
-type DateRangeProps = Pick<Project, 'date' | 'endDate' | 'ongoing'>;
+interface DateRangeProps {
+  date: string;
+  endDate?: string;
+  ongoing?: boolean;
+}
 
 /**
  * The dates themselves, shared with the résumé's date line, to the month
