@@ -10,7 +10,9 @@ export default function Hero() {
     <section className="hero">
       <div className="hero-grid">
         <div className="hero-primary">
-          <p className="hero-kicker">Student · Independent AI Safety Researcher</p>
+          <p className="hero-kicker">
+            Student · Independent AI Safety Researcher
+          </p>
           <h1 className="hero-title">
             <span className="hero-name">{smartQuotes(profile.name)}</span>
           </h1>
@@ -20,8 +22,8 @@ export default function Hero() {
           </p>
           <p className="hero-summary">
             My work explores AI safety across different domains, from
-            agricultural intelligence and multilingual systems to the
-            evaluation and control of autonomous AI agents.
+            agricultural intelligence and multilingual systems to the evaluation
+            and control of autonomous AI agents.
           </p>
           <div className="hero-cta">
             <Link href="/about" className="button">
