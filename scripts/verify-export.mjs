@@ -890,8 +890,8 @@ if (!existsSync(resumeJsonPath)) {
     ) {
       fail('resume.json', 'basics.name must be a non-empty string');
     }
-    if (!Array.isArray(resume.work) || resume.work.length === 0) {
-      fail('resume.json', 'work is missing or empty');
+    if (!Array.isArray(resume.work)) {
+      fail('resume.json', 'work must be an array');
     } else {
       resume.work.forEach((entry, index) => {
         if (!isObject(entry)) {
