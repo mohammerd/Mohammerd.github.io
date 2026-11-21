@@ -183,6 +183,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest' && matrix.node-version != env.DEPLOY_NODE
         run: npm pkg set homepage=https://example.github.io/personal-site/
 
+      # The Test job above already regenerates the profile assets at the root
+      # URL. This leg has its own checkout, so regenerate them here as well
+      # before the tests run under the project-site base path.
+      - name: Generate profile-specific artwork for project-site tests
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version != env.DEPLOY_NODE
+        run: npm run icons && npm run og
+
       # The Test job runs at the upstream root URL, so a test that assumes one
       # passes there and blocks a fork's first deployment. Run the suite again
       # as the fork's own Test job will.
