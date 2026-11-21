@@ -28,7 +28,7 @@ jobs:
   code-quality:
     name: Code Quality
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -43,6 +43,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      - name: Generate profile-specific artwork
+        run: npm run icons && npm run og
 
       - name: Type Check
         run: npm run type-check
@@ -53,9 +55,9 @@ jobs:
       - name: Format Check
         run: npm run format:check
 
-      # Split so a font-fetch failure reads as a network problem rather than as
-      # a stale card: the ledger half is hermetic, the render half reaches
-      # fonts.gstatic.com for the three checksum-pinned TTFs.
+      # Regenerate the profile-bound icon and share-card assets above so a fork
+      # never ships the upstream owner's artwork. The ledger and pixel checks
+      # then verify the generated output against the current source and tokens.
       - name: Verify share-card ledger
         run: npm run og:check:ledger
 
@@ -81,6 +83,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      - name: Generate profile-specific artwork
+        run: npm run icons && npm run og
 
       - name: Run tests
         run: npm run test:coverage
@@ -132,6 +136,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      - name: Generate profile-specific artwork for deployment
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == env.DEPLOY_NODE
+        run: npm run icons && npm run og
 
       # Everything except this job takes its Node from .nvmrc, but a matrix
       # needs literals. If the two drift, the deploy leg stops being built and
