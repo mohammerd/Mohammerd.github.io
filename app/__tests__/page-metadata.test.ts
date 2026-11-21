@@ -17,19 +17,19 @@ describe('personal-site page metadata', () => {
     (_, metadata, path) => {
       const url = SITE_URL + path;
 
-    expect(metadata.alternates?.canonical).toBe(url);
-    expect(metadata.openGraph).toMatchObject({
-      siteName: AUTHOR_NAME,
-      locale: 'en_US',
-      url,
-      description: metadata.description,
-    });
-    expect(metadata.twitter).toMatchObject({
-      card: 'summary_large_image',
-      site: TWITTER_HANDLE,
-      creator: TWITTER_HANDLE,
-      description: metadata.description,
-    });
+      expect(metadata.alternates?.canonical).toBe(url);
+      expect(metadata.openGraph).toMatchObject({
+        siteName: AUTHOR_NAME,
+        locale: 'en_US',
+        url,
+        description: metadata.description,
+      });
+      expect(metadata.twitter).toMatchObject({
+        card: 'summary_large_image',
+        site: TWITTER_HANDLE,
+        creator: TWITTER_HANDLE,
+        description: metadata.description,
+      });
       expect(JSON.stringify(metadata.openGraph?.images)).toContain('/og.png');
     },
   );
