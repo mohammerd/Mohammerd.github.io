@@ -607,3 +607,9 @@ a.project-entry:focus-visible .project-entry-external {
   white-space: normal;
   overflow-wrap: anywhere;
 }
+
+/* Let long project names wrap at high text zoom without widening the page. */
+.project-detail-page .projects-header .page-title {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
