@@ -21,11 +21,7 @@ import { type Skill, skills } from '@/data/resume/skills';
 import work from '@/data/resume/work';
 import { sortPositions } from '@/lib/career';
 import { publishedMarkdown } from '@/lib/published-markdown.mjs';
-import {
-  AUTHOR_NAME,
-  SITE_DESCRIPTION,
-  SITE_URL,
-} from '@/lib/utils';
+import { AUTHOR_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/utils';
 
 /**
  * File-like, so it keeps no trailing slash under `trailingSlash: true` — the
