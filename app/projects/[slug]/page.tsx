@@ -85,7 +85,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Visit {project.title} <span aria-hidden="true">↗</span>
+              Visit website <span aria-hidden="true">↗</span>
             </a>
           </p>
         </header>
