@@ -39,7 +39,9 @@ export default function Entry({ data }: EntryProps) {
       <div className="project-entry-body">
         <h3 className="project-entry-title">
           {displayTitle}
-          <span className="project-entry-external" aria-hidden="true">→</span>
+          <span className="project-entry-external" aria-hidden="true">
+            →
+          </span>
         </h3>
         <p className="project-entry-desc">{smartQuotes(desc)}</p>
       </div>
