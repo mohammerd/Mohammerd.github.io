@@ -197,13 +197,14 @@ a.project-entry:focus-visible .project-entry-external {
    here because the width and height attributes only supply it until the file
    loads — after that a file of another shape would take over and move the
    row. */
-.project-entry-thumb {
+ .project-entry-thumb {
   grid-column: 3;
   grid-row: 1;
   align-self: start;
   width: 100%;
   aspect-ratio: 16 / 10;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
   border: var(--rule) solid var(--color-border);
   border-radius: var(--radius-xs);
   background-color: var(--color-surface-subtle);
@@ -577,4 +578,23 @@ a.project-entry:focus-visible .project-entry-external {
   line-height: var(--leading-snug);
   text-wrap: balance;
   color: var(--color-fg);
+}
+
+
+/* Supplied project identity mark on the individual project page. */
+.project-detail-brand {
+  width: clamp(9rem, 22vw, 13rem);
+  aspect-ratio: 1;
+  margin: 0 0 1.75rem;
+  overflow: hidden;
+  border: var(--rule) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: #000;
+}
+
+.project-detail-brand img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
