@@ -13,7 +13,7 @@ describe('personal-site page metadata', () => {
     ['projects', projectsMetadata, '/projects/'],
     ['writing', writingMetadata, '/writing/'],
   ])('%s uses the personal site identity and canonical URL', (_, metadata, path) => {
-    const url = \`\${SITE_URL}\${path}\`;
+    const url = SITE_URL + path;
 
     expect(metadata.alternates?.canonical).toBe(url);
     expect(metadata.openGraph).toMatchObject({
