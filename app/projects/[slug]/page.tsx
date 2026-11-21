@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -7,7 +8,7 @@ import PageWrapper from '@/components/Template/PageWrapper';
 import { getProject, projects } from '@/data/projects';
 import { createPageMetadata } from '@/lib/metadata';
 import { breadcrumbNode, webPageNode } from '@/lib/schema';
-import { SITE_URL } from '@/lib/utils';
+import { SITE_URL, withBasePath } from '@/lib/utils';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -59,6 +60,17 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <nav className="project-detail-back" aria-label="Breadcrumb">
           <Link href="/projects/">← All projects</Link>
         </nav>
+        {project.image && (
+          <figure className="project-detail-brand">
+            <Image
+              src={withBasePath(project.image)}
+              alt={`${project.title} logo`}
+              width={384}
+              height={384}
+              priority
+            />
+          </figure>
+        )}
         <header className="projects-header">
           <p className="hero-kicker">{project.subtitle}</p>
           <h1 className="page-title">{project.title}</h1>
