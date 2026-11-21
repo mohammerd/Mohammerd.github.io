@@ -3,48 +3,37 @@ import Link from 'next/link';
 import profile from '@/data/profile.json';
 import { smartQuotes } from '@/lib/typography';
 
-import Portrait from './Portrait';
-
 export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-grid">
         <div className="hero-primary">
-          <p className="hero-kicker">Software &amp; security</p>
+          <p className="hero-kicker">Student · Independent AI Safety Researcher</p>
           <h1 className="hero-title">
             <span className="hero-name">{smartQuotes(profile.name)}</span>
           </h1>
           <p className="hero-tagline">
-            I’m a {profile.role} at{' '}
-            <a href="https://openai.com" className="hero-highlight">
-              {profile.employer}
-            </a>
-            , working on{' '}
-            <a href="https://promptfoo.dev" className="hero-highlight">
-              Promptfoo
-            </a>{' '}
-            and other cyber products.
+            I’m interested in building AI systems that are more reliable,
+            controllable, and useful in the real world.
           </p>
-
           <p className="hero-summary">
-            I help secure AI systems and use AI to find software
-            vulnerabilities. I co-founded Promptfoo before it joined OpenAI in
-            2026.
+            My work explores AI safety across different domains, from
+            agricultural intelligence and multilingual systems to the
+            evaluation and control of autonomous AI agents.
           </p>
-
           <div className="hero-cta">
             <Link href="/about" className="button">
               About me
             </Link>
-            <Link href="/resume" className="hero-resume-link">
-              View resume
+            <Link href="/projects" className="hero-resume-link">
+              Explore projects
             </Link>
           </div>
         </div>
 
         <figure className="hero-portrait">
-          <Portrait width={320} height={320} priority />
-          <figcaption>{profile.currentCity}</figcaption>
+          <div className="hero-monogram" aria-hidden="true">MZ</div>
+          <figcaption>AI safety · Independent research</figcaption>
         </figure>
       </div>
     </section>
