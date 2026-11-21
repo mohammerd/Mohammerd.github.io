@@ -59,6 +59,7 @@ export const projects: Project[] = [
     desc: 'An open-source research effort exploring how to test whether autonomous AI agents can be monitored, constrained, and reliably interrupted.',
     stage: 'Research and prototype development',
     link: 'https://hypervisorzero.xyz',
+    image: '/images/projects/hypervisor-zero.webp',
     sections: [
       {
         heading: 'The problem',
