@@ -176,7 +176,6 @@ for (const { size, ratio, text, key } of RASTERS) {
 }
 
 const manifest = {
-  name: profile.name,
   short_name: MONOGRAM,
   // Relative to the manifest's own URL, so a fork served under a repository
   // basePath resolves these without the generator knowing the prefix.
