@@ -48,8 +48,8 @@ describe('generated icon set', () => {
     expect(meta.inputs[input]).toBe(readColorToken(token, theme));
   });
 
-  it('records the current profile name', () => {
-    expect(meta.inputs.name).toBe(profile.name);
+  it('records initials derived from the current profile name', () => {
+    expect(meta.inputs.monogram).toBe(monogramFor(profile.name));
   });
 
   it('fetches a versioned font file, never a mutable Google Fonts endpoint', () => {
