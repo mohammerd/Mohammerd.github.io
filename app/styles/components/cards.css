@@ -597,3 +597,13 @@ a.project-entry:focus-visible .project-entry-external {
   height: 100%;
   object-fit: contain;
 }
+
+/* Keep the project destination link within the reading column at enlarged
+   text sizes and narrow viewports. */
+.project-detail-page .projects-header .button {
+  max-width: 100%;
+  min-width: 0;
+  padding-inline: 1rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
