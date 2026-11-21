@@ -13,15 +13,15 @@ describe('homepage', () => {
 
     for (const name of ['AgroGuardAI', 'Hypervisor-Zero', 'AgroMind']) {
       expect(
-        screen.getByRole('link', { name: `Read more about ${name}` }),
+        screen.getByRole('link', { name: 'Read more about ' + name }),
       ).toBeInTheDocument();
     }
   });
 
   it('offers a link to the full project register', () => {
     render(<HomePage />);
-    expect(
-      screen.getByRole('link', { name: /All projects/ }),
-    ).toHaveAttribute('href', expect.stringMatching(/\/projects\/?$/));
+    const link = screen.getByRole('link', { name: /All projects/ });
+
+    expect(link.getAttribute('href')).toMatch(/\/projects\/?$/);
   });
 });
