@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import { SchemaGraph } from '@/components/Schema';
 import PageWrapper from '@/components/Template/PageWrapper';
-import { getWritingItems, type WritingItem } from '@/lib/writing';
 import { createPageMetadata } from '@/lib/metadata';
 import {
   blogNode,
@@ -11,8 +10,9 @@ import {
   sectionPageNodes,
   WRITING_DESCRIPTION,
 } from '@/lib/schema';
-import { formatDate } from '@/lib/utils';
 import { smartQuotes } from '@/lib/typography';
+import { formatDate } from '@/lib/utils';
+import { getWritingItems, type WritingItem } from '@/lib/writing';
 
 const writingMetadata = createPageMetadata({
   title: 'Writing',
