@@ -8,40 +8,11 @@ interface Route {
 }
 
 const routes: Route[] = [
-  {
-    index: true,
-    label: AUTHOR_NAME,
-    path: '/',
-  },
-  {
-    label: 'About',
-    path: '/about',
-  },
-  {
-    label: 'Resume',
-    path: '/resume',
-  },
-  {
-    label: 'Projects',
-    path: '/projects',
-  },
-  {
-    label: 'Writing',
-    path: '/writing',
-  },
-  {
-    label: 'Speaking',
-    path: '/speaking',
-  },
-  {
-    label: 'Stats',
-    path: '/stats',
-    primary: false,
-  },
-  {
-    label: 'Contact',
-    path: '/contact',
-  },
+  { index: true, label: AUTHOR_NAME, path: '/' },
+  { label: 'About', path: '/about' },
+  { label: 'Projects', path: '/projects' },
+  { label: 'Writing', path: '/writing' },
+  { label: 'Contact', path: '/contact' },
 ];
 
 export default routes;
