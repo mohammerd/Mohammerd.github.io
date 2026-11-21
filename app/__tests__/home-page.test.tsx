@@ -22,6 +22,6 @@ describe('homepage', () => {
     render(<HomePage />);
     expect(
       screen.getByRole('link', { name: /All projects/ }),
-    ).toHaveAttribute('href', '/projects/');
+    ).toHaveAttribute('href', '/projects');
   });
 });
