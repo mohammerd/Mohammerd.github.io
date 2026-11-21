@@ -15,8 +15,7 @@ describe('toPlainText', () => {
   });
 
   it('leaves comparisons and generic type notation alone', () => {
-    const text =
-      'latency < 50ms and throughput > 1k with Map<string, number>';
+    const text = 'latency < 50ms and throughput > 1k with Map<string, number>';
     expect(toPlainText(text)).toBe(text);
   });
 });
@@ -55,8 +54,6 @@ describe('JSON Resume document', () => {
     expect(links).toContain('https://github.com/mohammerd');
     expect(links).toContain('https://x.com/mohammerdzakari');
     expect(links).toContain('https://www.instagram.com/mohammerdzakari/');
-    expect(links).toContain(
-      'https://www.linkedin.com/in/muhammad-z-75a73831a',
-    );
+    expect(links).toContain('https://www.linkedin.com/in/muhammad-z-75a73831a');
   });
 });
