@@ -12,8 +12,10 @@ describe('personal-site page metadata', () => {
     ['contact', contactMetadata, '/contact/'],
     ['projects', projectsMetadata, '/projects/'],
     ['writing', writingMetadata, '/writing/'],
-  ])('%s uses the personal site identity and canonical URL', (_, metadata, path) => {
-    const url = SITE_URL + path;
+  ])(
+    '%s uses the personal site identity and canonical URL',
+    (_, metadata, path) => {
+      const url = SITE_URL + path;
 
     expect(metadata.alternates?.canonical).toBe(url);
     expect(metadata.openGraph).toMatchObject({
@@ -28,8 +30,9 @@ describe('personal-site page metadata', () => {
       creator: TWITTER_HANDLE,
       description: metadata.description,
     });
-    expect(JSON.stringify(metadata.openGraph?.images)).toContain('/og.png');
-  });
+      expect(JSON.stringify(metadata.openGraph?.images)).toContain('/og.png');
+    },
+  );
 
   it('advertises the RSS feed for future writing', () => {
     expect(writingMetadata.alternates?.types).toEqual({
