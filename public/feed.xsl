@@ -40,8 +40,8 @@
             <p class="eyebrow">RSS feed</p>
             <h1><xsl:value-of select="rss/channel/title" /></h1>
             <p class="intro"><xsl:value-of select="rss/channel/description" /></p>
+            <p class="intro">To subscribe, copy this page’s address and add it to your RSS reader.</p>
             <nav class="actions" aria-label="Feed actions">
-              <a href="feed.xml">Copy this feed into an RSS reader</a>
               <a href="writing/">Browse all writing</a>
             </nav>
           </header>
