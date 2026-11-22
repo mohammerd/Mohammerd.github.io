@@ -114,54 +114,9 @@ export default function WritingPage() {
           )}
         </section>
         <p className="page-prose">
-          You can also follow new writing through the{' '}
-          <Link href="/feed.xml">RSS feed</Link>.
+          Subscribe to the <Link href="/feed.xml">RSS feed</Link> to follow new
+          writing.
         </p>
-        <section
-          className="newsletter-signup"
-          aria-labelledby="newsletter-signup-title"
-        >
-          <h2 id="newsletter-signup-title" className="newsletter-signup-title">
-            Get new writing by email
-          </h2>
-          <p className="newsletter-signup-description">
-            Receive an email when I publish a new essay or research note. You
-            can unsubscribe at any time.
-          </p>
-          <form
-            className="newsletter-form"
-            action="https://buttondown.com/api/emails/embed-subscribe/mohammerd"
-            method="post"
-          >
-            <label className="newsletter-form-label" htmlFor="newsletter-email">
-              Email address
-            </label>
-            <input
-              className="newsletter-form-input"
-              id="newsletter-email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              required
-            />
-            <input type="hidden" name="embed" value="1" />
-            <button className="button" type="submit">
-              Subscribe
-            </button>
-          </form>
-          <p className="newsletter-signup-note">
-            Your subscription is handled by{' '}
-            <a
-              href="https://buttondown.com/mohammerd"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Buttondown
-            </a>
-            .
-          </p>
-        </section>
       </article>
     </PageWrapper>
   );
