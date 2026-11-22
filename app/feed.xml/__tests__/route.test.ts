@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { SITE_URL } from '@/lib/utils';
+
 import { GET } from '../route';
 
 describe('feed.xml route', () => {
@@ -9,5 +11,20 @@ describe('feed.xml route', () => {
     const xml = await (await GET()).text();
 
     expect(xml).not.toContain('lastBuildDate');
+  });
+
+  it('serves RSS XML and links to a browser stylesheet', async () => {
+    const response = await GET();
+    const xml = await response.text();
+
+    expect(response.headers.get('content-type')).toBe(
+      'application/rss+xml; charset=utf-8',
+    );
+    expect(xml).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?>/);
+    expect(xml).toContain(
+      `<?xml-stylesheet type="text/xsl" href="${SITE_URL}/feed.xsl"?>`,
+    );
+    expect(xml).toContain('<rss version="2.0"');
+    expect(xml).toContain('<channel>');
   });
 });
