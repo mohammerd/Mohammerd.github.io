@@ -41,8 +41,8 @@
             <h1><xsl:value-of select="rss/channel/title" /></h1>
             <p class="intro"><xsl:value-of select="rss/channel/description" /></p>
             <nav class="actions" aria-label="Feed actions">
-              <a href="https://mohammerd.github.io/feed.xml">Copy this feed into an RSS reader</a>
-              <a href="https://mohammerd.github.io/writing/">Browse all writing</a>
+              <a href="feed.xml">Copy this feed into an RSS reader</a>
+              <a href="writing/">Browse all writing</a>
             </nav>
           </header>
           <ol>
