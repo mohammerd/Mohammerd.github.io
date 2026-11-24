@@ -993,7 +993,7 @@
   font-family:var(--font-mono); font-size:.7rem; color:var(--color-fg);
 }
 .harvest-mission-tab.is-completed .harvest-mission-tab-number {
-  border-color:var(--color-accent); background:var(--color-accent); color:#fff;
+  border-color:var(--color-accent-fill); background:var(--color-accent-fill); color:var(--color-on-accent);
 }
 .harvest-mission-tab-copy { display:flex; min-width:0; flex-direction:column; gap:.18rem; }
 .harvest-mission-tab-copy strong {
@@ -1130,7 +1130,7 @@
 .harvest-risk-tag { display:inline-flex; min-height:1.2rem; align-items:center; padding:.08rem .3rem; border:var(--rule) solid var(--color-border-alt); border-radius:var(--radius-xs); color:var(--color-fg-light); font-family:var(--font-mono); font-size:.53rem; line-height:1.25; }
 .harvest-risk-tag.high-exposure { border-color:var(--color-signal-mark); color:var(--color-signal); }
 .harvest-risk-tag.moderate-exposure { border-color:var(--color-control-border); color:var(--color-fg); }
-.harvest-risk-tag.resilient { border-color:#73916a; color:#4e7148; }
+.harvest-risk-tag.resilient { border-color:#73916a; color:var(--color-accent); }
 .harvest-field-description { min-height:2.65em; color:var(--color-fg-light); font-family:var(--font-body); font-size:var(--text-sm); line-height:1.35; }
 .harvest-field-stats { display:flex; flex-wrap:wrap; gap:.25rem .7rem; padding-top:.45rem; border-top:var(--rule) solid var(--color-border); color:var(--color-fg-light); font-family:var(--font-mono); font-size:.59rem; line-height:1.35; }
 .harvest-field-stats strong { color:var(--color-fg); font-weight:var(--font-weight-semibold); }
@@ -1171,7 +1171,7 @@
 .harvest-plan-slot-main>strong small { color:var(--color-fg-light); font-size:.57rem; font-weight:var(--font-weight-normal); }
 .harvest-plan-slot-meta { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:.2rem .45rem; margin-top:.25rem; color:var(--color-fg-light); font-family:var(--font-mono); font-size:.56rem; line-height:1.4; }
 .harvest-plan-slot-meta .has-weather-loss { color:var(--color-signal); }
-.harvest-plan-slot-meta .has-weather-clear { color:#4e7148; }
+.harvest-plan-slot-meta .has-weather-clear { color:var(--color-accent); }
 .harvest-plan-controls { display:flex; align-items:center; gap:.25rem; margin-top:.45rem; font-family:var(--font-mono); font-size:.6rem; }
 .harvest-plan-controls button { display:inline-grid; min-width:1.75rem; min-height:1.65rem; place-items:center; padding:0 .35rem; border:var(--rule) solid var(--color-control-border); border-radius:var(--radius-xs); background:transparent; color:var(--color-fg); cursor:pointer; }
 .harvest-plan-controls button:hover:not(:disabled) { border-color:var(--color-accent); background:var(--color-surface-hover); }
