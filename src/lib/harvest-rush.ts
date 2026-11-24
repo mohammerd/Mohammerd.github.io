@@ -133,7 +133,8 @@ export const HARVEST_MISSIONS = [
     subtitle: 'The temperature rises earlier than expected.',
     briefing:
       'A hot, dry wind is moving in from the north. The first team gets a clean run. Every field harvested after that loses some quality, but not every crop reacts in the same way.',
-    objective: 'Use the first clear harvest slot for the most heat-sensitive crop.',
+    objective:
+      'Use the first clear harvest slot for the most heat-sensitive crop.',
     weather: 'heat',
     weatherName: 'Heatwave',
     weatherDetail: 'High temperatures begin after harvest 01.',
@@ -265,7 +266,8 @@ export function previewHarvestPlan(
     const slot = index + 1;
     const baseScore = field.crates * field.pointsPerCrate;
     const weatherLoss = field.weatherLoss[mission.weather];
-    const weatherAffected = slot > mission.exposureAfterSlots && weatherLoss > 0;
+    const weatherAffected =
+      slot > mission.exposureAfterSlots && weatherLoss > 0;
     const score = weatherAffected
       ? Math.round(baseScore * (1 - weatherLoss))
       : baseScore;
@@ -294,7 +296,10 @@ export function evaluateHarvestPlan(
   }
 
   const metrics = getHarvestMetrics(fieldIds);
-  if (metrics.crew > mission.crewLimit || metrics.crates > mission.truckCapacity) {
+  if (
+    metrics.crew > mission.crewLimit ||
+    metrics.crates > mission.truckCapacity
+  ) {
     throw new Error('The harvest plan exceeds its available resources.');
   }
 
