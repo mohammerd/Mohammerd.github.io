@@ -37,33 +37,10 @@ export default function PlayPage() {
 
         <HarvestRushGame />
 
-        <section className="play-next-games" aria-labelledby="play-next-title">
-          <h2 id="play-next-title" className="section-heading">
-            Coming next
-          </h2>
-          <p className="play-next-note">
-            Two more games are in development. They will be added when they are
-            complete and ready to play.
-          </p>
-          <div className="play-next-grid">
-            <article className="play-next-card">
-              <h3>Guess the Crop</h3>
-              <p>
-                Identify crops from visual clues, growing conditions, and
-                practical field knowledge.
-              </p>
-              <span className="play-next-status">IN DEVELOPMENT / 002</span>
-            </article>
-            <article className="play-next-card">
-              <h3>Farm Memory</h3>
-              <p>
-                A timed matching challenge built around crops, seeds, tools, and
-                agricultural patterns.
-              </p>
-              <span className="play-next-status">IN DEVELOPMENT / 003</span>
-            </article>
-          </div>
-        </section>
+        <p className="play-next-note">
+          More games, including Guess the Crop and Farm Memory, are in
+          development.
+        </p>
       </div>
     </PageWrapper>
   );
