@@ -33,9 +33,7 @@ describe('homepage', () => {
     );
 
     expect(
-      screen
-        .getByRole('link', { name: /All writing/ })
-        .getAttribute('href'),
+      screen.getByRole('link', { name: /All writing/ }).getAttribute('href'),
     ).toMatch(/\/writing\/?$/);
   });
 
