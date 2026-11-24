@@ -4,6 +4,7 @@ import routes from '@/data/routes';
 import { SITE_URL } from '@/lib/utils';
 
 import { metadata as about } from '../../about/page';
+import { metadata as play } from '../../play/page';
 import { GET } from '../route';
 
 describe('llms.txt route', () => {
@@ -13,6 +14,7 @@ describe('llms.txt route', () => {
     expect(text).toContain(
       `- [About](${SITE_URL}/about/): ${about.description}`,
     );
+    expect(text).toContain(`- [Play](${SITE_URL}/play/): ${play.description}`);
   });
 
   it('fails the build for a route it has no description for', () => {

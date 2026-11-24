@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { AUTHOR_NAME, SITE_URL, TWITTER_HANDLE } from '@/lib/utils';
 import { metadata as aboutMetadata } from '../about/page';
 import { metadata as contactMetadata } from '../contact/page';
+import { metadata as playMetadata } from '../play/page';
 import { metadata as projectsMetadata } from '../projects/page';
 import { metadata as resumeMetadata } from '../resume/page';
 import { metadata as writingMetadata } from '../writing/page';
@@ -11,6 +12,7 @@ describe('personal-site page metadata', () => {
   it.each([
     ['about', aboutMetadata, '/about/'],
     ['contact', contactMetadata, '/contact/'],
+    ['play', playMetadata, '/play/'],
     ['projects', projectsMetadata, '/projects/'],
     ['resume', resumeMetadata, '/resume/'],
     ['writing', writingMetadata, '/writing/'],
