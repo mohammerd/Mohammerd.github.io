@@ -678,11 +678,6 @@ export default function HarvestRushGame() {
                 })}
               </div>
 
-              <div className="harvest-field-legend">
-                <span><i className="risk-high" /> High exposure</span>
-                <span><i className="risk-moderate" /> Moderate exposure</span>
-                <span><i className="risk-low" /> Resilient</span>
-              </div>
             </section>
 
             <aside className="harvest-dispatch-panel" aria-labelledby="harvest-plan-title">
@@ -707,11 +702,6 @@ export default function HarvestRushGame() {
                   limit={mission.truckCapacity}
                   unit="crates"
                 />
-              </div>
-
-              <div className="harvest-weather-sequence">
-                <span className="harvest-section-kicker">WEATHER TIMELINE</span>
-                <WeatherTimeline mission={mission} />
               </div>
 
               <ol className="harvest-plan-list">
