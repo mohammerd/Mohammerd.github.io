@@ -32,7 +32,7 @@ describe('homepage', () => {
     ).toBeEnabled();
     expect(
       screen.getByRole('link', { name: /Game details/ }).getAttribute('href'),
-    ).toMatch(/\\/play\\/?$/);
+    ).toMatch(/\/play\/?$/);
   });
 
   it('features the newest essay and links to the full writing register', () => {

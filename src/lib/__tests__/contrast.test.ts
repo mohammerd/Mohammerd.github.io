@@ -45,7 +45,7 @@ function contrastRatio(a: string, b: string): number {
  * channels as an opaque colour would produce a misleading ratio.
  */
 function compositeSurface(surface: string, backdrop: string): string {
-  const rgba = /^rgba?\\(\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*(\\d+(?:\\.\\d+)?)\\s*,\\s*(\\d+(?:\\.\\d+)?)\\s*,?\\s*([\\d.]+)?\\s*\\)$/i.exec(
+  const rgba = /^rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,?\s*([\d.]+)?\s*\)$/i.exec(
     surface,
   );
   if (!rgba) {
