@@ -308,8 +308,8 @@ export default function HarvestRushGame() {
                           <div>
                             <strong>{outcome.field.crop}</strong>
                             <span>
-                              {outcome.field.crates} crates · {outcome.field.crew}{' '}
-                              crew
+                              {outcome.field.crates} crates ·{' '}
+                              {outcome.field.crew} crew
                             </span>
                           </div>
                           <strong className="harvest-plan-score">
@@ -342,7 +342,9 @@ export default function HarvestRushGame() {
                               <button
                                 type="button"
                                 className="harvest-icon-button"
-                                onClick={() => reorderField(outcome.field.id, 1)}
+                                onClick={() =>
+                                  reorderField(outcome.field.id, 1)
+                                }
                                 disabled={index === plan.length - 1}
                                 aria-label={
                                   'Move ' + outcome.field.crop + ' later'
@@ -462,7 +464,10 @@ export default function HarvestRushGame() {
       </div>
 
       {result && (
-        <section className="harvest-debrief" aria-labelledby="harvest-debrief-title">
+        <section
+          className="harvest-debrief"
+          aria-labelledby="harvest-debrief-title"
+        >
           <div className="harvest-section-heading">
             <div>
               <span className="harvest-section-index">AFTER-ACTION REPORT</span>
@@ -476,7 +481,9 @@ export default function HarvestRushGame() {
             {result.outcomes.map((outcome) => (
               <li key={outcome.field.id}>
                 <span className="harvest-debrief-slot">0{outcome.slot}</span>
-                <span className="harvest-debrief-crop">{outcome.field.crop}</span>
+                <span className="harvest-debrief-crop">
+                  {outcome.field.crop}
+                </span>
                 <span className="harvest-debrief-condition">
                   {outcome.rainAffected
                     ? 'Rain reduced the score by ' +
