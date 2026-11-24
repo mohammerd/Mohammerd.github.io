@@ -88,105 +88,45 @@ function readProgress(): PlayerProgress {
   }
 }
 
-function CropArt({ fieldId }: { fieldId: HarvestFieldId }) {
-  const common = {
-    viewBox: '0 0 100 100',
-    role: 'img' as const,
-    'aria-hidden': true as const,
-  };
+const CROP_ILLUSTRATIONS: Record<HarvestFieldId, string> = {
+  tomatoes: '/images/harvest-rush/tomatoes.svg',
+  peppers: '/images/harvest-rush/peppers.svg',
+  maize: '/images/harvest-rush/maize.svg',
+  cassava: '/images/harvest-rush/cassava.svg',
+  okra: '/images/harvest-rush/okra.svg',
+};
 
-  switch (fieldId) {
-    case 'tomatoes':
-      return (
-        <svg {...common}>
-          <path d="M50 27c-8-14-21-13-27-5 12 1 18 7 20 15" fill="#477c56" />
-          <path d="M51 28c6-17 20-18 28-10-12 2-19 9-22 19" fill="#477c56" />
-          <path d="M50 30c-5-9-2-16 1-22 6 9 7 16 2 23" fill="#6c965d" />
-          <path d="M50 28v12" stroke="#477c56" strokeWidth="4" strokeLinecap="round" />
-          <circle cx="37" cy="57" r="20" fill="#c65b45" />
-          <circle cx="64" cy="59" r="19" fill="#d97455" />
-          <path d="M31 43l6-3 5 5m17-1 6-3 5 5" fill="none" stroke="#f4b29a" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-      );
-    case 'peppers':
-      return (
-        <svg {...common}>
-          <path d="M49 25c3-10 11-13 20-11-3 8-9 13-18 15" fill="#6c965d" />
-          <path d="M49 28c-2-7-1-13 2-19" stroke="#477c56" strokeWidth="5" strokeLinecap="round" />
-          <path d="M50 32c-7-7-17-7-23-2-8 8-4 28 2 42 4 9 10 13 17 11 5-1 7-8 7-15 1 9 6 16 13 14 10-3 17-24 14-38-2-11-12-17-23-12-3 1-5 3-7 6z" fill="#4d8a66" />
-          <path d="M50 38c-3 15-2 29 0 41" fill="none" stroke="#a9c18d" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-      );
-    case 'maize':
-      return (
-        <svg {...common}>
-          <path d="M49 15c-14 13-20 33-14 62 12-5 19-22 18-44" fill="#6f985f" />
-          <path d="M52 18c18 13 25 34 17 62-12-7-19-24-17-46" fill="#477c56" />
-          <path d="M50 22c-9 8-12 24-10 43 8 7 14 7 21 0 2-19-1-35-11-43z" fill="#e1b54c" />
-          {Array.from({ length: 4 }, (_, row) =>
-            Array.from({ length: 3 }, (_, col) => (
-              <ellipse
-                key={row + '-' + col}
-                cx={43 + col * 7 + (row % 2) * 2}
-                cy={32 + row * 8}
-                rx="2.2"
-                ry="3"
-                fill="#f7d77b"
-              />
-            )),
-          )}
-          <path d="M50 19c-3-7-2-11 1-16" stroke="#477c56" strokeWidth="4" strokeLinecap="round" />
-        </svg>
-      );
-    case 'cassava':
-      return (
-        <svg {...common}>
-          <path d="M49 29c-13-14-24-13-31-6 13 0 20 8 24 18m9-14c9-18 21-19 29-13-12 4-17 11-19 21" fill="#638a59" />
-          <path d="M49 32c-5-12-2-20 2-26 5 9 6 17 2 28" fill="#88a76b" />
-          <path d="M47 41c-5 6-7 17-5 29 2 8 8 14 11 18 5-8 7-16 4-26-2-9-5-16-10-21z" fill="#b88d59" />
-          <path d="M55 43c5 7 8 17 6 28-1 8-5 14-8 18-5-8-7-17-4-27 1-8 3-15 6-19z" fill="#d0a66f" />
-          <path d="M39 56l7 2m-4 9 9 1m-1 12 7-2m-1-25 8 3" stroke="#f1d4a3" strokeWidth="3" strokeLinecap="round" />
-        </svg>
-      );
-    case 'okra':
-      return (
-        <svg {...common}>
-          <path d="M50 27c-8-14-19-15-28-8 12 2 18 8 20 17m10-9c8-14 19-15 28-8-12 2-18 8-20 17" fill="#6c965d" />
-          <path d="M48 31c-3-8-2-15 2-23 5 10 5 16 2 24" fill="#477c56" />
-          <path d="M41 35c-10 1-16 10-15 23 1 13 9 27 17 33 5-9 8-24 6-38-1-10-3-16-8-18z" fill="#6c9564" />
-          <path d="M60 34c9 1 15 10 14 23-1 13-8 27-16 33-6-9-9-24-7-38 1-10 4-16 9-18z" fill="#7ca16d" />
-          <path d="M42 43l-3 34m20-34 3 34" stroke="#bdd09e" strokeWidth="2.5" strokeLinecap="round" />
-          <path d="M46 48l-4 4m17-4 4 4m-18 7 4 4m9-4-4 4" stroke="#d5e0bb" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      );
-  }
+const WEATHER_ILLUSTRATIONS: Record<WeatherType, string> = {
+  rain: '/images/harvest-rush/rain.svg',
+  heat: '/images/harvest-rush/heat.svg',
+  dust: '/images/harvest-rush/dust.svg',
+};
+
+function CropArt({ fieldId }: { fieldId: HarvestFieldId }) {
+  return (
+    <img
+      className="harvest-crop-illustration"
+      src={CROP_ILLUSTRATIONS[fieldId]}
+      alt=""
+      aria-hidden="true"
+      width={96}
+      height={96}
+      loading="lazy"
+      decoding="async"
+    />
+  );
 }
 
 function WeatherMark({ weather }: { weather: WeatherType }) {
-  if (weather === 'rain') {
-    return (
-      <svg viewBox="0 0 48 48" aria-hidden="true">
-        <path d="M11 26h26a8 8 0 0 0 0-16 12 12 0 0 0-22-1 9 9 0 0 0-4 17z" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="m17 33-3 6m12-6-3 6m12-6-3 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    );
-  }
-  if (weather === 'heat') {
-    return (
-      <svg viewBox="0 0 48 48" aria-hidden="true">
-        <circle cx="24" cy="21" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-        <path d="M24 3v5m0 26v5M6 21h5m26 0h5M11 8l4 4m18 18 4 4m0-26-4 4m-18 18-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        <path d="M14 43c2-3 4-3 6 0m4 0c2-3 4-3 6 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      </svg>
-    );
-  }
   return (
-    <svg viewBox="0 0 48 48" aria-hidden="true">
-      <path d="M5 17c7-6 12 6 19 0s12 6 19 0M5 26c7-6 12 6 19 0s12 6 19 0M9 35c5-4 9 4 14 0s9 4 14 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-      <circle cx="15" cy="10" r="1.6" fill="currentColor" />
-      <circle cx="32" cy="7" r="1.4" fill="currentColor" />
-      <circle cx="27" cy="39" r="1.4" fill="currentColor" />
-    </svg>
+    <img
+      src={WEATHER_ILLUSTRATIONS[weather]}
+      alt=""
+      aria-hidden="true"
+      width={48}
+      height={48}
+      decoding="async"
+    />
   );
 }
 
