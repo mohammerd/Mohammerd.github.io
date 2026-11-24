@@ -676,7 +676,8 @@ export default function HarvestRushGame() {
                             className={
                               'harvest-risk-tag ' +
                               risk.toLowerCase().replaceAll(' ', '-')
-                            }>
+                            }
+                          >
                             {risk}
                           </span>
                         </span>
@@ -684,10 +685,16 @@ export default function HarvestRushGame() {
                           {field.description}
                         </span>
                         <span className="harvest-field-stats">
-                          <span><strong>{field.crates}</strong> crates</span>
-                          <span><strong>{field.crew}</strong> crew</span>
                           <span>
-                            <strong>{field.crates * field.pointsPerCrate}</strong>{' '}
+                            <strong>{field.crates}</strong> crates
+                          </span>
+                          <span>
+                            <strong>{field.crew}</strong> crew
+                          </span>
+                          <span>
+                            <strong>
+                              {field.crates * field.pointsPerCrate}
+                            </strong>{' '}
                             base pts
                           </span>
                         </span>
@@ -698,7 +705,8 @@ export default function HarvestRushGame() {
                         )}
                         {selected && (
                           <span className="harvest-field-selected-label">
-                            ADDED TO SLOT {String(selectedAt + 1).padStart(2, '0')}
+                            ADDED TO SLOT{' '}
+                            {String(selectedAt + 1).padStart(2, '0')}
                           </span>
                         )}
                       </span>
@@ -744,93 +752,91 @@ export default function HarvestRushGame() {
                 {Array.from(
                   { length: HARVEST_RUSH_RULES.harvestSlots },
                   (_, index) => {
-                  const outcome = preview[index];
-                  return (
-                    <li
-                      key={index}
-                      className={
-                        'harvest-plan-slot' +
-                        (outcome?.weatherAffected ? ' is-exposed' : '') +
-                        (outcome ? ' has-field' : '')
-                      }
-                    >
-                      <span className="harvest-plan-slot-number">
-                        0{index + 1}
-                      </span>
-                      {outcome ? (
-                        <div className="harvest-plan-slot-content">
-                          <div className="harvest-plan-slot-main">
-                            <span className="harvest-plan-crop-name">
-                              {outcome.field.crop}
-                            </span>
-                            <strong>
-                              {outcome.score}
-                              <small> pts</small>
-                            </strong>
+                    const outcome = preview[index];
+                    const slotClass =
+                      'harvest-plan-slot' +
+                      (outcome?.weatherAffected ? ' is-exposed' : '') +
+                      (outcome ? ' has-field' : '');
+                    const weatherClass = outcome?.weatherAffected
+                      ? 'has-weather-loss'
+                      : 'has-weather-clear';
+
+                    return (
+                      <li key={index} className={slotClass}>
+                        <span className="harvest-plan-slot-number">
+                          0{index + 1}
+                        </span>
+                        {outcome ? (
+                          <div className="harvest-plan-slot-content">
+                            <div className="harvest-plan-slot-main">
+                              <span className="harvest-plan-crop-name">
+                                {outcome.field.crop}
+                              </span>
+                              <strong>
+                                {outcome.score}
+                                <small> pts</small>
+                              </strong>
+                            </div>
+                            <div className="harvest-plan-slot-meta">
+                              <span>
+                                {outcome.field.crates} crates ·{' '}
+                                {outcome.field.crew} crew
+                              </span>
+                              <span className={weatherClass}>
+                                {outcome.weatherAffected
+                                  ? '−' + outcome.lostPoints + ' pts · exposed'
+                                  : outcome.slot > mission.exposureAfterSlots
+                                    ? 'Weather resilient'
+                                    : 'Clear window'}
+                              </span>
+                            </div>
+                            <div className="harvest-plan-controls">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  moveField(outcome.field.id, -1)
+                                }
+                                disabled={index === 0}
+                                aria-label={
+                                  'Move ' + outcome.field.crop + ' earlier'
+                                }
+                              >
+                                ↑
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => moveField(outcome.field.id, 1)}
+                                disabled={index === plan.length - 1}
+                                aria-label={
+                                  'Move ' + outcome.field.crop + ' later'
+                                }
+                              >
+                                ↓
+                              </button>
+                              <button
+                                type="button"
+                                className="harvest-plan-remove"
+                                onClick={() => toggleField(outcome.field.id)}
+                                aria-label={'Remove ' + outcome.field.crop}
+                              >
+                                Remove
+                              </button>
+                            </div>
                           </div>
-                          <div className="harvest-plan-slot-meta">
+                        ) : (
+                          <div className="harvest-plan-empty">
+                            <strong>Awaiting field selection</strong>
                             <span>
-                              {outcome.field.crates} crates · {outcome.field.crew}{' '}
-                              crew
-                            </span>
-                            <span
-                              className={
-                                outcome.weatherAffected
-                                  ? 'has-weather-loss'
-                                  : 'has-weather-clear'
-                              }
-                            >
-                              {outcome.weatherAffected
-                                ? '−' + outcome.lostPoints + ' pts · exposed'
-                                : outcome.slot > mission.exposureAfterSlots
-                                  ? 'Weather resilient'
-                                  : 'Clear window'}
+                              {index + 1 > mission.exposureAfterSlots
+                                ? mission.weatherName + ' window'
+                                : 'Choose a plot to fill this slot'}
                             </span>
                           </div>
-                          <div className="harvest-plan-controls">
-                            <button
-                              type="button"
-                              onClick={() => moveField(outcome.field.id, -1)}
-                              disabled={index === 0}
-                              aria-label={
-                                'Move ' + outcome.field.crop + ' earlier'
-                              }
-                            >
-                              ↑
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => moveField(outcome.field.id, 1)}
-                              disabled={index === plan.length - 1}
-                              aria-label={
-                                'Move ' + outcome.field.crop + ' later'
-                              }
-                            >
-                              ↓
-                            </button>
-                            <button
-                              type="button"
-                              className="harvest-plan-remove"
-                              onClick={() => toggleField(outcome.field.id)}
-                              aria-label={'Remove ' + outcome.field.crop}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="harvest-plan-empty">
-                          <strong>Awaiting field selection</strong>
-                          <span>
-                            {index + 1 > mission.exposureAfterSlots
-                              ? mission.weatherName + ' window'
-                              : 'Choose a plot to fill this slot'}
-                          </span>
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
+                        )}
+                      </li>
+                    );
+                  },
+                )}
               </ol>
 
               <div className="harvest-score-preview" aria-live="polite">
