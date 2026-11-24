@@ -10,10 +10,10 @@ import {
 
 describe('Harvest Rush mission rules', () => {
   it('keeps a three-field plan within the published crew and truck limits', () => {
-    const plan = ['tomatoes', 'peppers', 'cassava'] as const;
+    const plan = ['tomatoes', 'okra', 'cassava'] as const;
     const metrics = getHarvestMetrics(plan);
 
-    expect(metrics).toMatchObject({ slots: 3, crates: 11, crew: 7 });
+    expect(metrics).toMatchObject({ slots: 3, crates: 11, crew: 6 });
     expect(metrics.crew).toBe(HARVEST_RUSH_RULES.crewLimit);
     expect(metrics.crates).toBe(HARVEST_RUSH_RULES.truckCapacity);
   });
@@ -22,7 +22,7 @@ describe('Harvest Rush mission rules', () => {
     expect(getFieldAvailability(['tomatoes'], 'tomatoes')).toBe(
       'Already in plan',
     );
-    expect(getFieldAvailability(['tomatoes', 'cassava'], 'peppers')).toBe(
+    expect(getFieldAvailability(['tomatoes', 'maize'], 'peppers')).toBe(
       'Truck capacity reached',
     );
     expect(getFieldAvailability(['tomatoes', 'peppers'], 'cassava')).toBe(
@@ -42,12 +42,12 @@ describe('Harvest Rush mission rules', () => {
   it('changes the result when a rain-sensitive crop is moved into the storm slot', () => {
     const protectedPlan = evaluateHarvestPlan([
       'tomatoes',
-      'peppers',
+      'okra',
       'cassava',
     ]);
     const exposedPlan = evaluateHarvestPlan(['okra', 'peppers', 'tomatoes']);
 
-    expect(protectedPlan.score).toBe(54);
+    expect(protectedPlan.score).toBe(48);
     expect(protectedPlan.grade).toBe('Gold');
     expect(exposedPlan.score).toBe(42);
     expect(exposedPlan.outcomes[2].rainAffected).toBe(true);
@@ -63,7 +63,7 @@ describe('Harvest Rush mission rules', () => {
   });
 
   it('does not penalise crops marked as weather-safe', () => {
-    const outcomes = previewHarvestPlan(['tomatoes', 'peppers', 'cassava']);
+    const outcomes = previewHarvestPlan(['tomatoes', 'okra', 'cassava']);
 
     expect(outcomes[2]).toMatchObject({
       rainAffected: false,
