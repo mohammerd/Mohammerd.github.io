@@ -6,7 +6,7 @@ import { collectionPageNode, sectionPageNodes } from '@/lib/schema';
 
 const PAGE_TITLE = 'Play';
 const DESCRIPTION =
-  'Play short browser-based games built around agriculture, observation, and practical decision-making.';
+  'Play a three-mission agricultural strategy campaign built around harvest planning, weather risk, and resource management.';
 
 export const metadata = createPageMetadata({
   title: PAGE_TITLE,
@@ -30,8 +30,8 @@ export default function PlayPage() {
           <p className="play-eyebrow">INTERACTIVE PLAYGROUND / 001</p>
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">
-            Short games built around farming, observation, and practical
-            decisions. No account required; the games run in your browser.
+            A compact strategy campaign about timing, trade-offs, and making
+            the best use of limited resources. No account required.
           </p>
         </header>
 
@@ -42,8 +42,8 @@ export default function PlayPage() {
             Coming next
           </h2>
           <p className="play-next-note">
-            The next games are being designed. They will appear here when they
-            are complete and ready to play.
+            Two more games are in development. They will be added when they are
+            complete and ready to play.
           </p>
           <div className="play-next-grid">
             <article className="play-next-card">
