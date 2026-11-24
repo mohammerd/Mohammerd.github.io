@@ -9,10 +9,10 @@ describe('play page', () => {
 
     expect(screen.getByRole('heading', { name: 'Play' })).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'Plan the harvest.' }),
+      screen.getByRole('heading', { name: 'Every decision has a cost.' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Dispatch harvest/ }),
+      screen.getByRole('button', { name: /Open field plan/ }),
     ).toBeDisabled();
   });
 
