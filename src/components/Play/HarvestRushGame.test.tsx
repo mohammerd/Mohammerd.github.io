@@ -22,7 +22,7 @@ describe('Harvest Rush game', () => {
     }
 
     expect(screen.getByText(/rain after slot 02/i)).toBeInTheDocument();
-    expect(screen.getByText('7/6')).not.toBeInTheDocument();
+    expect(screen.getByText('0/6')).toBeInTheDocument();
   });
 
   it('blocks a plan that exceeds the crew limit', () => {
@@ -50,8 +50,8 @@ describe('Harvest Rush game', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
 
-    expect(screen.getByText('Gold')).toBeInTheDocument();
-    expect(screen.getByText('48', { exact: true })).toBeInTheDocument();
+    const result = screen.getByText('Gold').parentElement;
+    expect(result).toHaveTextContent('48');
     expect(
       screen.getByText(/protected vulnerable crops/i),
     ).toBeInTheDocument();
