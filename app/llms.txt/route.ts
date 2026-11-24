@@ -28,7 +28,7 @@ function linkText(text: string): string {
 }
 
 function entry(title: string, url: string, description?: string | null) {
-  const note = description?.replace(/\\s+/g, ' ').trim();
+  const note = description?.replace(/\s+/g, ' ').trim();
   return '- [' + linkText(title) + '](' + url + ')' + (note ? ': ' + note : '');
 }
 
@@ -68,15 +68,15 @@ export function GET() {
     '',
     '## Pages',
     '',
-    pages.join('\\n'),
+    pages.join('\n'),
     '',
     '## Projects',
     '',
-    projectEntries.join('\\n'),
+    projectEntries.join('\n'),
     '',
     '## Writing',
     '',
-    posts.join('\\n'),
+    posts.join('\n'),
     '',
     '## Data',
     '',
@@ -94,8 +94,8 @@ export function GET() {
     '',
     '## Optional',
     '',
-    elsewhere.join('\\n'),
-  ].join('\\n');
+    elsewhere.join('\n'),
+  ].join('\n');
 
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
