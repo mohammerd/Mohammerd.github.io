@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import HarvestRushGame from './HarvestRushGame';
@@ -80,7 +80,7 @@ describe('Harvest Rush campaign experience', () => {
     fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
 
     expect(screen.getByRole('heading', { name: 'You managed the operation well.' })).toBeInTheDocument();
-    expect(screen.getByText('48', { exact: true })).toBeInTheDocument();
+    expect(screen.getByText('FINAL HARVEST SCORE').parentElement).toHaveTextContent('48');
 
     await waitFor(() => {
       const saved = JSON.parse(
@@ -109,7 +109,7 @@ describe('Harvest Rush campaign experience', () => {
     fireEvent.click(screen.getByRole('button', { name: /Continue to next mission/ }));
     fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
 
-    expect(screen.getByText(/Heatwave begins after harvest 01/i)).toBeInTheDocument();
+    expect(screen.getByText(/High temperatures begin after harvest 01/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /Tomatoes, 4 crates/ }));
     fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
@@ -125,6 +125,23 @@ describe('Harvest Rush campaign experience', () => {
     expect(
       screen.getByRole('button', { name: /Mission 03: The Dust Run, available/i }),
     ).toBeEnabled();
+  });
+
+
+  it('migrates the previous personal-best score into the campaign record', async () => {
+    window.localStorage.setItem('mohammerd.harvest-rush.best.v1', '52');
+    render(<HarvestRushGame />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
+    planStrongStormRun();
+    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
+
+    await waitFor(() => {
+      const saved = JSON.parse(
+        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ?? '{}',
+      );
+      expect(saved.bestScores['storm-front']).toBe(52);
+    });
   });
 
   it('keeps a completed mission replayable without relocking campaign progress', () => {
