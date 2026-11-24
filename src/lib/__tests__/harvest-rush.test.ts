@@ -68,6 +68,7 @@ describe('Harvest Rush campaign rules', () => {
     expect(protectedPlan.grade).toBe('Gold');
     expect(protectedPlan.stars).toBe(3);
     expect(exposedPlan.score).toBe(42);
+    expect(exposedPlan.grade).toBe('Developing');
     expect(exposedPlan.outcomes[2].weatherAffected).toBe(true);
   });
 
