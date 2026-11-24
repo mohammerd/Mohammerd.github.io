@@ -136,7 +136,9 @@ describe('Harvest Rush campaign experience', () => {
     fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
     planStrongStormRun();
     fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Continue to next mission/ }));
+    fireEvent.click(
+      screen.getByRole('button', { name: /Continue to next mission/ }),
+    );
     fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
 
     expect(
@@ -167,7 +169,6 @@ describe('Harvest Rush campaign experience', () => {
     ).toBeEnabled();
   });
 
-
   it('migrates the previous personal-best score into the campaign record', async () => {
     window.localStorage.setItem('mohammerd.harvest-rush.best.v1', '52');
     render(<HarvestRushGame />);
@@ -178,7 +179,8 @@ describe('Harvest Rush campaign experience', () => {
 
     await waitFor(() => {
       const saved = JSON.parse(
-        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ?? '{}',
+        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ??
+          '{}',
       );
       expect(saved.bestScores['storm-front']).toBe(52);
     });
@@ -200,6 +202,8 @@ describe('Harvest Rush campaign experience', () => {
         name: /Mission 02: The Heat Window, available/i,
       }),
     ).toBeEnabled();
-    expect(screen.getByRole('button', { name: /Dispatch harvest/ })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: /Dispatch harvest/ }),
+    ).toBeDisabled();
   });
 });
