@@ -20,7 +20,7 @@ describe('play page', () => {
     render(<PlayPage />);
 
     expect(
-      screen.getByText(/Guess the Crop and Farm Memory are in development/i),
-    ).toBeInTheDocument();
+      screen.getByText(/More games, including/i),
+    ).toHaveTextContent('Guess the Crop and Farm Memory');
   });
 });
