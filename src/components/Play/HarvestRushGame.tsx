@@ -33,7 +33,14 @@ const EMPTY_PROGRESS: PlayerProgress = {
 function readProgress(): PlayerProgress {
   try {
     const raw = window.localStorage.getItem(PROGRESS_KEY);
-    if (!raw) return EMPTY_PROGRESS;
+    if (!raw) {
+      const legacyScore = Number(
+        window.localStorage.getItem('mohammerd.harvest-rush.best.v1'),
+      );
+      return Number.isFinite(legacyScore) && legacyScore > 0
+        ? { bestScores: { 'storm-front': legacyScore }, completed: [] }
+        : EMPTY_PROGRESS;
+    }
 
     const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return EMPTY_PROGRESS;
@@ -59,6 +66,17 @@ function readProgress(): PlayerProgress {
           bestScores[id] = score;
         }
       }
+    }
+
+    const legacyScore = Number(
+      window.localStorage.getItem('mohammerd.harvest-rush.best.v1'),
+    );
+    if (
+      bestScores['storm-front'] === undefined &&
+      Number.isFinite(legacyScore) &&
+      legacyScore > 0
+    ) {
+      bestScores['storm-front'] = legacyScore;
     }
 
     return {
@@ -374,10 +392,13 @@ export default function HarvestRushGame() {
   const missionIndex = HARVEST_MISSIONS.findIndex(
     (candidate) => candidate.id === selectedMissionId,
   );
-  const unlockedCount = Math.min(
-    HARVEST_MISSIONS.length,
-    1 + progress.completed.length,
+  const firstIncompleteMission = HARVEST_MISSIONS.findIndex(
+    (candidate) => !progress.completed.includes(candidate.id),
   );
+  const unlockedCount =
+    firstIncompleteMission === -1
+      ? HARVEST_MISSIONS.length
+      : firstIncompleteMission + 1;
   const bestScore = progress.bestScores[selectedMissionId] ?? null;
   const nextMission =
     HARVEST_MISSIONS[missionIndex + 1] ?? null;
