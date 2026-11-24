@@ -203,7 +203,6 @@ function WeatherTimeline({
             }
           >
             <span className="harvest-weather-step-index">0{slot}</span>
-            <span className="harvest-weather-step-marker" aria-hidden="true" />
             <strong>{exposed ? mission.weatherName : 'Clear window'}</strong>
             <small>{exposed ? 'Weather risk' : 'Full quality'}</small>
           </div>
@@ -457,7 +456,7 @@ export default function HarvestRushGame() {
         <div className="harvest-game-brand">
           <span className="harvest-brand-mark" aria-hidden="true">
             <img
-              src="/images/harvest-rush/brand-mark.svg"
+              src={withBasePath('/images/harvest-rush/brand-mark.svg')}
               alt=""
               width={36}
               height={36}
