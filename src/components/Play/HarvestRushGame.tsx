@@ -17,6 +17,7 @@ import {
   previewHarvestPlan,
   type WeatherType,
 } from '@/lib/harvest-rush';
+import { withBasePath } from '@/lib/utils';
 
 const PROGRESS_KEY = 'mohammerd.harvest-rush.campaign.v2';
 
@@ -102,7 +103,7 @@ function CropArt({ fieldId }: { fieldId: HarvestFieldId }) {
   return (
     <img
       className="harvest-crop-illustration"
-      src={CROP_ILLUSTRATIONS[fieldId]}
+      src={withBasePath(CROP_ILLUSTRATIONS[fieldId])}
       alt=""
       aria-hidden="true"
       width={96}
@@ -116,7 +117,7 @@ function CropArt({ fieldId }: { fieldId: HarvestFieldId }) {
 function WeatherMark({ weather }: { weather: WeatherType }) {
   return (
     <img
-      src={WEATHER_ILLUSTRATIONS[weather]}
+      src={withBasePath(WEATHER_ILLUSTRATIONS[weather])}
       alt=""
       aria-hidden="true"
       width={48}
@@ -909,8 +910,13 @@ export default function HarvestRushGame() {
               </small>
             </div>
             <div className="harvest-result-score-block">
-              <span className="harvest-section-kicker">FINAL HARVEST SCORE</span>
-              <strong>{result.score}<small> / {result.baseScore} pts</small></strong>
+              <span className="harvest-section-kicker">
+                FINAL HARVEST SCORE
+              </span>
+              <strong>
+                {result.score}
+                <small> / {result.baseScore} pts</small>
+              </strong>
               <span>{result.lostPoints} points lost to weather exposure</span>
             </div>
           </div>
