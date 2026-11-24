@@ -10,7 +10,7 @@ describe('play page', () => {
     expect(screen.getByRole('heading', { name: 'Play' })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Every decision has a cost.' }),
-    ).toBeInTheDocument();
+    ).toHaveTextContent('Guess the Crop and Farm Memory');
     expect(
       screen.getByRole('button', { name: /Open field plan/ }),
     ).toBeEnabled();
