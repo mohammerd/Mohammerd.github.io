@@ -6,7 +6,7 @@ import { collectionPageNode, sectionPageNodes } from '@/lib/schema';
 
 const PAGE_TITLE = 'Play';
 const DESCRIPTION =
-  'Play short browser-based games built around agriculture, observation, and practical decision-making.';
+  'Play a three-mission agricultural strategy campaign built around harvest planning, weather risk, and resource management.';
 
 export const metadata = createPageMetadata({
   title: PAGE_TITLE,
@@ -30,40 +30,17 @@ export default function PlayPage() {
           <p className="play-eyebrow">INTERACTIVE PLAYGROUND / 001</p>
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">
-            Short games built around farming, observation, and practical
-            decisions. No account required; the games run in your browser.
+            A compact strategy campaign about timing, trade-offs, and making the
+            best use of limited resources. No account required.
           </p>
         </header>
 
         <HarvestRushGame />
 
-        <section className="play-next-games" aria-labelledby="play-next-title">
-          <h2 id="play-next-title" className="section-heading">
-            Coming next
-          </h2>
-          <p className="play-next-note">
-            The next games are being designed. They will appear here when they
-            are complete and ready to play.
-          </p>
-          <div className="play-next-grid">
-            <article className="play-next-card">
-              <h3>Guess the Crop</h3>
-              <p>
-                Identify crops from visual clues, growing conditions, and
-                practical field knowledge.
-              </p>
-              <span className="play-next-status">IN DEVELOPMENT / 002</span>
-            </article>
-            <article className="play-next-card">
-              <h3>Farm Memory</h3>
-              <p>
-                A timed matching challenge built around crops, seeds, tools, and
-                agricultural patterns.
-              </p>
-              <span className="play-next-status">IN DEVELOPMENT / 003</span>
-            </article>
-          </div>
-        </section>
+        <p className="play-next-note">
+          More games, including Guess the Crop and Farm Memory, are in
+          development.
+        </p>
       </div>
     </PageWrapper>
   );

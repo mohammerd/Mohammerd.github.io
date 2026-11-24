@@ -9,22 +9,18 @@ describe('play page', () => {
 
     expect(screen.getByRole('heading', { name: 'Play' })).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'Plan the harvest.' }),
+      screen.getByRole('heading', { name: 'Every decision has a cost.' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Dispatch harvest/ }),
-    ).toBeDisabled();
+      screen.getByRole('button', { name: /Open field plan/ }),
+    ).toBeEnabled();
   });
 
-  it('labels future games as in development rather than playable', () => {
+  it('keeps future game ideas separate from the playable campaign', () => {
     render(<PlayPage />);
 
-    expect(
-      screen.getByRole('heading', { name: 'Guess the Crop' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: 'Farm Memory' }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(/IN DEVELOPMENT/)).toHaveLength(2);
+    expect(screen.getByText(/More games, including/i)).toHaveTextContent(
+      'Guess the Crop and Farm Memory',
+    );
   });
 });
