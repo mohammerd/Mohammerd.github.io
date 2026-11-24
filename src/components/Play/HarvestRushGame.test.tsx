@@ -65,11 +65,12 @@ describe('Harvest Rush campaign experience', () => {
 
     const summary = screen.getByText('Projected operation score').parentElement;
     expect(summary).toHaveTextContent('45');
+    expect(screen.getByText(/−3 pts · exposed/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Move Okra earlier' }));
 
     expect(summary).toHaveTextContent('48');
-    expect(screen.getByText(/−3 pts · exposed/i)).toBeInTheDocument();
+    expect(screen.getByText(/Weather resilient/i)).toBeInTheDocument();
   });
 
   it('clears the opening mission, saves the best, and unlocks the heat mission', async () => {
