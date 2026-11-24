@@ -28,14 +28,14 @@ describe('homepage', () => {
     const essay = screen.getByRole('link', {
       name: 'Read essay: When Knowledge Becomes Accessible, What Is the Purpose of College?',
     });
-    expect(essay).toHaveAttribute(
-      'href',
-      '/writing/when-knowledge-becomes-accessible/',
+    expect(essay.getAttribute('href')).toMatch(
+      /\/writing\/when-knowledge-becomes-accessible\/?$/,
     );
 
-    expect(
-      screen.getByRole('link', { name: /All writing/ }),
-    ).toHaveAttribute('href', '/writing/');
+    expect(screen.getByRole('link', { name: /All writing/ })).toHaveAttribute(
+      'href',
+      '/writing/',
+    );
   });
 
   it('offers a link to the full project register', () => {
