@@ -619,7 +619,8 @@ export default function HarvestRushGame() {
                   </p>
                 </div>
                 <span className="harvest-selection-count">
-                  {plan.length}<small> / 03</small>
+                  {plan.length}
+                  <small> / 03</small>
                 </span>
               </div>
 
@@ -720,7 +721,6 @@ export default function HarvestRushGame() {
                   );
                 })}
               </div>
-
             </section>
 
             <aside
