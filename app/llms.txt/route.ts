@@ -7,6 +7,7 @@ import { AUTHOR_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/utils';
 import { getWritingItems } from '@/lib/writing';
 import { metadata as about } from '../about/page';
 import { metadata as contact } from '../contact/page';
+import { metadata as play } from '../play/page';
 import { metadata as projectIndex } from '../projects/page';
 import { metadata as resume } from '../resume/page';
 import { metadata as writing } from '../writing/page';
@@ -16,6 +17,7 @@ export const dynamic = 'force-static';
 const PAGES: Record<string, Metadata> = {
   '/about': about,
   '/contact': contact,
+  '/play': play,
   '/projects': projectIndex,
   '/resume': resume,
   '/writing': writing,
@@ -26,7 +28,7 @@ function linkText(text: string): string {
 }
 
 function entry(title: string, url: string, description?: string | null) {
-  const note = description?.replace(/\s+/g, ' ').trim();
+  const note = description?.replace(/\\s+/g, ' ').trim();
   return '- [' + linkText(title) + '](' + url + ')' + (note ? ': ' + note : '');
 }
 
@@ -66,15 +68,15 @@ export function GET() {
     '',
     '## Pages',
     '',
-    pages.join('\n'),
+    pages.join('\\n'),
     '',
     '## Projects',
     '',
-    projectEntries.join('\n'),
+    projectEntries.join('\\n'),
     '',
     '## Writing',
     '',
-    posts.join('\n'),
+    posts.join('\\n'),
     '',
     '## Data',
     '',
@@ -92,8 +94,8 @@ export function GET() {
     '',
     '## Optional',
     '',
-    elsewhere.join('\n'),
-  ].join('\n');
+    elsewhere.join('\\n'),
+  ].join('\\n');
 
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
