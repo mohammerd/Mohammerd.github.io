@@ -8,7 +8,12 @@ import PageWrapper from '@/components/Template/PageWrapper';
 import { projects } from '@/data/projects';
 import { profilePageNode } from '@/lib/schema';
 import { smartQuotes } from '@/lib/typography';
-import { AUTHOR_NAME, formatDate, SITE_DESCRIPTION, SITE_URL } from '@/lib/utils';
+import {
+  AUTHOR_NAME,
+  formatDate,
+  SITE_DESCRIPTION,
+  SITE_URL,
+} from '@/lib/utils';
 import { getWritingItems, type WritingItem } from '@/lib/writing';
 
 export const metadata: Metadata = {
