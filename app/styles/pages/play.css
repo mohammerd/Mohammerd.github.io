@@ -38,7 +38,6 @@
 .harvest-campaign-title-block p{max-width:58ch;margin:0;color:var(--m);font-size:var(--text-md);line-height:1.45}
 .harvest-campaign-progress{display:flex;min-width:0;flex-direction:column;gap:.45rem;padding:.9rem 0 .2rem}
 .harvest-campaign-progress-copy{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem}
-.harvest-campaign-progress-copy .harvest-micro-label{margin:0}
 .harvest-campaign-progress-copy>strong{font-family:var(--n);font-size:var(--text-base);font-weight:var(--font-weight-semibold);font-variant-numeric:tabular-nums;white-space:nowrap}
 .harvest-campaign-progress-copy>strong small{color:var(--m);font-size:.65rem;font-weight:var(--font-weight-normal)}
 .harvest-campaign-track,.harvest-resource-track{height:.42rem;overflow:hidden;background:var(--h)}
@@ -98,17 +97,12 @@
 .harvest-weather-step.is-clear{border-color:#73916a}
 .harvest-weather-step.is-exposed{border-color:var(--w)}
 .harvest-weather-step-index{color:var(--m);font-family:var(--n);font-size:.57rem}
-.harvest-weather-step-marker{position:absolute;top:-.31rem;left:0;width:.5rem;height:.5rem;border:1px solid var(--g);border-radius:var(--radius-full);background:var(--c)}
-.harvest-weather-step.is-clear .harvest-weather-step-marker{background:#73916a}
-.harvest-weather-step.is-exposed .harvest-weather-step-marker{background:var(--w)}
-.harvest-weather-step strong{max-width:100%;overflow-wrap:anywhere;font-family:var(--d);font-size:.66rem;font-weight:var(--font-weight-semibold);line-height:1.25}
+.harvest-weather-step.is-clear .harvest-weather-step.is-exposed .harvest-weather-step strong{max-width:100%;overflow-wrap:anywhere;font-family:var(--d);font-size:.66rem;font-weight:var(--font-weight-semibold);line-height:1.25}
 .harvest-weather-step small{color:var(--m);font-family:var(--n);font-size:.55rem;line-height:1.3}
 .harvest-weather-card>p{margin:.85rem 0 0;color:var(--m);font-size:var(--text-sm);line-height:1.4}
 .harvest-target-card{display:flex;align-items:end;justify-content:space-between;gap:.8rem}
-.harvest-target-label,.harvest-target-note{color:var(--m);font-family:var(--n);font-size:.59rem;line-height:1.4}
-.harvest-target-card>strong{margin-left:auto;color:var(--a);font-family:var(--d);font-size:2rem;font-weight:var(--font-weight-semibold);font-variant-numeric:tabular-nums;line-height:1}
+.harvest-target-label,.harvest-target-card>strong{margin-left:auto;color:var(--a);font-family:var(--d);font-size:2rem;font-weight:var(--font-weight-semibold);font-variant-numeric:tabular-nums;line-height:1}
 .harvest-target-card>strong small{font-family:var(--n);font-size:.65rem;font-weight:var(--font-weight-normal)}
-.harvest-target-note{max-width:5rem;text-align:right}
 
 /* Planning board */
 .harvest-stage-guide{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.75rem clamp(1.1rem,2.5vw,1.6rem);border-bottom:var(--l);background:var(--s);color:var(--m);font-family:var(--n);font-size:.62rem}
@@ -122,14 +116,10 @@
 .harvest-selection-count small{color:var(--m);font-size:var(--text-sm)}
 .harvest-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
 .harvest-field{display:flex;min-width:0;flex-direction:column;overflow:hidden;padding:0;border:var(--lc);border-radius:var(--radius-xs);background:var(--g);color:var(--f);text-align:left;cursor:pointer;transition:border-color var(--duration-fast) var(--ease-out),background-color var(--duration-fast) var(--ease-out),transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
-.harvest-field:hover:not(:disabled){border-color:var(--a);background:var(--s)}
-.harvest-field:active:not(:disabled){transform:translateY(1px)}
 .harvest-field.is-selected{border-color:var(--a);background:var(--s);box-shadow:inset 0 0 0 1px var(--a)}
 .harvest-field.is-unavailable{cursor:not-allowed;opacity:.58}
 .harvest-field-art{position:relative;display:flex;min-height:5.1rem;align-items:center;justify-content:space-between;padding:.65rem .9rem;border-bottom:var(--l);background:linear-gradient(140deg,var(--s),transparent 68%),var(--g)}
 .harvest-field-art img{display:block;width:4.2rem;height:4.2rem;object-fit:contain;filter:drop-shadow(0 1px 0 rgba(0,0,0,.08));transition:transform var(--duration-fast) var(--ease-out)}
-.harvest-field:hover:not(:disabled) .harvest-field-art img{transform:translateY(-2px) rotate(-2deg)}
-.harvest-field-number{align-self:start;color:var(--m);font-family:var(--n);font-size:.59rem}
 .harvest-field-selected-mark{position:absolute;right:.65rem;bottom:.55rem;display:grid;width:1.45rem;height:1.45rem;place-items:center;border-radius:var(--radius-full);background:var(--a);color:#fff;font-family:var(--n);font-size:.58rem;font-weight:var(--font-weight-semibold)}
 .harvest-field-content{display:flex;min-width:0;flex:1;flex-direction:column;gap:.4rem;padding:.75rem .8rem .8rem}
 .harvest-field-card-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.3rem .5rem}
@@ -156,8 +146,6 @@
 .harvest-resource-heading small{color:var(--m);font-size:.58rem;font-weight:var(--font-weight-normal)}
 .harvest-resource-track{height:.36rem}
 .harvest-resource-track>span{background:var(--a)}
-.harvest-resource.is-mid-limit .harvest-resource-track>span{background:var(--w)}
-.harvest-resource.is-near-limit .harvest-resource-track>span{background:var(--r)}
 .harvest-plan-list{display:grid;gap:0;margin:.8rem 0 0;padding:0;list-style:none}
 .harvest-plan-slot{display:grid;grid-template-columns:1.7rem minmax(0,1fr);align-items:start;gap:.55rem;min-height:4.5rem;padding:.7rem 0;border-bottom:var(--l)}
 .harvest-plan-slot-number{padding-top:.08rem;color:var(--m);font-family:var(--n);font-size:.62rem}
@@ -171,8 +159,6 @@
 .harvest-plan-slot-meta .has-weather-clear{color:var(--a)}
 .harvest-plan-controls{display:flex;align-items:center;gap:.25rem;margin-top:.45rem;font-family:var(--n);font-size:.6rem}
 .harvest-plan-controls button{display:inline-grid;min-width:1.75rem;min-height:1.65rem;place-items:center;padding:0 .35rem;border:var(--lc);border-radius:var(--radius-xs);background:transparent;color:var(--f);cursor:pointer}
-.harvest-plan-controls button:hover:not(:disabled){border-color:var(--a);background:var(--h)}
-.harvest-plan-controls button:disabled{opacity:.35}
 .harvest-plan-controls button.harvest-plan-remove{display:inline-flex;min-width:auto;margin-left:auto;border-color:transparent;color:var(--m);text-decoration:underline;text-underline-offset:.15em}
 .harvest-plan-empty{display:flex;min-height:3.2rem;flex-direction:column;justify-content:center;gap:.18rem}
 .harvest-plan-empty strong{color:var(--m);font-family:var(--d);font-size:var(--text-sm);font-weight:var(--font-weight-medium)}
@@ -210,55 +196,53 @@
 
 /* Responsive */
 @media(max-width:900px){
- .harvest-campaign-header{grid-template-columns:minmax(0,1fr);gap:1rem}
- .harvest-campaign-progress{max-width:32rem}
- .harvest-briefing-screen,.harvest-planning-layout{grid-template-columns:minmax(0,1fr)}
- .harvest-briefing-visual{border-top:var(--l);border-left:0}
- .harvest-fields-section{border-right:0;border-bottom:var(--l)}
- .harvest-dispatch-panel{background:var(--s)}
+.harvest-campaign-header{grid-template-columns:minmax(0,1fr);gap:1rem}
+.harvest-campaign-progress{max-width:32rem}
+.harvest-briefing-screen,.harvest-planning-layout{grid-template-columns:minmax(0,1fr)}
+.harvest-briefing-visual{border-top:var(--rule) solid var(--color-border);border-left:0}
+.harvest-fields-section{border-right:0;border-bottom:var(--rule) solid var(--color-border)}
 }
 @media(max-width:640px){
- .harvest-game-topbar{align-items:flex-start;flex-direction:column;gap:.7rem}
- .harvest-game-topbar-meta{width:100%;justify-content:space-between}
- .harvest-campaign-header{padding:1.2rem 1rem}
- .harvest-campaign-title-block h2{font-size:1.8rem}
- .harvest-mission-selector{grid-template-columns:minmax(0,1fr)}
- .harvest-mission-tab{min-height:3.75rem;grid-template-columns:1.8rem minmax(0,1fr) auto;border-right:0;border-bottom:var(--l)}
- .harvest-mission-tab:last-child{border-bottom:0}
- .harvest-mission-tab.is-selected:after{top:0;right:auto;bottom:0;width:2px;height:auto}
- .harvest-mission-context{align-items:start;flex-direction:column;gap:.8rem;padding:1rem}
- .harvest-mission-weather{width:100%;min-width:0;padding:.75rem 0 0;border-top:var(--l);border-left:0}
- .harvest-briefing-copy,.harvest-briefing-visual,.harvest-result-detail{padding:1.1rem}
- .harvest-mission-limits{grid-template-columns:repeat(3,minmax(0,1fr))}
- .harvest-hero-metric{padding-inline:.35rem}
- .harvest-hero-metric>span,.harvest-hero-metric>small{font-size:.53rem}
- .harvest-hero-metric>strong{font-size:var(--text-lg)}
- .harvest-stage-guide{align-items:flex-start;flex-direction:column;gap:.3rem}
- .harvest-fields-section,.harvest-dispatch-panel{padding:1rem}
- .harvest-field-grid{grid-template-columns:minmax(0,1fr)}
- .harvest-field{display:grid;grid-template-columns:5rem minmax(0,1fr);flex-direction:initial}
- .harvest-field-art{min-height:100%;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;padding:.5rem .25rem;border-right:var(--l);border-bottom:0}
- .harvest-field-art img{width:3.5rem;height:3.5rem}
- .harvest-field-number{align-self:center;order:2;font-size:.53rem}
- .harvest-field-selected-mark{top:.3rem;right:.3rem;bottom:auto}
- .harvest-field-content{padding:.7rem}
- .harvest-field-description{min-height:0}
- .harvest-field-stats{gap:.2rem .55rem}
- .harvest-result-screen{grid-template-columns:minmax(0,1fr)}
- .harvest-result-primary{flex-direction:row;align-items:end;border-right:0;border-bottom:var(--l)}
- .harvest-result-score-block{align-items:end;text-align:right}
- .harvest-result-score-block>strong{font-size:2.8rem}
- .harvest-result-row{grid-template-columns:1.2rem minmax(4.5rem,.7fr) minmax(0,1.3fr) auto;gap:.35rem}
- .harvest-result-actions{align-items:stretch;flex-direction:column}
- .harvest-result-actions .harvest-primary-button{flex:auto}
- .harvest-text-button{align-self:start;margin-left:0}
+.harvest-game-topbar{align-items:flex-start;flex-direction:column;gap:.7rem}
+.harvest-game-topbar-meta{width:100%;justify-content:space-between}
+.harvest-campaign-header{padding:1.2rem 1rem}
+.harvest-campaign-title-block h2{font-size:1.8rem}
+.harvest-mission-selector{grid-template-columns:minmax(0,1fr)}
+.harvest-mission-tab{min-height:3.75rem;grid-template-columns:1.8rem minmax(0,1fr) auto;border-right:0;border-bottom:var(--rule) solid var(--color-border)}
+.harvest-mission-tab:last-child{border-bottom:0}
+.harvest-mission-tab.is-selected:after{top:0;right:auto;bottom:0;width:2px;height:auto}
+.harvest-mission-context{align-items:start;flex-direction:column;gap:.8rem;padding:1rem}
+.harvest-mission-weather{width:100%;min-width:0;padding:.75rem 0 0;border-top:var(--rule) solid var(--color-border);border-left:0}
+.harvest-briefing-copy,.harvest-briefing-visual,.harvest-result-detail{padding:1.1rem}
+.harvest-mission-limits{grid-template-columns:repeat(3,minmax(0,1fr))}
+.harvest-hero-metric{padding-inline:.35rem}
+.harvest-hero-metric>span,.harvest-hero-metric>small{font-size:.53rem}
+.harvest-hero-metric>strong{font-size:var(--text-lg)}
+.harvest-stage-guide{align-items:flex-start;flex-direction:column;gap:.3rem}
+.harvest-fields-section,.harvest-dispatch-panel{padding:1rem}
+.harvest-field-grid{grid-template-columns:minmax(0,1fr)}
+.harvest-field{display:grid;grid-template-columns:5rem minmax(0,1fr)}
+.harvest-field-art{min-height:100%;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;padding:.5rem .25rem;border-right:var(--rule) solid var(--color-border);border-bottom:0}
+.harvest-field-art img{width:3.5rem;height:3.5rem}
+.harvest-field-selected-mark{top:.3rem;right:.3rem;bottom:auto}
+.harvest-field-content{padding:.7rem}
+.harvest-field-description{min-height:0}
+.harvest-field-stats{gap:.2rem .55rem}
+.harvest-result-screen{grid-template-columns:minmax(0,1fr)}
+.harvest-result-primary{flex-direction:row;align-items:end;border-right:0;border-bottom:var(--rule) solid var(--color-border)}
+.harvest-result-score-block{align-items:end;text-align:right}
+.harvest-result-score-block>strong{font-size:2.8rem}
+.harvest-result-row{grid-template-columns:1.2rem minmax(4.5rem,.7fr) minmax(0,1.3fr) auto;gap:.35rem}
+.harvest-result-actions{align-items:stretch;flex-direction:column}
+.harvest-result-actions .harvest-primary-button{flex:auto}
+.harvest-text-button{align-self:start;margin-left:0}
 }
 @media(max-width:380px){
- .harvest-dispatch-actions{grid-template-columns:minmax(0,1fr)}
- .harvest-result-row{grid-template-columns:1.1rem minmax(0,1fr) auto}
- .harvest-result-row-condition{grid-column:2;grid-row:2}
- .harvest-result-row>strong{grid-column:3;grid-row:1/span 2}
+.harvest-dispatch-actions{grid-template-columns:minmax(0,1fr)}
+.harvest-result-row{grid-template-columns:1.1rem minmax(0,1fr) auto}
+.harvest-result-row-condition{grid-column:2;grid-row:2}
+.harvest-result-row>strong{grid-column:3;grid-row:1/span 2}
 }
 @media(prefers-reduced-motion:reduce){
- .harvest-game *, .harvest-game *:before, .harvest-game *:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+.harvest-game *,.harvest-game *:before,.harvest-game *:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
