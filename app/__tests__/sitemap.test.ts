@@ -4,6 +4,12 @@ import { SITE_URL } from '@/lib/utils';
 import sitemap from '../sitemap';
 
 describe('sitemap', () => {
+  it('includes the interactive play page', () => {
+    expect(sitemap().some((entry) => entry.url === SITE_URL + '/play/')).toBe(
+      true,
+    );
+  });
+
   it('does not invent modification dates for static pages', () => {
     const staticEntries = sitemap().filter(
       (entry) => !entry.url.startsWith(`${SITE_URL}/writing/`),
