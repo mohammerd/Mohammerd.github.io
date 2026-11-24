@@ -40,11 +40,7 @@ describe('Harvest Rush mission rules', () => {
   });
 
   it('changes the result when a rain-sensitive crop is moved into the storm slot', () => {
-    const protectedPlan = evaluateHarvestPlan([
-      'tomatoes',
-      'okra',
-      'cassava',
-    ]);
+    const protectedPlan = evaluateHarvestPlan(['tomatoes', 'okra', 'cassava']);
     const exposedPlan = evaluateHarvestPlan(['okra', 'peppers', 'tomatoes']);
 
     expect(protectedPlan.score).toBe(48);
@@ -57,9 +53,9 @@ describe('Harvest Rush mission rules', () => {
     expect(() => evaluateHarvestPlan(['tomatoes', 'peppers'])).toThrow(
       'A dispatch requires exactly three fields.',
     );
-    expect(() =>
-      evaluateHarvestPlan(['tomatoes', 'maize', 'cassava']),
-    ).toThrow('The harvest plan exceeds its available resources.');
+    expect(() => evaluateHarvestPlan(['tomatoes', 'maize', 'cassava'])).toThrow(
+      'The harvest plan exceeds its available resources.',
+    );
   });
 
   it('does not penalise crops marked as weather-safe', () => {
