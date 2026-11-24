@@ -114,13 +114,13 @@ jobs:
         # not the declared floor), and the version .nvmrc pins for development
         # and the rest of CI.
         node-version: [22.x, 26.x]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-15-intel]
         exclude:
           # Reduce matrix size for faster CI. Non-Linux runners only need to
           # prove the build is portable, so they run the deployed version.
           - os: windows-latest
             node-version: 22.x
-          - os: macos-latest
+          - os: macos-15-intel
             node-version: 22.x
     steps:
       - name: Checkout code
