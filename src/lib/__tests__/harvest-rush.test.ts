@@ -8,7 +8,6 @@ import {
   getWeatherRiskLabel,
   HARVEST_FIELDS,
   HARVEST_MISSIONS,
-  HARVEST_RUSH_RULES,
   previewHarvestPlan,
 } from '../harvest-rush';
 
