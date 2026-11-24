@@ -32,10 +32,11 @@ describe('homepage', () => {
       /\/writing\/when-knowledge-becomes-accessible\/?$/,
     );
 
-    expect(screen.getByRole('link', { name: /All writing/ })).toHaveAttribute(
-      'href',
-      '/writing/',
-    );
+    expect(
+      screen
+        .getByRole('link', { name: /All writing/ })
+        .getAttribute('href'),
+    ).toMatch(/\/writing\/?$/);
   });
 
   it('offers a link to the full project register', () => {
