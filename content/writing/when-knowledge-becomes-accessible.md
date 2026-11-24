@@ -1,7 +1,7 @@
 ---
-title: "When Knowledge Becomes Accessible, What Is the Purpose of College?"
-date: "2026-11-24"
-description: "The internet and AI are changing how we learn. Universities need to rethink what they teach, how they assess students, and what makes a degree valuable."
+title: 'When Knowledge Becomes Accessible, What Is the Purpose of College?'
+date: '2026-11-24'
+description: 'The internet and AI are changing how we learn. Universities need to rethink what they teach, how they assess students, and what makes a degree valuable.'
 ---
 
 For decades, college has been treated as one of the main routes to a successful life. We are told to attend school, earn a degree, and find a good job. People who take a different path can quickly be labelled uneducated or even illiterate, as though a degree is the only proof that someone has learned anything.
