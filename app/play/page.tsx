@@ -57,8 +57,8 @@ export default function PlayPage() {
             <article className="play-next-card">
               <h3>Farm Memory</h3>
               <p>
-                A timed matching challenge built around crops, seeds, tools,
-                and agricultural patterns.
+                A timed matching challenge built around crops, seeds, tools, and
+                agricultural patterns.
               </p>
               <span className="play-next-status">IN DEVELOPMENT / 003</span>
             </article>
