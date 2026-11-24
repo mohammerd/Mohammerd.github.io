@@ -112,7 +112,7 @@
 .harvest-section-heading{display:flex;align-items:start;justify-content:space-between;gap:.85rem;margin-bottom:1rem}
 .harvest-section-heading h3,.harvest-dispatch-panel-heading h3{margin:0 0 .25rem;color:var(--b);font-family:var(--d);font-size:var(--text-lg);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-tight)}
 .harvest-section-heading p{margin:0;color:var(--m);font-size:var(--text-sm);line-height:1.4}
-.harvest-selection-count{display:flex;align-items:baseline;gap:.12rem;color:var(--a);font-family:var(--n);font-size:var(--text-2xl);font-variant-numeric:tabular-nums}
+.harvest-selection-count{display:flex;align-items:baseline;color:var(--a);font-family:var(--n);font-size:var(--text-2xl);font-variant-numeric:tabular-nums}
 .harvest-selection-count small{color:var(--m);font-size:var(--text-sm)}
 .harvest-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem}
 .harvest-field{display:flex;min-width:0;flex-direction:column;overflow:hidden;padding:0;border:var(--lc);border-radius:var(--radius-xs);background:var(--g);color:var(--f);text-align:left;cursor:pointer;transition:border-color var(--duration-fast) var(--ease-out),background-color var(--duration-fast) var(--ease-out),transform var(--duration-fast) var(--ease-out),box-shadow var(--duration-fast) var(--ease-out)}
