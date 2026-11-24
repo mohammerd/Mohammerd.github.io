@@ -53,6 +53,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Preview repository Prettier output for Play stylesheet
+        run: prettier app/styles/pages/play.css
+
       - name: Format Check
         run: npm run format:check
 
