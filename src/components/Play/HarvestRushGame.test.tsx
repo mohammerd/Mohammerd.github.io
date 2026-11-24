@@ -62,11 +62,13 @@ describe('Harvest Rush game', () => {
     fireEvent.click(screen.getByRole('button', { name: /Cassava, 4 crates/ }));
     fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
 
-    expect(screen.getByText(/45 pts/)).toBeInTheDocument();
+    const projectedScore =
+      screen.getByText('Projected harvest score').parentElement;
+    expect(projectedScore).toHaveTextContent('45');
 
     fireEvent.click(screen.getByRole('button', { name: 'Move Okra earlier' }));
 
-    expect(screen.getByText(/48 pts/)).toBeInTheDocument();
+    expect(projectedScore).toHaveTextContent('48');
   });
 
   it('allows the player to restart a completed mission', () => {
@@ -78,7 +80,7 @@ describe('Harvest Rush game', () => {
     fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
     fireEvent.click(screen.getByRole('button', { name: /Run mission again/ }));
 
-    expect(screen.getByText('0/3')).toBeInTheDocument();
+    expect(screen.getAllByText('0/3')).toHaveLength(2);
     expect(
       screen.getByRole('button', { name: /Dispatch harvest/ }),
     ).toBeDisabled();
