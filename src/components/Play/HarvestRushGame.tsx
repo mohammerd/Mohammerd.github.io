@@ -425,9 +425,11 @@ export default function HarvestRushGame() {
           ...current.bestScores,
           [selectedMissionId]: Math.max(currentBest, outcome.score),
         },
-        completed: current.completed.includes(selectedMissionId)
-          ? current.completed
-          : [...current.completed, selectedMissionId],
+        completed:
+          outcome.grade === 'Developing' ||
+          current.completed.includes(selectedMissionId)
+            ? current.completed
+            : [...current.completed, selectedMissionId],
       };
     });
   }
@@ -453,9 +455,13 @@ export default function HarvestRushGame() {
       <div className="harvest-game-topbar">
         <div className="harvest-game-brand">
           <span className="harvest-brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 36 36">
-              <path d="M18 29V17m0 5c-8 0-12-5-12-12 8 0 12 4 12 12zm0-3c0-8 5-13 13-13 0 8-5 13-13 13z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <img
+              src="/images/harvest-rush/brand-mark.svg"
+              alt=""
+              width={36}
+              height={36}
+              decoding="async"
+            />
           </span>
           <span>
             <strong>HARVEST RUSH</strong>
@@ -793,9 +799,7 @@ export default function HarvestRushGame() {
                             <div className="harvest-plan-controls">
                               <button
                                 type="button"
-                                onClick={() =>
-                                  moveField(outcome.field.id, -1)
-                                }
+                                onClick={() => moveField(outcome.field.id, -1)}
                                 disabled={index === 0}
                                 aria-label={
                                   'Move ' + outcome.field.crop + ' earlier'
@@ -852,7 +856,8 @@ export default function HarvestRushGame() {
                     ? 'Your score updates as you select and reorder fields.'
                     : planIsComplete
                       ? 'Gold standard: ' + mission.goldScore + ' points.'
-                      : (HARVEST_RUSH_RULES.harvestSlots - plan.length) +
+                      : HARVEST_RUSH_RULES.harvestSlots -
+                        plan.length +
                         ' more field' +
                         (HARVEST_RUSH_RULES.harvestSlots - plan.length === 1
                           ? ''
@@ -917,14 +922,20 @@ export default function HarvestRushGame() {
               <h3 id="harvest-result-title">
                 {result.grade === 'Gold'
                   ? 'You managed the operation well.'
-                  : 'Review the operation.'}
+                  : result.grade === 'Developing'
+                    ? 'This plan did not meet the mission standard.'
+                    : 'Mission complete.'}
               </h3>
               <p>
                 {result.grade === 'Gold'
                   ? 'Your team balanced crop value, timing, and available resources. ' +
-                    'The campaign has recorded this mission as cleared.'
-                  : 'The mission is cleared. Review where weather reduced your ' +
-                    'return, then try a different field order or crop mix.'}
+                    'This mission is cleared.'
+                  : result.grade === 'Developing'
+                    ? 'Your score is below the bronze target. Rework the crop mix or ' +
+                      'harvest order and dispatch again. Earn Bronze or better to ' +
+                      'unlock the next mission.'
+                    : 'You cleared the mission. Review where weather reduced your ' +
+                      'return, then try a different field order or crop mix.'}
               </p>
             </div>
             <div className="harvest-result-breakdown">
@@ -938,7 +949,10 @@ export default function HarvestRushGame() {
                   </span>
                   <span className="harvest-result-row-condition">
                     {outcome.weatherAffected
-                      ? mission.weatherName + ' · −' + outcome.lostPoints + ' pts'
+                      ? mission.weatherName +
+                        ' · −' +
+                        outcome.lostPoints +
+                        ' pts'
                       : outcome.slot > mission.exposureAfterSlots
                         ? 'Weather resilient'
                         : 'Harvested in clear window'}
@@ -962,7 +976,7 @@ export default function HarvestRushGame() {
                 {nextMission
                   ? nextMissionUnlocked
                     ? 'Continue to next mission'
-                    : 'Mission cleared'
+                    : 'Earn Bronze to unlock next'
                   : 'Campaign complete'}
                 <span aria-hidden="true">→</span>
               </button>
@@ -984,7 +998,6 @@ export default function HarvestRushGame() {
           </div>
         </section>
       )}
-
-          </section>
+    </section>
   );
 }
