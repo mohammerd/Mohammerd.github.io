@@ -339,8 +339,11 @@ function MissionSelector({
               mission.number +
               ': ' +
               mission.title +
-              (isCompleted ? ', completed' : '') +
-              (!isUnlocked ? ', locked' : '')
+              (isCompleted
+                ? ', completed'
+                : !isUnlocked
+                  ? ', locked'
+                  : ', available')
             }
           >
             <span className="harvest-mission-tab-number">
