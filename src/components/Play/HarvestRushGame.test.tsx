@@ -64,13 +64,13 @@ describe('Harvest Rush game', () => {
     fireEvent.click(screen.getByRole('button', { name: /Cassava, 4 crates/ }));
     fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
 
-    expect(screen.getByText('45', { exact: true })).toBeInTheDocument();
+    expect(screen.getByText(/45 pts/)).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole('button', { name: 'Move Okra earlier' }),
     );
 
-    expect(screen.getByText('48', { exact: true })).toBeInTheDocument();
+    expect(screen.getByText(/48 pts/)).toBeInTheDocument();
   });
 
   it('allows the player to restart a completed mission', () => {
