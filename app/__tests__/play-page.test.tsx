@@ -13,7 +13,7 @@ describe('play page', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Open field plan/ }),
-    ).toBeDisabled();
+    ).toBeEnabled();
   });
 
   it('labels future games as in development rather than playable', () => {
