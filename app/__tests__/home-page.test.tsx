@@ -18,6 +18,23 @@ describe('homepage', () => {
     }
   });
 
+  it('embeds the playable Harvest Rush campaign and keeps its dedicated page', () => {
+    render(<HomePage />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Harvest Rush' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('region', { name: 'Harvest Rush campaign' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Open field plan/ }),
+    ).toBeEnabled();
+    expect(
+      screen.getByRole('link', { name: /Game details/ }).getAttribute('href'),
+    ).toMatch(/\/play\/?$/);
+  });
+
   it('features the newest essay and links to the full writing register', () => {
     render(<HomePage />);
 

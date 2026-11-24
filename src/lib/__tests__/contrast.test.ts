@@ -39,6 +39,42 @@ function contrastRatio(a: string, b: string): number {
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
 }
 
+/**
+ * Composite an sRGB rgba surface over its real opaque backdrop before scoring
+ * text contrast. CSS surface tokens are translucent, so treating their RGB
+ * channels as an opaque colour would produce a misleading ratio.
+ */
+function compositeSurface(surface: string, backdrop: string): string {
+  const rgba =
+    /^rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,?\s*([\d.]+)?\s*\)$/i.exec(
+      surface,
+    );
+  if (!rgba) {
+    throw new Error(`Not an sRGB rgba surface: ${surface}`);
+  }
+
+  const alpha = rgba[4] === undefined ? 1 : Number(rgba[4]);
+  if (!Number.isFinite(alpha) || alpha < 0 || alpha > 1) {
+    throw new Error(`Invalid surface alpha: ${surface}`);
+  }
+
+  const backdropChannels = (backdrop.slice(1).match(/../g) ?? []).map((pair) =>
+    Number.parseInt(pair, 16),
+  );
+  const surfaceChannels = rgba.slice(1, 4).map(Number);
+
+  return (
+    '#' +
+    surfaceChannels
+      .map((channel, index) =>
+        Math.round(channel * alpha + backdropChannels[index] * (1 - alpha))
+          .toString(16)
+          .padStart(2, '0'),
+      )
+      .join('')
+  );
+}
+
 const STYLES = join(process.cwd(), 'app', 'styles');
 
 function readTokens(file: string): Map<string, string> {
@@ -163,6 +199,30 @@ describe('token contrast', () => {
   // Any other malformed value scores NaN and fails its floor anyway.
   it('refuses to score a hex with alpha rather than treating it as opaque', () => {
     expect(() => contrastRatio('#bc770aff', '#ffffff')).toThrow(/opaque/);
+  });
+});
+
+describe('Harvest Rush reading surfaces', () => {
+  it.each([
+    { theme: 'light', tokens: light },
+    { theme: 'dark', tokens: dark },
+  ])('$theme text remains readable on the subtle game panels', ({ tokens }) => {
+    const paper = resolve(tokens, '--color-bg-alt');
+    const panel = compositeSurface(
+      resolve(tokens, '--color-surface-subtle'),
+      paper,
+    );
+
+    for (const foreground of [
+      '--color-fg',
+      '--color-fg-bold',
+      '--color-fg-light',
+    ]) {
+      expect(
+        contrastRatio(resolve(tokens, foreground), panel),
+        `${foreground} on the composited game panel`,
+      ).toBeGreaterThanOrEqual(AA_TEXT);
+    }
   });
 });
 

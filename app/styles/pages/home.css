@@ -273,3 +273,48 @@
     margin-top: 0;
   }
 }
+
+/* Featured game on the homepage */
+
+.home-play {
+  align-items: start;
+}
+
+.home-play-header {
+  display: block;
+}
+
+.home-play-kicker {
+  margin: 0 0 0.65rem;
+  color: var(--color-fg-light);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+}
+
+.home-play-header .section-heading {
+  margin-bottom: 0.75rem;
+}
+
+.home-play-summary {
+  max-width: 30ch;
+  margin: 0 0 0.75rem;
+  color: var(--color-fg-light);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.home-play-header .home-writing-all {
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .home-play-header {
+    display: block;
+    margin-bottom: 1.25rem;
+  }
+
+  .home-play-summary {
+    max-width: 46ch;
+  }
+}

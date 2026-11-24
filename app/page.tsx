@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
+import HarvestRushGame from '@/components/Play/HarvestRushGame';
 import Entry from '@/components/Projects/Entry';
 import { SchemaGraph } from '@/components/Schema';
 import Hero from '@/components/Template/Hero';
@@ -86,6 +87,25 @@ export default function HomePage() {
             </li>
           ))}
         </ol>
+      </section>
+      <section
+        className="home-writing home-play"
+        aria-labelledby="home-play-title"
+      >
+        <div className="home-writing-header home-play-header">
+          <p className="home-play-kicker">INTERACTIVE CAMPAIGN / 001</p>
+          <h2 id="home-play-title" className="section-heading">
+            Harvest Rush
+          </h2>
+          <p className="home-play-summary">
+            Plan three field operations around weather, timing, and limited
+            resources. Play the campaign here, with no account required.
+          </p>
+          <Link href="/play/" className="home-writing-all">
+            Game details <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <HarvestRushGame />
       </section>
       {latestWriting.length > 0 && (
         <section className="home-writing" aria-labelledby="home-writing-title">
