@@ -52,9 +52,7 @@ describe('Harvest Rush game', () => {
 
     const result = screen.getByText('Gold').parentElement;
     expect(result).toHaveTextContent('48');
-    expect(
-      screen.getByText(/protected vulnerable crops/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/protected vulnerable crops/i)).toBeInTheDocument();
   });
 
   it('recalculates the preview when a field is moved before the storm', () => {
@@ -66,9 +64,7 @@ describe('Harvest Rush game', () => {
 
     expect(screen.getByText(/45 pts/)).toBeInTheDocument();
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Move Okra earlier' }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Move Okra earlier' }));
 
     expect(screen.getByText(/48 pts/)).toBeInTheDocument();
   });
