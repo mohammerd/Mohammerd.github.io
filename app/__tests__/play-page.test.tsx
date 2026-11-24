@@ -10,7 +10,7 @@ describe('play page', () => {
     expect(screen.getByRole('heading', { name: 'Play' })).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Every decision has a cost.' }),
-    ).toHaveTextContent('Guess the Crop and Farm Memory');
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Open field plan/ }),
     ).toBeEnabled();
@@ -19,8 +19,8 @@ describe('play page', () => {
   it('keeps future game ideas separate from the playable campaign', () => {
     render(<PlayPage />);
 
-    expect(
-      screen.getByText(/More games, including/i),
-    ).toHaveTextContent('Guess the Crop and Farm Memory');
+    expect(screen.getByText(/More games, including/i)).toHaveTextContent(
+      'Guess the Crop and Farm Memory',
+    );
   });
 });
