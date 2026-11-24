@@ -30,8 +30,8 @@ export default function PlayPage() {
           <p className="play-eyebrow">INTERACTIVE PLAYGROUND / 001</p>
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">
-            A compact strategy campaign about timing, trade-offs, and making
-            the best use of limited resources. No account required.
+            A compact strategy campaign about timing, trade-offs, and making the
+            best use of limited resources. No account required.
           </p>
         </header>
 
