@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import Entry from '@/components/Projects/Entry';
 import HarvestRushGame from '@/components/Play/HarvestRushGame';
+import Entry from '@/components/Projects/Entry';
 import { SchemaGraph } from '@/components/Schema';
 import Hero from '@/components/Template/Hero';
 import PageWrapper from '@/components/Template/PageWrapper';

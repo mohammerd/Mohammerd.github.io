@@ -45,9 +45,10 @@ function contrastRatio(a: string, b: string): number {
  * channels as an opaque colour would produce a misleading ratio.
  */
 function compositeSurface(surface: string, backdrop: string): string {
-  const rgba = /^rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,?\s*([\d.]+)?\s*\)$/i.exec(
-    surface,
-  );
+  const rgba =
+    /^rgba?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)\s*,?\s*([\d.]+)?\s*\)$/i.exec(
+      surface,
+    );
   if (!rgba) {
     throw new Error(`Not an sRGB rgba surface: ${surface}`);
   }
@@ -57,8 +58,8 @@ function compositeSurface(surface: string, backdrop: string): string {
     throw new Error(`Invalid surface alpha: ${surface}`);
   }
 
-  const backdropChannels = (backdrop.slice(1).match(/../g) ?? []).map(
-    (pair) => Number.parseInt(pair, 16),
+  const backdropChannels = (backdrop.slice(1).match(/../g) ?? []).map((pair) =>
+    Number.parseInt(pair, 16),
   );
   const surfaceChannels = rgba.slice(1, 4).map(Number);
 
@@ -66,9 +67,7 @@ function compositeSurface(surface: string, backdrop: string): string {
     '#' +
     surfaceChannels
       .map((channel, index) =>
-        Math.round(
-          channel * alpha + backdropChannels[index] * (1 - alpha),
-        )
+        Math.round(channel * alpha + backdropChannels[index] * (1 - alpha))
           .toString(16)
           .padStart(2, '0'),
       )
