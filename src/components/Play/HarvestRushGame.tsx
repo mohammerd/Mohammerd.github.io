@@ -575,20 +575,7 @@ export default function HarvestRushGame() {
       {phase === 'planning' && !result && (
         <>
           <div className="harvest-stage-guide">
-            <div className="harvest-stage is-current">
-              <span>01</span>
-              <div><strong>Select fields</strong><small>Build your load</small></div>
-            </div>
-            <span className="harvest-stage-line" />
-            <div className="harvest-stage">
-              <span>02</span>
-              <div><strong>Sequence the work</strong><small>Protect crop quality</small></div>
-            </div>
-            <span className="harvest-stage-line" />
-            <div className="harvest-stage">
-              <span>03</span>
-              <div><strong>Dispatch</strong><small>Review the result</small></div>
-            </div>
+            <span>SELECT FIELDS · SET ORDER · DISPATCH</span>
             <button
               type="button"
               className="harvest-brief-link"
@@ -851,11 +838,9 @@ export default function HarvestRushGame() {
                 </div>
               ))}
             </div>
-            <div className="harvest-result-records">
-              <div><span>Personal best</span><strong>{completionBest ?? result.score}</strong></div>
-              <div><span>Mission target</span><strong>{mission.goldScore} <small>pts for gold</small></strong></div>
-              <div><span>Campaign cleared</span><strong>{progress.completed.length} / 3</strong></div>
-            </div>
+            <p className="harvest-result-record">
+              Personal best: {completionBest ?? result.score} · Gold target: {mission.goldScore} pts · Campaign: {progress.completed.length}/3 cleared
+            </p>
             <div className="harvest-result-actions">
               <button
                 type="button"
@@ -889,14 +874,6 @@ export default function HarvestRushGame() {
         </section>
       )}
 
-      <div className="harvest-game-footer">
-        <span>TACTICAL DECISION GAME / NO ACCOUNT REQUIRED</span>
-        <span>
-          {progress.completed.length === HARVEST_MISSIONS.length
-            ? 'ALL MISSIONS CLEARED'
-            : 'PERSONAL PROGRESS SAVED LOCALLY'}
-        </span>
-      </div>
-    </section>
+          </section>
   );
 }
