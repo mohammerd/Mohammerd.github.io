@@ -62,8 +62,9 @@ describe('Harvest Rush game', () => {
     fireEvent.click(screen.getByRole('button', { name: /Cassava, 4 crates/ }));
     fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
 
-    const projectedScore =
-      screen.getByText('Projected harvest score').parentElement;
+    const projectedScore = screen.getByText(
+      'Projected harvest score',
+    ).parentElement;
     expect(projectedScore).toHaveTextContent('45');
 
     fireEvent.click(screen.getByRole('button', { name: 'Move Okra earlier' }));
