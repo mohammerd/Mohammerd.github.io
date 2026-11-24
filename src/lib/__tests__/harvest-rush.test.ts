@@ -18,11 +18,9 @@ describe('Harvest Rush campaign rules', () => {
       'heat',
       'dust',
     ]);
-    expect(HARVEST_MISSIONS.map((mission) => mission.exposureAfterSlots)).toEqual([
-      2,
-      1,
-      2,
-    ]);
+    expect(
+      HARVEST_MISSIONS.map((mission) => mission.exposureAfterSlots),
+    ).toEqual([2, 1, 2]);
     expect(HARVEST_MISSIONS[2].crewLimit).toBe(5);
   });
 
@@ -63,11 +61,7 @@ describe('Harvest Rush campaign rules', () => {
   });
 
   it('rewards protecting high-risk crops before the storm', () => {
-    const protectedPlan = evaluateHarvestPlan([
-      'tomatoes',
-      'okra',
-      'cassava',
-    ]);
+    const protectedPlan = evaluateHarvestPlan(['tomatoes', 'okra', 'cassava']);
     const exposedPlan = evaluateHarvestPlan(['okra', 'peppers', 'tomatoes']);
 
     expect(protectedPlan.score).toBe(48);
@@ -107,9 +101,9 @@ describe('Harvest Rush campaign rules', () => {
     expect(() =>
       evaluateHarvestPlan(['tomatoes', 'tomatoes', 'cassava']),
     ).toThrow('A field can only be harvested once.');
-    expect(() =>
-      evaluateHarvestPlan(['tomatoes', 'maize', 'cassava']),
-    ).toThrow('The harvest plan exceeds its available resources.');
+    expect(() => evaluateHarvestPlan(['tomatoes', 'maize', 'cassava'])).toThrow(
+      'The harvest plan exceeds its available resources.',
+    );
   });
 
   it('does not penalise weather-resilient crops after the event', () => {
@@ -130,11 +124,11 @@ describe('Harvest Rush campaign rules', () => {
     expect(cassava).toBeDefined();
     if (!peppers || !cassava) return;
 
-    expect(
-      getWeatherRiskLabel(peppers, getHarvestMission('heatwave')),
-    ).toBe('Moderate exposure');
-    expect(
-      getWeatherRiskLabel(cassava, getHarvestMission('storm-front')),
-    ).toBe('Resilient');
+    expect(getWeatherRiskLabel(peppers, getHarvestMission('heatwave'))).toBe(
+      'Moderate exposure',
+    );
+    expect(getWeatherRiskLabel(cassava, getHarvestMission('storm-front'))).toBe(
+      'Resilient',
+    );
   });
 });
