@@ -192,7 +192,11 @@ function WeatherTimeline({
   mission: ReturnType<typeof getHarvestMission>;
 }) {
   return (
-    <div className="harvest-weather-timeline" aria-label="Weather timeline">
+    <div
+      className="harvest-weather-timeline"
+      role="group"
+      aria-label="Weather timeline"
+    >
       {[1, 2, 3].map((slot) => {
         const exposed = slot > mission.exposureAfterSlots;
         return (
