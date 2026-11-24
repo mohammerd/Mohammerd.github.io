@@ -171,7 +171,6 @@ describe('Harvest Rush campaign experience', () => {
     ).toBeEnabled();
   });
 
-
   it('does not unlock the next mission when the score is below bronze', async () => {
     render(<HarvestRushGame />);
     fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
