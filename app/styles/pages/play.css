@@ -73,7 +73,8 @@
   outline-color: var(--color-focus-ring-fill);
 }
 
-.harvest-micro-label, .harvest-section-kicker {
+.harvest-micro-label,
+.harvest-section-kicker {
   display: block;
   margin-bottom: 0.55rem;
   color: var(--m);
@@ -82,7 +83,8 @@
   line-height: 1.4;
 }
 
-.harvest-primary-button, .harvest-secondary-button {
+.harvest-primary-button,
+.harvest-secondary-button {
   display: inline-flex;
   min-width: 0;
   min-height: 2.8rem;
@@ -112,7 +114,8 @@
   transform: translateY(1px);
 }
 
-.harvest-primary-button:disabled, .harvest-secondary-button:disabled {
+.harvest-primary-button:disabled,
+.harvest-secondary-button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
 }
@@ -128,7 +131,8 @@
   background: var(--h);
 }
 
-.harvest-brief-link, .harvest-text-button {
+.harvest-brief-link,
+.harvest-text-button {
   margin-left: auto;
   padding: 0.3rem 0;
   border: 0;
@@ -194,7 +198,8 @@
   line-height: 1.1;
 }
 
-.harvest-game-brand small, .harvest-game-topbar-meta {
+.harvest-game-brand small,
+.harvest-game-topbar-meta {
   color: color-mix(in srgb, var(--color-on-hero) 76%, transparent);
   font-family: var(--n);
   font-size: var(--text-xs);
@@ -284,13 +289,15 @@
   font-weight: var(--font-weight-normal);
 }
 
-.harvest-campaign-track, .harvest-resource-track {
+.harvest-campaign-track,
+.harvest-resource-track {
   height: 0.42rem;
   overflow: hidden;
   background: var(--h);
 }
 
-.harvest-campaign-track > span, .harvest-resource-track > span {
+.harvest-campaign-track > span,
+.harvest-resource-track > span {
   display: block;
   height: 100%;
   background: var(--a);
@@ -347,7 +354,7 @@
   left: 0;
   height: 2px;
   background: var(--a);
-  content: "";
+  content: '';
 }
 
 .harvest-mission-tab.is-locked {
@@ -429,7 +436,8 @@
   margin-bottom: 0.45rem;
 }
 
-.harvest-mission-number, .harvest-mission-status {
+.harvest-mission-number,
+.harvest-mission-status {
   font-family: var(--n);
   font-size: var(--text-xs);
   line-height: 1.4;
@@ -526,7 +534,8 @@
   border-bottom: var(--l);
 }
 
-.harvest-briefing-copy, .harvest-briefing-visual {
+.harvest-briefing-copy,
+.harvest-briefing-visual {
   padding: clamp(1.25rem, 3vw, 2rem);
 }
 
@@ -612,7 +621,8 @@
   border-left: var(--l);
 }
 
-.harvest-hero-metric > span, .harvest-hero-metric > small {
+.harvest-hero-metric > span,
+.harvest-hero-metric > small {
   color: var(--m);
   font-family: var(--n);
   font-size: var(--text-xs);
@@ -636,7 +646,8 @@
   background: var(--s);
 }
 
-.harvest-weather-card, .harvest-target-card {
+.harvest-weather-card,
+.harvest-target-card {
   padding: 1rem;
   border: var(--l);
   background: var(--g);
@@ -713,7 +724,8 @@
   gap: 0.8rem;
 }
 
-.harvest-target-label, .harvest-target-card > strong {
+.harvest-target-label,
+.harvest-target-card > strong {
   margin-left: auto;
   color: var(--a);
   font-family: var(--d);
@@ -750,7 +762,8 @@
   align-items: start;
 }
 
-.harvest-fields-section, .harvest-dispatch-panel {
+.harvest-fields-section,
+.harvest-dispatch-panel {
   min-width: 0;
   padding: clamp(1.1rem, 2.5vw, 1.6rem);
 }
@@ -767,7 +780,8 @@
   margin-bottom: 1rem;
 }
 
-.harvest-section-heading h3, .harvest-dispatch-panel-heading h3 {
+.harvest-section-heading h3,
+.harvest-dispatch-panel-heading h3 {
   margin: 0 0 0.25rem;
   color: var(--b);
   font-family: var(--d);
@@ -943,7 +957,8 @@
   font-weight: var(--font-weight-semibold);
 }
 
-.harvest-field-blocked, .harvest-field-selected-label {
+.harvest-field-blocked,
+.harvest-field-selected-label {
   display: block;
   margin-top: 0.1rem;
   font-family: var(--n);
@@ -1325,7 +1340,8 @@
   border-bottom: var(--l);
 }
 
-.harvest-result-row-number, .harvest-result-row-condition {
+.harvest-result-row-number,
+.harvest-result-row-condition {
   color: var(--m);
   font-family: var(--n);
   font-size: var(--text-xs);
@@ -1378,7 +1394,8 @@
     max-width: 32rem;
   }
 
-  .harvest-briefing-screen, .harvest-planning-layout {
+  .harvest-briefing-screen,
+  .harvest-planning-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1451,7 +1468,9 @@
     border-left: 0;
   }
 
-  .harvest-briefing-copy, .harvest-briefing-visual, .harvest-result-detail {
+  .harvest-briefing-copy,
+  .harvest-briefing-visual,
+  .harvest-result-detail {
     padding: 1.1rem;
   }
 
@@ -1463,7 +1482,8 @@
     padding-inline: 0.35rem;
   }
 
-  .harvest-hero-metric > span, .harvest-hero-metric > small {
+  .harvest-hero-metric > span,
+  .harvest-hero-metric > small {
     font-size: var(--text-xs);
   }
 
@@ -1477,7 +1497,8 @@
     gap: 0.3rem;
   }
 
-  .harvest-fields-section, .harvest-dispatch-panel {
+  .harvest-fields-section,
+  .harvest-dispatch-panel {
     padding: 1rem;
   }
 
@@ -1580,12 +1601,14 @@
 
   .harvest-result-row > strong {
     grid-column: 3;
-    grid-row: 1/span 2;
+    grid-row: 1 / span 2;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .harvest-game *, .harvest-game *:before, .harvest-game *:after {
+  .harvest-game *,
+  .harvest-game *:before,
+  .harvest-game *:after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
