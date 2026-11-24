@@ -122,9 +122,9 @@ export const HARVEST_MISSIONS = [
     exposureAfterSlots: 2,
     crewLimit: 6,
     truckCapacity: 11,
-    goldScore: 47,
-    silverScore: 43,
-    bronzeScore: 36,
+    goldScore: 48,
+    silverScore: 46,
+    bronzeScore: 43,
   },
   {
     id: 'heatwave',
