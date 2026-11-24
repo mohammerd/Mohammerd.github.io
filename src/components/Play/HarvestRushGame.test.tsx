@@ -157,7 +157,9 @@ describe('Harvest Rush campaign experience', () => {
     expect(
       screen.getByRole('button', { name: /Continue to next mission/ }),
     ).toBeEnabled();
-    fireEvent.click(screen.getByRole('button', { name: /Continue to next mission/ }));
+    fireEvent.click(
+      screen.getByRole('button', { name: /Continue to next mission/ }),
+    );
 
     expect(
       screen.getByRole('heading', { name: 'The Dust Run' }),
@@ -167,6 +169,34 @@ describe('Harvest Rush campaign experience', () => {
         name: /Mission 03: The Dust Run, available/i,
       }),
     ).toBeEnabled();
+  });
+
+
+  it('does not unlock the next mission when the score is below bronze', async () => {
+    render(<HarvestRushGame />);
+    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Peppers, 3 crates/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Maize, 5 crates/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'This plan did not meet the mission standard.',
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Earn Bronze to unlock next/ }),
+    ).toBeDisabled();
+
+    await waitFor(() => {
+      const saved = JSON.parse(
+        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ??
+          '{}',
+      );
+      expect(saved.completed).not.toContain('storm-front');
+      expect(saved.bestScores['storm-front']).toBe(42);
+    });
   });
 
   it('migrates the previous personal-best score into the campaign record', async () => {
