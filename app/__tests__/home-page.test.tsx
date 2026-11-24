@@ -18,6 +18,25 @@ describe('homepage', () => {
     }
   });
 
+  it('features the newest essay and links to the full writing register', () => {
+    render(<HomePage />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Latest writing' }),
+    ).toBeInTheDocument();
+
+    const essay = screen.getByRole('link', {
+      name: 'Read essay: When Knowledge Becomes Accessible, What Is the Purpose of College?',
+    });
+    expect(essay.getAttribute('href')).toMatch(
+      /\/writing\/when-knowledge-becomes-accessible\/?$/,
+    );
+
+    expect(
+      screen.getByRole('link', { name: /All writing/ }).getAttribute('href'),
+    ).toMatch(/\/writing\/?$/);
+  });
+
   it('offers a link to the full project register', () => {
     render(<HomePage />);
     const link = screen.getByRole('link', { name: /All projects/ });

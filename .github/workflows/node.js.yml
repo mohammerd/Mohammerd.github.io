@@ -17,10 +17,11 @@ env:
   # deploy. Must stay in step with .nvmrc; the build job asserts that.
   DEPLOY_NODE: '26.x'
 
-# Supersede stale PR runs, but never cancel a main run that may already be
-# deploying. The Pages job below serializes main deployments.
+# A new group version lets the corrected publish workflow proceed even if an
+# earlier main run is waiting indefinitely for a hosted runner. The Pages job
+# below continues to serialize actual deployments.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-publish-v2
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
@@ -97,7 +98,9 @@ jobs:
           path: coverage/
           retention-days: 7
 
-  # Build on multiple OS and Node versions
+  # Build on Linux and Windows across the supported Node versions. macOS is
+  # not a production target for this static export, so runner availability
+  # there must not block a GitHub Pages release.
   build:
     name: Build (${{ matrix.os }}, Node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
@@ -114,13 +117,11 @@ jobs:
         # not the declared floor), and the version .nvmrc pins for development
         # and the rest of CI.
         node-version: [22.x, 26.x]
-        os: [ubuntu-latest, windows-latest, macos-15-intel]
+        os: [ubuntu-latest, windows-latest]
         exclude:
           # Reduce matrix size for faster CI. Non-Linux runners only need to
           # prove the build is portable, so they run the deployed version.
           - os: windows-latest
-            node-version: 22.x
-          - os: macos-15-intel
             node-version: 22.x
     steps:
       - name: Checkout code
