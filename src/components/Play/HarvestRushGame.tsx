@@ -50,16 +50,12 @@ function readProgress(): PlayerProgress {
     const completed = Array.isArray(candidate.completed)
       ? candidate.completed.filter(
           (id): id is HarvestMissionId =>
-            typeof id === 'string' &&
-            validIds.includes(id as HarvestMissionId),
+            typeof id === 'string' && validIds.includes(id as HarvestMissionId),
         )
       : [];
     const bestScores: PlayerProgress['bestScores'] = {};
 
-    if (
-      candidate.bestScores &&
-      typeof candidate.bestScores === 'object'
-    ) {
+    if (candidate.bestScores && typeof candidate.bestScores === 'object') {
       for (const id of validIds) {
         const score = candidate.bestScores[id];
         if (typeof score === 'number' && Number.isFinite(score) && score >= 0) {
@@ -142,14 +138,19 @@ function ResourceMeter({
   unit: string;
 }) {
   const ratio = Math.min(100, (used / limit) * 100);
-  const tone = ratio >= 90 ? 'is-near-limit' : ratio >= 70 ? 'is-mid-limit' : '';
+  const tone =
+    ratio >= 90 ? 'is-near-limit' : ratio >= 70 ? 'is-mid-limit' : '';
 
   return (
     <div className={'harvest-resource ' + tone}>
       <div className="harvest-resource-heading">
         <span>{label}</span>
         <strong>
-          {used}<small> / {limit} {unit}</small>
+          {used}
+          <small>
+            {' '}
+            / {limit} {unit}
+          </small>
         </strong>
       </div>
       <div
@@ -223,7 +224,8 @@ function CampaignProgress({
       <div className="harvest-campaign-progress-copy">
         <span className="harvest-micro-label">CAMPAIGN PROGRESS</span>
         <strong>
-          {completed.length} <small>of {HARVEST_MISSIONS.length} missions cleared</small>
+          {completed.length}{' '}
+          <small>of {HARVEST_MISSIONS.length} missions cleared</small>
         </strong>
       </div>
       <div
@@ -234,7 +236,11 @@ function CampaignProgress({
         aria-valuemax={HARVEST_MISSIONS.length}
         aria-valuenow={completed.length}
       >
-        <span style={{ width: (completed.length / HARVEST_MISSIONS.length) * 100 + '%' }} />
+        <span
+          style={{
+            width: (completed.length / HARVEST_MISSIONS.length) * 100 + '%',
+          }}
+        />
       </div>
       <span className="harvest-campaign-unlocked">
         {unlockedCount} {unlockedCount === 1 ? 'mission' : 'missions'} available
@@ -343,8 +349,7 @@ export default function HarvestRushGame() {
       ? HARVEST_MISSIONS.length
       : firstIncompleteMission + 1;
   const bestScore = progress.bestScores[selectedMissionId] ?? null;
-  const nextMission =
-    HARVEST_MISSIONS[missionIndex + 1] ?? null;
+  const nextMission = HARVEST_MISSIONS[missionIndex + 1] ?? null;
   const nextMissionUnlocked = nextMission
     ? progress.completed.includes(selectedMissionId)
     : false;
@@ -365,7 +370,9 @@ export default function HarvestRushGame() {
   }, [progress, progressReady]);
 
   function selectMission(id: HarvestMissionId) {
-    const index = HARVEST_MISSIONS.findIndex((candidate) => candidate.id === id);
+    const index = HARVEST_MISSIONS.findIndex(
+      (candidate) => candidate.id === id,
+    );
     if (index < 0 || index >= unlockedCount) return;
 
     setSelectedMissionId(id);
@@ -520,7 +527,9 @@ export default function HarvestRushGame() {
             <h3>Know the conditions before you commit.</h3>
             <p>{mission.briefing}</p>
             <div className="harvest-objective">
-              <span className="harvest-objective-icon" aria-hidden="true">!</span>
+              <span className="harvest-objective-icon" aria-hidden="true">
+                !
+              </span>
               <span>
                 <small>MISSION OBJECTIVE</small>
                 <strong>{mission.objective}</strong>
@@ -565,7 +574,10 @@ export default function HarvestRushGame() {
             </div>
             <div className="harvest-target-card">
               <span className="harvest-target-label">GOLD TARGET</span>
-              <strong>{mission.goldScore}<small> pts</small></strong>
+              <strong>
+                {mission.goldScore}
+                <small> pts</small>
+              </strong>
               <span className="harvest-target-note">Three-star operation</span>
             </div>
           </div>
@@ -586,12 +598,19 @@ export default function HarvestRushGame() {
           </div>
 
           <div className="harvest-planning-layout">
-            <section className="harvest-fields-section" aria-labelledby="harvest-fields-title">
+            <section
+              className="harvest-fields-section"
+              aria-labelledby="harvest-fields-title"
+            >
               <div className="harvest-section-heading">
                 <div>
-                  <span className="harvest-section-kicker">FIELD REGISTER / 05 PLOTS</span>
+                  <span className="harvest-section-kicker">
+                    FIELD REGISTER / 05 PLOTS
+                  </span>
                   <h3 id="harvest-fields-title">Choose your fields</h3>
-                  <p>Select up to three plots. Tap a selected plot to remove it.</p>
+                  <p>
+                    Select up to three plots. Tap a selected plot to remove it.
+                  </p>
                 </div>
                 <span className="harvest-selection-count">
                   {plan.length}<small> / 03</small>
@@ -602,8 +621,13 @@ export default function HarvestRushGame() {
                 {HARVEST_FIELDS.map((field) => {
                   const selectedAt = plan.indexOf(field.id);
                   const selected = selectedAt >= 0;
-                  const availability = getFieldAvailability(plan, field.id, mission);
-                  const disabled = Boolean(result) || (!selected && Boolean(availability));
+                  const availability = getFieldAvailability(
+                    plan,
+                    field.id,
+                    mission,
+                  );
+                  const disabled =
+                    Boolean(result) || (!selected && Boolean(availability));
                   const risk = getWeatherRiskLabel(field, mission);
 
                   return (
@@ -626,14 +650,21 @@ export default function HarvestRushGame() {
                         field.crew +
                         ' crew, ' +
                         risk +
-                        (selected ? ', selected in slot ' + (selectedAt + 1) : '')
+                        (selected
+                          ? ', selected in slot ' + (selectedAt + 1)
+                          : '')
                       }
                     >
                       <span className="harvest-field-art">
                         <CropArt fieldId={field.id} />
-                        <span className="harvest-field-number">PLOT {field.number}</span>
+                        <span className="harvest-field-number">
+                          PLOT {field.number}
+                        </span>
                         {selected && (
-                          <span className="harvest-field-selected-mark" aria-hidden="true">
+                          <span
+                            className="harvest-field-selected-mark"
+                            aria-hidden="true"
+                          >
                             {String(selectedAt + 1).padStart(2, '0')}
                           </span>
                         )}
@@ -641,18 +672,29 @@ export default function HarvestRushGame() {
                       <span className="harvest-field-content">
                         <span className="harvest-field-card-heading">
                           <strong>{field.crop}</strong>
-                          <span className={'harvest-risk-tag ' + risk.toLowerCase().replaceAll(' ', '-')}>
+                          <span
+                            className={
+                              'harvest-risk-tag ' +
+                              risk.toLowerCase().replaceAll(' ', '-')
+                            }>
                             {risk}
                           </span>
                         </span>
-                        <span className="harvest-field-description">{field.description}</span>
+                        <span className="harvest-field-description">
+                          {field.description}
+                        </span>
                         <span className="harvest-field-stats">
                           <span><strong>{field.crates}</strong> crates</span>
                           <span><strong>{field.crew}</strong> crew</span>
-                          <span><strong>{field.crates * field.pointsPerCrate}</strong> base pts</span>
+                          <span>
+                            <strong>{field.crates * field.pointsPerCrate}</strong>{' '}
+                            base pts
+                          </span>
                         </span>
                         {availability && !selected && (
-                          <span className="harvest-field-blocked">{availability}</span>
+                          <span className="harvest-field-blocked">
+                            {availability}
+                          </span>
                         )}
                         {selected && (
                           <span className="harvest-field-selected-label">
@@ -667,13 +709,20 @@ export default function HarvestRushGame() {
 
             </section>
 
-            <aside className="harvest-dispatch-panel" aria-labelledby="harvest-plan-title">
+            <aside
+              className="harvest-dispatch-panel"
+              aria-labelledby="harvest-plan-title"
+            >
               <div className="harvest-dispatch-panel-heading">
                 <div>
-                  <span className="harvest-section-kicker">LIVE DISPATCH BOARD</span>
+                  <span className="harvest-section-kicker">
+                    LIVE DISPATCH BOARD
+                  </span>
                   <h3 id="harvest-plan-title">Your harvest order</h3>
                 </div>
-                <span className="harvest-dispatch-live"><i /> LIVE PREVIEW</span>
+                <span className="harvest-dispatch-live">
+                  <i /> LIVE PREVIEW
+                </span>
               </div>
 
               <div className="harvest-resource-stack">
@@ -692,7 +741,9 @@ export default function HarvestRushGame() {
               </div>
 
               <ol className="harvest-plan-list">
-                {Array.from({ length: HARVEST_RUSH_RULES.harvestSlots }, (_, index) => {
+                {Array.from(
+                  { length: HARVEST_RUSH_RULES.harvestSlots },
+                  (_, index) => {
                   const outcome = preview[index];
                   return (
                     <li
@@ -703,16 +754,32 @@ export default function HarvestRushGame() {
                         (outcome ? ' has-field' : '')
                       }
                     >
-                      <span className="harvest-plan-slot-number">0{index + 1}</span>
+                      <span className="harvest-plan-slot-number">
+                        0{index + 1}
+                      </span>
                       {outcome ? (
                         <div className="harvest-plan-slot-content">
                           <div className="harvest-plan-slot-main">
-                            <span className="harvest-plan-crop-name">{outcome.field.crop}</span>
-                            <strong>{outcome.score}<small> pts</small></strong>
+                            <span className="harvest-plan-crop-name">
+                              {outcome.field.crop}
+                            </span>
+                            <strong>
+                              {outcome.score}
+                              <small> pts</small>
+                            </strong>
                           </div>
                           <div className="harvest-plan-slot-meta">
-                            <span>{outcome.field.crates} crates · {outcome.field.crew} crew</span>
-                            <span className={outcome.weatherAffected ? 'has-weather-loss' : 'has-weather-clear'}>
+                            <span>
+                              {outcome.field.crates} crates · {outcome.field.crew}{' '}
+                              crew
+                            </span>
+                            <span
+                              className={
+                                outcome.weatherAffected
+                                  ? 'has-weather-loss'
+                                  : 'has-weather-clear'
+                              }
+                            >
                               {outcome.weatherAffected
                                 ? '−' + outcome.lostPoints + ' pts · exposed'
                                 : outcome.slot > mission.exposureAfterSlots
@@ -725,7 +792,9 @@ export default function HarvestRushGame() {
                               type="button"
                               onClick={() => moveField(outcome.field.id, -1)}
                               disabled={index === 0}
-                              aria-label={'Move ' + outcome.field.crop + ' earlier'}
+                              aria-label={
+                                'Move ' + outcome.field.crop + ' earlier'
+                              }
                             >
                               ↑
                             </button>
@@ -733,7 +802,9 @@ export default function HarvestRushGame() {
                               type="button"
                               onClick={() => moveField(outcome.field.id, 1)}
                               disabled={index === plan.length - 1}
-                              aria-label={'Move ' + outcome.field.crop + ' later'}
+                              aria-label={
+                                'Move ' + outcome.field.crop + ' later'
+                              }
                             >
                               ↓
                             </button>
@@ -765,14 +836,22 @@ export default function HarvestRushGame() {
               <div className="harvest-score-preview" aria-live="polite">
                 <div>
                   <span>Projected operation score</span>
-                  <strong>{plan.length ? projectedScore : '—'}<small>{plan.length ? ' pts' : ''}</small></strong>
+                  <strong>
+                    {plan.length ? projectedScore : '—'}
+                    <small>{plan.length ? ' pts' : ''}</small>
+                  </strong>
                 </div>
                 <span>
                   {plan.length === 0
                     ? 'Your score updates as you select and reorder fields.'
                     : planIsComplete
                       ? 'Gold standard: ' + mission.goldScore + ' points.'
-                      : (HARVEST_RUSH_RULES.harvestSlots - plan.length) + ' more field' + (HARVEST_RUSH_RULES.harvestSlots - plan.length === 1 ? '' : 's') + ' required.'}
+                      : (HARVEST_RUSH_RULES.harvestSlots - plan.length) +
+                        ' more field' +
+                        (HARVEST_RUSH_RULES.harvestSlots - plan.length === 1
+                          ? ''
+                          : 's') +
+                        ' required.'}
                 </span>
               </div>
 
@@ -800,11 +879,23 @@ export default function HarvestRushGame() {
       )}
 
       {result && (
-        <section className="harvest-result-screen" aria-labelledby="harvest-result-title" aria-live="polite">
+        <section
+          className="harvest-result-screen"
+          aria-labelledby="harvest-result-title"
+          aria-live="polite"
+        >
           <div className="harvest-result-primary">
             <div className="harvest-result-grade-mark">
               <span>{result.stars ? '★'.repeat(result.stars) : '—'}</span>
-              <small>{result.grade === 'Gold' ? 'EXCELLENT OPERATION' : result.grade === 'Silver' ? 'STRONG OPERATION' : result.grade === 'Bronze' ? 'OPERATION COMPLETE' : 'ROOM TO IMPROVE'}</small>
+              <small>
+                {result.grade === 'Gold'
+                  ? 'EXCELLENT OPERATION'
+                  : result.grade === 'Silver'
+                    ? 'STRONG OPERATION'
+                    : result.grade === 'Bronze'
+                      ? 'OPERATION COMPLETE'
+                      : 'ROOM TO IMPROVE'}
+              </small>
             </div>
             <div className="harvest-result-score-block">
               <span className="harvest-section-kicker">FINAL HARVEST SCORE</span>
@@ -814,19 +905,31 @@ export default function HarvestRushGame() {
           </div>
           <div className="harvest-result-detail">
             <div className="harvest-result-heading">
-              <span className="harvest-section-kicker">AFTER-ACTION REPORT / MISSION {mission.number}</span>
-              <h3 id="harvest-result-title">{result.grade === 'Gold' ? 'You managed the operation well.' : 'Review the operation.'}</h3>
+              <span className="harvest-section-kicker">
+                AFTER-ACTION REPORT / MISSION {mission.number}
+              </span>
+              <h3 id="harvest-result-title">
+                {result.grade === 'Gold'
+                  ? 'You managed the operation well.'
+                  : 'Review the operation.'}
+              </h3>
               <p>
                 {result.grade === 'Gold'
-                  ? 'Your team balanced crop value, timing, and available resources. The campaign has recorded this mission as cleared.'
-                  : 'The mission is cleared. Review where weather reduced your return, then try a different field order or crop mix.'}
+                  ? 'Your team balanced crop value, timing, and available resources. ' +
+                    'The campaign has recorded this mission as cleared.'
+                  : 'The mission is cleared. Review where weather reduced your ' +
+                    'return, then try a different field order or crop mix.'}
               </p>
             </div>
             <div className="harvest-result-breakdown">
               {result.outcomes.map((outcome) => (
                 <div key={outcome.field.id} className="harvest-result-row">
-                  <span className="harvest-result-row-number">0{outcome.slot}</span>
-                  <span className="harvest-result-row-name">{outcome.field.crop}</span>
+                  <span className="harvest-result-row-number">
+                    0{outcome.slot}
+                  </span>
+                  <span className="harvest-result-row-name">
+                    {outcome.field.crop}
+                  </span>
                   <span className="harvest-result-row-condition">
                     {outcome.weatherAffected
                       ? mission.weatherName + ' · −' + outcome.lostPoints + ' pts'
@@ -839,7 +942,9 @@ export default function HarvestRushGame() {
               ))}
             </div>
             <p className="harvest-result-record">
-              Personal best: {completionBest ?? result.score} · Gold target: {mission.goldScore} pts · Campaign: {progress.completed.length}/3 cleared
+              Personal best: {completionBest ?? result.score} · Gold target:{' '}
+              {mission.goldScore} pts · Campaign: {progress.completed.length}/3
+              cleared
             </p>
             <div className="harvest-result-actions">
               <button
