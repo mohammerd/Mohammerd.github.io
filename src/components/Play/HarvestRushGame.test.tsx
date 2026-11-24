@@ -24,6 +24,9 @@ describe('Harvest Rush campaign experience', () => {
       screen.getByRole('heading', { name: 'The Storm Front' }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole('group', { name: 'Weather timeline' }),
+    ).toBeInTheDocument();
+    expect(
       screen.getByText(/Keep rain-sensitive crops out of the final slot/i),
     ).toBeInTheDocument();
     expect(
