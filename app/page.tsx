@@ -6,11 +6,10 @@ import { SchemaGraph } from '@/components/Schema';
 import Hero from '@/components/Template/Hero';
 import PageWrapper from '@/components/Template/PageWrapper';
 import { projects } from '@/data/projects';
-import { formatDate } from '@/lib/utils';
-import { getWritingItems, type WritingItem } from '@/lib/writing';
 import { profilePageNode } from '@/lib/schema';
 import { smartQuotes } from '@/lib/typography';
-import { AUTHOR_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/utils';
+import { AUTHOR_NAME, formatDate, SITE_DESCRIPTION, SITE_URL } from '@/lib/utils';
+import { getWritingItems, type WritingItem } from '@/lib/writing';
 
 export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
