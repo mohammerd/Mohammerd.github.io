@@ -184,7 +184,7 @@ export interface HarvestOutcome {
 }
 
 export interface HarvestResult {
-  mission: (typeof HARVEST_MISSIONS)[number];
+  mission: HarvestMission;
   score: number;
   grade: HarvestGrade;
   stars: number;
