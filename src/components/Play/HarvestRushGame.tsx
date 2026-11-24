@@ -8,9 +8,9 @@ import {
   getHarvestMetrics,
   HARVEST_FIELDS,
   HARVEST_RUSH_RULES,
-  previewHarvestPlan,
   type HarvestFieldId,
   type HarvestResult,
+  previewHarvestPlan,
 } from '@/lib/harvest-rush';
 
 const BEST_SCORE_KEY = 'mohammerd.harvest-rush.best.v1';
@@ -126,7 +126,9 @@ export default function HarvestRushGame() {
     <section className="harvest-game" aria-label="Harvest Rush game">
       <div className="harvest-console">
         <div className="harvest-console-topline">
-          <span className="harvest-console-code">MISSION 01 / FIELD OPERATIONS</span>
+          <span className="harvest-console-code">
+            MISSION 01 / FIELD OPERATIONS
+          </span>
           <span className="harvest-weather">
             <span className="harvest-weather-indicator" aria-hidden="true" />
             Storm forecast · rain after slot 02
@@ -141,7 +143,10 @@ export default function HarvestRushGame() {
               protect vulnerable crops before the rain arrives.
             </p>
           </div>
-          <div className="harvest-console-metrics" aria-label="Available resources">
+          <div
+            className="harvest-console-metrics"
+            aria-label="Available resources"
+          >
             <Metric
               label="Harvest slots"
               value={metrics.slots + '/' + HARVEST_RUSH_RULES.harvestSlots}
@@ -171,10 +176,15 @@ export default function HarvestRushGame() {
       </div>
 
       <div className="harvest-game-layout">
-        <section className="harvest-fields-section" aria-labelledby="harvest-fields-title">
+        <section
+          className="harvest-fields-section"
+          aria-labelledby="harvest-fields-title"
+        >
           <div className="harvest-section-heading">
             <div>
-              <span className="harvest-section-index">FIELD REGISTER / 05 PLOTS</span>
+              <span className="harvest-section-index">
+                FIELD REGISTER / 05 PLOTS
+              </span>
               <h3 id="harvest-fields-title">Available fields</h3>
             </div>
             <span className="harvest-section-count">
@@ -238,7 +248,8 @@ export default function HarvestRushGame() {
                         <strong>{field.crew}</strong> crew
                       </span>
                       <span>
-                        <strong>{field.crates * field.pointsPerCrate}</strong> pts
+                        <strong>{field.crates * field.pointsPerCrate}</strong>{' '}
+                        pts
                       </span>
                     </span>
                     <span
@@ -258,10 +269,15 @@ export default function HarvestRushGame() {
           </div>
         </section>
 
-        <aside className="harvest-plan-panel" aria-labelledby="harvest-plan-title">
+        <aside
+          className="harvest-plan-panel"
+          aria-labelledby="harvest-plan-title"
+        >
           <div className="harvest-section-heading">
             <div>
-              <span className="harvest-section-index">DISPATCH QUEUE / 03 SLOTS</span>
+              <span className="harvest-section-index">
+                DISPATCH QUEUE / 03 SLOTS
+              </span>
               <h3 id="harvest-plan-title">Your harvest plan</h3>
             </div>
             <span className="harvest-section-count">
@@ -270,93 +286,98 @@ export default function HarvestRushGame() {
           </div>
 
           <ol className="harvest-plan-list">
-            {Array.from({ length: HARVEST_RUSH_RULES.harvestSlots }, (_, index) => {
-              const outcome = preview[index];
+            {Array.from(
+              { length: HARVEST_RUSH_RULES.harvestSlots },
+              (_, index) => {
+                const outcome = preview[index];
 
-              return (
-                <li
-                  key={index}
-                  className={
-                    'harvest-plan-slot ' +
-                    (outcome?.rainAffected ? 'harvest-plan-slot-exposed' : '')
-                  }
-                >
-                  <span className="harvest-plan-slot-number">
-                    0{index + 1}
-                  </span>
-                  {outcome ? (
-                    <div className="harvest-plan-slot-content">
-                      <div className="harvest-plan-slot-main">
-                        <div>
-                          <strong>{outcome.field.crop}</strong>
-                          <span>
-                            {outcome.field.crates} crates · {outcome.field.crew}{' '}
-                            crew
-                          </span>
-                        </div>
-                        <strong className="harvest-plan-score">
-                          {outcome.score} pts
-                        </strong>
-                      </div>
-                      <div className="harvest-plan-slot-actions">
-                        <span className="harvest-plan-weather-note">
-                          {outcome.rainAffected
-                            ? 'Rain loss · −' + outcome.lostPoints + ' pts'
-                            : index === 2
-                              ? 'After rain · protected'
-                              : 'Clear weather'}
-                        </span>
-                        {!result && (
-                          <div className="harvest-plan-controls">
-                            <button
-                              type="button"
-                              className="harvest-icon-button"
-                              onClick={() => reorderField(outcome.field.id, -1)}
-                              disabled={index === 0}
-                              aria-label={
-                                'Move ' + outcome.field.crop + ' earlier'
-                              }
-                            >
-                              ↑
-                            </button>
-                            <button
-                              type="button"
-                              className="harvest-icon-button"
-                              onClick={() => reorderField(outcome.field.id, 1)}
-                              disabled={index === plan.length - 1}
-                              aria-label={
-                                'Move ' + outcome.field.crop + ' later'
-                              }
-                            >
-                              ↓
-                            </button>
-                            <button
-                              type="button"
-                              className="harvest-remove-button"
-                              onClick={() => removeField(outcome.field.id)}
-                              aria-label={
-                                'Remove ' + outcome.field.crop + ' from plan'
-                              }
-                            >
-                              Remove
-                            </button>
+                return (
+                  <li
+                    key={index}
+                    className={
+                      'harvest-plan-slot ' +
+                      (outcome?.rainAffected ? 'harvest-plan-slot-exposed' : '')
+                    }
+                  >
+                    <span className="harvest-plan-slot-number">
+                      0{index + 1}
+                    </span>
+                    {outcome ? (
+                      <div className="harvest-plan-slot-content">
+                        <div className="harvest-plan-slot-main">
+                          <div>
+                            <strong>{outcome.field.crop}</strong>
+                            <span>
+                              {outcome.field.crates} crates · {outcome.field.crew}{' '}
+                              crew
+                            </span>
                           </div>
-                        )}
+                          <strong className="harvest-plan-score">
+                            {outcome.score} pts
+                          </strong>
+                        </div>
+                        <div className="harvest-plan-slot-actions">
+                          <span className="harvest-plan-weather-note">
+                            {outcome.rainAffected
+                              ? 'Rain loss · −' + outcome.lostPoints + ' pts'
+                              : index === 2
+                                ? 'After rain · protected'
+                                : 'Clear weather'}
+                          </span>
+                          {!result && (
+                            <div className="harvest-plan-controls">
+                              <button
+                                type="button"
+                                className="harvest-icon-button"
+                                onClick={() =>
+                                  reorderField(outcome.field.id, -1)
+                                }
+                                disabled={index === 0}
+                                aria-label={
+                                  'Move ' + outcome.field.crop + ' earlier'
+                                }
+                              >
+                                ↑
+                              </button>
+                              <button
+                                type="button"
+                                className="harvest-icon-button"
+                                onClick={() => reorderField(outcome.field.id, 1)}
+                                disabled={index === plan.length - 1}
+                                aria-label={
+                                  'Move ' + outcome.field.crop + ' later'
+                                }
+                              >
+                                ↓
+                              </button>
+                              <button
+                                type="button"
+                                className="harvest-remove-button"
+                                onClick={() => removeField(outcome.field.id)}
+                                aria-label={
+                                  'Remove ' + outcome.field.crop + ' from plan'
+                                }
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="harvest-plan-empty">
-                      <strong>Slot awaiting field</strong>
-                      <span>
-                        {index === 2
-                          ? 'The storm will have arrived'
-                          : 'Choose a plot from the register'}
-                      </span>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
+                    ) : (
+                      <div className="harvest-plan-empty">
+                        <strong>Slot awaiting field</strong>
+                        <span>
+                          {index === 2
+                            ? 'The storm will have arrived'
+                            : 'Choose a plot from the register'}
+                        </span>
+                      </div>
+                    )}
+                  </li>
+                );
+              },
+            )}
           </ol>
 
           <div className="harvest-plan-summary">
