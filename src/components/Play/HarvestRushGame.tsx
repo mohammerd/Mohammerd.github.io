@@ -419,7 +419,9 @@ export default function HarvestRushGame() {
               <div className="harvest-result-heading">
                 <div>
                   <span className="harvest-result-grade">{result.grade}</span>
-                  <strong className="harvest-result-score">{result.score}</strong>
+                  <strong className="harvest-result-score">
+                    {result.score}
+                  </strong>
                   <span className="harvest-result-unit">points earned</span>
                 </div>
                 <span className="harvest-result-best">
