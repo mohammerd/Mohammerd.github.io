@@ -1,11 +1,11 @@
 export const HARVEST_RUSH_RULES = {
   harvestSlots: 3,
-  crewLimit: 7,
+  crewLimit: 6,
   truckCapacity: 11,
   clearHarvests: 2,
-  goldScore: 50,
-  silverScore: 44,
-  bronzeScore: 36,
+  goldScore: 47,
+  silverScore: 42,
+  bronzeScore: 34,
 } as const;
 
 export interface HarvestField {
