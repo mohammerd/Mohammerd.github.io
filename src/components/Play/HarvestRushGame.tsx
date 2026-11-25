@@ -8,15 +8,15 @@ import {
   FARM_CROPS,
   FARM_GOAL,
   FARM_SAVE_KEY,
+  type FarmCropId,
+  type FarmPlot,
+  type FarmState,
   getFarmCrop,
   harvestFarmPlot,
   isCropReady,
   isValidFarmState,
   plantFarmCrop,
   waterFarmPlot,
-  type FarmCropId,
-  type FarmPlot,
-  type FarmState,
 } from '@/lib/farm-game';
 import { withBasePath } from '@/lib/utils';
 
@@ -108,9 +108,7 @@ function FarmWorld({
                 left: `${position.x}%`,
                 top: `${position.y}%`,
               }}
-              aria-label={
-                `Plot ${plot.id}: ${crop ? crop.name : 'empty bed'}${state}`
-              }
+              aria-label={`Plot ${plot.id}: ${crop ? crop.name : 'empty bed'}${state}`}
               aria-pressed={selected}
               onClick={() => onSelectPlot(plot.id)}
             >
@@ -238,9 +236,9 @@ export default function HarvestRushGame() {
     setNotice(
       wateredCount > 0
         ? `Day ${next.day} begins. ${wateredCount} watered ` +
-          `${wateredCount === 1 ? 'crop has' : 'crops have'} grown.`
+            `${wateredCount === 1 ? 'crop has' : 'crops have'} grown.`
         : `Day ${next.day} begins. ` +
-          'Water your crops before ending the day so they can grow.',
+            'Water your crops before ending the day so they can grow.',
     );
   }
 
