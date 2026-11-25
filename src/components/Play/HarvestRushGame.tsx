@@ -115,7 +115,9 @@ function FarmWorld({
               {crop ? (
                 <FarmCropSprite plot={plot} />
               ) : (
-                <span className="farm-plot-empty-mark" aria-hidden="true">+</span>
+                <span className="farm-plot-empty-mark" aria-hidden="true">
+                  +
+                </span>
               )}
             </button>
           );
@@ -209,7 +211,9 @@ export default function HarvestRushGame() {
     const next = waterFarmPlot(farm, selectedPlotId);
     if (next === farm) return;
     setFarm(next);
-    setNotice(`${plantedCrop?.name ?? 'Crop'} watered. End the day to grow it.`);
+    setNotice(
+      `${plantedCrop?.name ?? 'Crop'} watered. End the day to grow it.`,
+    );
   }
 
   function harvestSelectedPlot() {
@@ -244,7 +248,9 @@ export default function HarvestRushGame() {
     >
       <header className="farm-topbar">
         <div className="farm-brand">
-          <span className="farm-brand-mark" aria-hidden="true">✦</span>
+          <span className="farm-brand-mark" aria-hidden="true">
+            ✦
+          </span>
           <span>
             <strong>HARVEST RUSH</strong>
             <small>YOUR LITTLE FARM</small>
@@ -273,8 +279,13 @@ export default function HarvestRushGame() {
           <p>Plant a few seeds, care for your crops, and sell what you grow.</p>
         </div>
         <div className="farm-weather-chip">
-          <span className="farm-sun" aria-hidden="true">☀</span>
-          <span><strong>Clear skies</strong><small>Good day for the farm</small></span>
+          <span className="farm-sun" aria-hidden="true">
+            ☀
+          </span>
+          <span>
+            <strong>Clear skies</strong>
+            <small>Good day for the farm</small>
+          </span>
         </div>
       </div>
 
@@ -286,7 +297,9 @@ export default function HarvestRushGame() {
               {farm.goalComplete ? 'Starter farm complete!' : 'Harvest 4 crops'}
             </strong>
           </div>
-          <span className="farm-goal-count">{goalProgress}/{FARM_GOAL}</span>
+          <span className="farm-goal-count">
+            {goalProgress}/{FARM_GOAL}
+          </span>
         </div>
         <div
           className="farm-goal-track"
@@ -323,9 +336,15 @@ export default function HarvestRushGame() {
             onSelectPlot={selectPlot}
           />
           <div className="farm-legend" aria-label="Map legend">
-            <span><i className="is-empty" /> Empty plot</span>
-            <span><i className="is-growing" /> Growing</span>
-            <span><i className="is-ready" /> Ready to harvest</span>
+            <span>
+              <i className="is-empty" /> Empty plot
+            </span>
+            <span>
+              <i className="is-growing" /> Growing
+            </span>
+            <span>
+              <i className="is-ready" /> Ready to harvest
+            </span>
           </div>
         </div>
 
@@ -337,7 +356,15 @@ export default function HarvestRushGame() {
               </span>
               <h3>{plantedCrop ? plantedCrop.name : 'Empty garden bed'}</h3>
             </div>
-            <span className={selectedReady ? 'farm-state-tag is-ready' : plantedCrop ? 'farm-state-tag is-growing' : 'farm-state-tag'}>
+            <span
+              className={
+                selectedReady
+                  ? 'farm-state-tag is-ready'
+                  : plantedCrop
+                    ? 'farm-state-tag is-growing'
+                    : 'farm-state-tag'
+              }
+            >
               {selectedReady ? 'Ready' : plantedCrop ? 'Growing' : 'Empty'}
             </span>
           </div>
@@ -361,7 +388,14 @@ export default function HarvestRushGame() {
                       : 'Give this crop water before you end the day.'}
                 </span>
               </div>
-              <div className="farm-growth-track" role="progressbar" aria-label={`${plantedCrop.name} growth`} aria-valuemin={0} aria-valuemax={plantedCrop.growDays} aria-valuenow={selectedPlot.growth}>
+              <div
+                className="farm-growth-track"
+                role="progressbar"
+                aria-label={`${plantedCrop.name} growth`}
+                aria-valuemin={0}
+                aria-valuemax={plantedCrop.growDays}
+                aria-valuenow={selectedPlot.growth}
+              >
                 <span style={{ width: `${growthPercent}%` }} />
               </div>
             </div>
@@ -373,13 +407,19 @@ export default function HarvestRushGame() {
                   <button
                     key={crop.id}
                     type="button"
-                    className={selectedSeed === crop.id ? 'farm-seed-option is-selected' : 'farm-seed-option'}
+                    className={
+                      selectedSeed === crop.id
+                        ? 'farm-seed-option is-selected'
+                        : 'farm-seed-option'
+                    }
                     onClick={() => setSelectedSeed(crop.id)}
                     aria-pressed={selectedSeed === crop.id}
                   >
                     <SeedMark cropId={crop.id} />
                     <span className="farm-seed-option-name">{crop.name}</span>
-                    <span className="farm-seed-option-meta">{crop.seedCost} coins · {crop.growDays} days</span>
+                    <span className="farm-seed-option-meta">
+                      {crop.seedCost} coins · {crop.growDays} days
+                    </span>
                   </button>
                 ))}
               </div>
@@ -389,18 +429,28 @@ export default function HarvestRushGame() {
                 onClick={plantSelectedSeed}
                 disabled={farm.coins < selectedCrop.seedCost}
               >
-                Plant {selectedCrop.name.toLowerCase()} <span>{selectedCrop.seedCost} coins</span>
+                Plant {selectedCrop.name.toLowerCase()}
+                <span>{selectedCrop.seedCost} coins</span>
               </button>
             </div>
           )}
 
           {plantedCrop && selectedReady && (
-            <button type="button" className="farm-primary-action" onClick={harvestSelectedPlot}>
-              Harvest {plantedCrop.name.toLowerCase()} <span>+{plantedCrop.sellPrice} coins</span>
+            <button
+              type="button"
+              className="farm-primary-action"
+              onClick={harvestSelectedPlot}
+            >
+              Harvest {plantedCrop.name.toLowerCase()}
+              <span>+{plantedCrop.sellPrice} coins</span>
             </button>
           )}
           {plantedCrop && !selectedReady && !selectedPlot.watered && (
-            <button type="button" className="farm-primary-action" onClick={waterSelectedPlot}>
+            <button
+              type="button"
+              className="farm-primary-action"
+              onClick={waterSelectedPlot}
+            >
               Water this crop <span>Free</span>
             </button>
           )}
@@ -412,7 +462,11 @@ export default function HarvestRushGame() {
           )}
 
           <div className="farm-action-divider" />
-          <button type="button" className="farm-secondary-action" onClick={endDay}>
+          <button
+            type="button"
+            className="farm-secondary-action"
+            onClick={endDay}
+          >
             End day <span aria-hidden="true">→</span>
           </button>
           <p className="farm-action-hint">
@@ -430,16 +484,35 @@ export default function HarvestRushGame() {
           <span className="farm-how-to-progress">No timer · No pressure</span>
         </div>
         <ol>
-          <li><span>1</span><strong>Choose a plot</strong><small>Tap any empty soil bed on the map.</small></li>
-          <li><span>2</span><strong>Plant a seed</strong><small>Pick a crop you can afford.</small></li>
-          <li><span>3</span><strong>Water & rest</strong><small>Water it, then press End day.</small></li>
-          <li><span>4</span><strong>Harvest & sell</strong><small>When it is ready, collect your coins.</small></li>
+          <li>
+            <span>1</span>
+            <strong>Choose a plot</strong>
+            <small>Tap any empty soil bed on the map.</small>
+          </li>
+          <li>
+            <span>2</span>
+            <strong>Plant a seed</strong>
+            <small>Pick a crop you can afford.</small>
+          </li>
+          <li>
+            <span>3</span>
+            <strong>Water & rest</strong>
+            <small>Water it, then press End day.</small>
+          </li>
+          <li>
+            <span>4</span>
+            <strong>Harvest & sell</strong>
+            <small>When it is ready, collect your coins.</small>
+          </li>
         </ol>
       </div>
 
-      <p className="farm-notice" role="status" aria-live="polite">{notice}</p>
+      <p className="farm-notice" role="status" aria-live="polite">
+        {notice}
+      </p>
       <p className="farm-disclaimer">
-        Crop prices and growing times are fictional game rules, not farming or market advice. Your progress is saved on this device.
+        Crop prices and growing times are fictional game rules, not farming or
+        market advice. Your progress is saved on this device.
       </p>
     </section>
   );
