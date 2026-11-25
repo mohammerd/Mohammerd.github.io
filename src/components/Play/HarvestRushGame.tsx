@@ -535,7 +535,7 @@ export default function HarvestRushGame() {
           <h2>Build a working farm.</h2>
           <p>Walk the field, prepare the soil, plant, water and bring in your harvest.</p>
         </div>
-        <div className="farm-weather-chip">
+        <div className={'farm-weather-chip is-' + weather.id}>
           <span className="farm-sun" aria-hidden="true">☀</span>
           <span>
             <strong>{weather.label}</strong>
