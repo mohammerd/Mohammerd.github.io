@@ -86,6 +86,16 @@ describe('farm simulation rules', () => {
     expect(watered.plots[0].watered).toBe(true);
   });
 
+  it('does not spend tank water when rain will irrigate the field', () => {
+    let farm = createInitialFarmState();
+    farm = plantFarmCrop(tillFarmPlot(farm, 1), 1, 'tomato');
+    farm = advanceFarmDay(advanceFarmDay(farm));
+
+    expect(getFarmWeather(farm.day).id).toBe('rainy');
+    expect(waterFarmPlot(farm, 1)).toBe(farm);
+    expect(advanceFarmDay(farm).plots[0].growth).toBe(1);
+  });
+
   it('lets rain water growing crops automatically overnight', () => {
     let farm = createInitialFarmState();
     farm = plantFarmCrop(tillFarmPlot(farm, 1), 1, 'tomato');
