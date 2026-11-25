@@ -133,6 +133,7 @@ describe('farm simulation rules', () => {
     expect(farm.goalComplete).toBe(true);
     expect(farm.coins).toBe(26 - 4 * 4 + 4 * 12 + FARM_GOAL_REWARD);
 
+    farm = refillFarmWater(farm);
     farm = plantFarmCrop(tillFarmPlot(farm, 5), 5, 'okra');
     farm = harvestFarmPlot(advanceFarmDay(waterFarmPlot(farm, 5)), 5).state;
     expect(farm.goalComplete).toBe(true);
