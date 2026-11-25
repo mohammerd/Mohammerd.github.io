@@ -49,6 +49,7 @@ export interface FarmPlot {
   crop: FarmCropId | null;
   growth: number;
   watered: boolean;
+  tilled: boolean;
 }
 
 export interface FarmState {
@@ -59,7 +60,8 @@ export interface FarmState {
   plots: FarmPlot[];
 }
 
-export const FARM_SAVE_KEY = 'mohammerd.harvest-rush.farm.v1';
+export const FARM_SAVE_KEY = 'mohammerd.agroguardai.farm.v2';
+export const LEGACY_FARM_SAVE_KEY = 'mohammerd.harvest-rush.farm.v1';
 
 export function createInitialFarmState(): FarmState {
   return {
@@ -72,6 +74,7 @@ export function createInitialFarmState(): FarmState {
       crop: null,
       growth: 0,
       watered: false,
+      tilled: false,
     })),
   };
 }
@@ -86,6 +89,17 @@ export function isCropReady(plot: FarmPlot): boolean {
   return plot.crop !== null && plot.growth >= getFarmCrop(plot.crop).growDays;
 }
 
+export function tillFarmPlot(state: FarmState, plotId: number): FarmState {
+  const index = state.plots.findIndex((plot) => plot.id === plotId);
+  if (index < 0 || state.plots[index].crop !== null || state.plots[index].tilled) {
+    return state;
+  }
+
+  const plots = [...state.plots];
+  plots[index] = { ...plots[index], tilled: true };
+  return { ...state, plots };
+}
+
 export function plantFarmCrop(
   state: FarmState,
   plotId: number,
@@ -96,13 +110,19 @@ export function plantFarmCrop(
   if (
     index < 0 ||
     state.plots[index].crop !== null ||
+    !state.plots[index].tilled ||
     state.coins < crop.seedCost
   ) {
     return state;
   }
 
   const plots = [...state.plots];
-  plots[index] = { id: plotId, crop: cropId, growth: 0, watered: false };
+  plots[index] = {
+    ...plots[index],
+    crop: cropId,
+    growth: 0,
+    watered: false,
+  };
   return { ...state, coins: state.coins - crop.seedCost, plots };
 }
 
@@ -154,7 +174,13 @@ export function harvestFarmPlot(
   const completedNow = !state.goalComplete && harvested >= FARM_GOAL;
   const goalReward = completedNow ? FARM_GOAL_REWARD : 0;
   const plots = [...state.plots];
-  plots[index] = { id: plotId, crop: null, growth: 0, watered: false };
+  plots[index] = {
+    ...plot,
+    crop: null,
+    growth: 0,
+    watered: false,
+    tilled: true,
+  };
 
   return {
     crop,
@@ -196,9 +222,10 @@ export function isValidFarmState(value: unknown): value is FarmState {
       Number.isInteger(plot.growth) &&
       plot.growth >= 0 &&
       typeof plot.watered === 'boolean' &&
+      typeof plot.tilled === 'boolean' &&
       (plot.crop === null
         ? plot.growth === 0 && !plot.watered
-        : plot.growth <= getFarmCrop(plot.crop).growDays)
+        : plot.tilled && plot.growth <= getFarmCrop(plot.crop).growDays)
     );
   });
 }
