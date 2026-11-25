@@ -20,7 +20,9 @@ if (!existsSync(sourceIndex)) {
 
 const html = readFileSync(sourceIndex, 'utf8');
 if (!html.includes('/Snakegame/')) {
-  throw new Error('Snakegame build does not contain the /Snakegame/ asset base.');
+  throw new Error(
+    'Snakegame build does not contain the /Snakegame/ asset base.',
+  );
 }
 
 rmSync(destinationDirectory, { recursive: true, force: true });
@@ -29,7 +31,9 @@ cpSync(sourceDirectory, destinationDirectory, { recursive: true });
 
 const copiedEntries = readdirSync(destinationDirectory);
 if (!copiedEntries.includes('index.html') || !copiedEntries.includes('assets')) {
-  throw new Error('Snakegame static output is incomplete after copying.');
+  throw new Error(
+    'Snakegame static output is incomplete after copying.',
+  );
 }
 
 console.log(
