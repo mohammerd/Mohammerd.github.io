@@ -438,7 +438,9 @@ export default function HarvestRushGame() {
               ? 'This plot has already been watered today.'
               : selectedReady
                 ? 'This crop is ready. Use your harvest basket.'
-                : farm.water === 0
+                : weather.id === 'rainy'
+                  ? 'Rain is coming. Save your water; the field will be watered overnight.'
+                  : farm.water === 0
                   ? 'Your water tank is empty. Walk to the well on the east side of the farm.'
                   : weather.id === 'heatwave' && farm.water < 2
                     ? 'A heatwave needs two water uses per crop. Refill at the well.'
