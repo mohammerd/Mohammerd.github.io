@@ -8,6 +8,66 @@ import HarvestRushGame from './HarvestRushGame';
 type GameId = 'harvest-rush' | 'snake';
 
 const SNAKE_GAME_URL = withBasePath('/Snakegame/');
+const monoStyle = {
+  fontFamily: 'var(--font-mono)',
+  fontSize: 'var(--text-xs)',
+  letterSpacing: '0.045em',
+} as const;
+const mutedStyle = {
+  color: 'var(--color-fg-light)',
+  fontSize: 'var(--text-sm)',
+  lineHeight: 1.5,
+} as const;
+const artLabelStyle = { ...monoStyle, opacity: 0.82 } as const;
+const metaStyle = {
+  ...monoStyle,
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: '.5rem',
+  width: '100%',
+  color: 'var(--color-fg-light)',
+} as const;
+const footerStyle = {
+  ...metaStyle,
+  marginTop: 'auto',
+  paddingTop: '.75rem',
+  borderTop: '1px solid var(--color-border)',
+  color: 'var(--color-accent)',
+} as const;
+const titleStyle = {
+  color: 'var(--color-fg-bold)',
+  fontFamily: 'var(--font-display)',
+  fontSize: 'var(--text-xl)',
+  fontWeight: 600,
+} as const;
+const harvestArtStyle = {
+  background:
+    'radial-gradient(circle at 86% 20%, rgba(183,214,138,.2), transparent 34%), linear-gradient(135deg,#1a3025,#263e2a 58%,#17291f)',
+  color: '#e4efda',
+} as const;
+const snakeArtStyle = {
+  background:
+    'radial-gradient(circle at 82% 18%, rgba(110,231,183,.18), transparent 34%), linear-gradient(135deg,#071a16,#102c23 58%,#071b15)',
+  color: '#d8f5df',
+} as const;
+const backButtonStyle = {
+  minHeight: '2.5rem',
+  padding: '.45rem .75rem',
+  border: '1px solid var(--color-border)',
+  background: 'var(--color-bg-alt)',
+  color: 'var(--color-fg)',
+  cursor: 'pointer',
+} as const;
+const embedHeaderStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '1rem',
+  padding: '.75rem 1rem',
+  borderBottom: '1px solid rgba(255,255,255,.12)',
+  background: '#0b1714',
+  color: '#dbe7df',
+} as const;
 
 export default function GameHub() {
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
@@ -19,11 +79,14 @@ export default function GameHub() {
           <button
             type="button"
             className="play-back-button"
+            style={backButtonStyle}
             onClick={() => setActiveGame(null)}
           >
             <span aria-hidden="true">←</span> All games
           </button>
-          <span className="play-active-game-label">NOW PLAYING / 01</span>
+          <span className="play-active-game-label" style={{ ...monoStyle, color: 'var(--color-fg-light)' }}>
+            NOW PLAYING / 01
+          </span>
         </div>
         <HarvestRushGame />
       </div>
@@ -37,20 +100,28 @@ export default function GameHub() {
           <button
             type="button"
             className="play-back-button"
+            style={backButtonStyle}
             onClick={() => setActiveGame(null)}
           >
             <span aria-hidden="true">←</span> All games
           </button>
-          <span className="play-active-game-label">NOW PLAYING / 02</span>
+          <span className="play-active-game-label" style={{ ...monoStyle, color: 'var(--color-fg-light)' }}>
+            NOW PLAYING / 02
+          </span>
         </div>
 
         <section className="snake-game-embed" aria-label="Snake game">
-          <div className="snake-game-embed-heading">
-            <p>
+          <div className="snake-game-embed-heading" style={embedHeaderStyle}>
+            <p style={{ margin: 0, color: '#aab9ae', fontSize: 'var(--text-xs)', lineHeight: 1.45 }}>
               Snake runs entirely in your browser. Your scores and settings stay
               on this device.
             </p>
-            <a href={SNAKE_GAME_URL} target="_blank" rel="noopener noreferrer">
+            <a
+              href={SNAKE_GAME_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#a9e7b5', fontSize: 'var(--text-xs)', textDecoration: 'underline', textUnderlineOffset: '.2em' }}
+            >
               Open in new tab <span aria-hidden="true">↗</span>
             </a>
           </div>
@@ -67,21 +138,22 @@ export default function GameHub() {
   }
 
   return (
-    <section
-      className="play-game-selection"
-      aria-labelledby="play-game-selection-title"
-    >
+    <section className="play-game-selection" aria-labelledby="play-game-selection-title">
       <div className="play-game-selection-heading">
         <div>
-          <p className="play-section-kicker">THE GAME LIBRARY / 02 TITLES</p>
-          <h2 id="play-game-selection-title">Choose a game.</h2>
-          <p>
+          <p className="play-section-kicker" style={{ ...monoStyle, margin: '0 0 .55rem', color: 'var(--color-fg-light)' }}>
+            THE GAME LIBRARY / 02 TITLES
+          </p>
+          <h2 id="play-game-selection-title" style={{ margin: '0 0 .35rem', color: 'var(--color-fg-bold)', fontFamily: 'var(--font-display)', fontSize: 'clamp(1.45rem,3vw,2rem)', fontWeight: 500 }}>
+            Choose a game.
+          </h2>
+          <p style={{ ...mutedStyle, margin: 0 }}>
             Two different challenges. No account, installation, or subscription
             required.
           </p>
         </div>
-        <span className="play-library-count">
-          02 <small>GAMES</small>
+        <span className="play-library-count" style={{ ...monoStyle, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', color: 'var(--color-fg-bold)', fontSize: 'var(--text-lg)' }}>
+          02 <small style={{ color: 'var(--color-fg-light)', fontSize: '.62rem', fontWeight: 400 }}>GAMES</small>
         </span>
       </div>
 
@@ -94,9 +166,10 @@ export default function GameHub() {
         >
           <span
             className="play-game-art play-game-art--harvest"
+            style={harvestArtStyle}
             aria-hidden="true"
           >
-            <span className="play-game-art-topline">01 / FIELD STRATEGY</span>
+            <span className="play-game-art-topline" style={artLabelStyle}>01 / FIELD STRATEGY</span>
             <svg viewBox="0 0 360 150" fill="none" role="presentation">
               <path
                 d="M30 30H330M30 76H330M30 122H330M82 18V134M178 18V134M274 18V134"
@@ -128,21 +201,21 @@ export default function GameHub() {
                 strokeLinecap="round"
               />
             </svg>
-            <span className="play-game-art-bottomline">
+            <span className="play-game-art-bottomline" style={artLabelStyle}>
               PLAN / ALLOCATE / HARVEST
             </span>
           </span>
-          <span className="play-game-card-body">
-            <span className="play-game-card-meta">
+          <span className="play-game-card-body" style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'start', gap: '.65rem', padding: '1rem' }}>
+            <span className="play-game-card-meta" style={metaStyle}>
               <span>STRATEGY</span>
               <span>3 MISSIONS</span>
             </span>
-            <strong>Harvest Rush</strong>
-            <span className="play-game-description">
+            <strong style={titleStyle}>Harvest Rush</strong>
+            <span className="play-game-description" style={mutedStyle}>
               Plan a farm, manage limited resources, and make decisions before
               the weather changes.
             </span>
-            <span className="play-game-card-footer">
+            <span className="play-game-card-footer" style={footerStyle}>
               <span>PLAY HARVEST RUSH</span>
               <span aria-hidden="true">↗</span>
             </span>
@@ -157,9 +230,10 @@ export default function GameHub() {
         >
           <span
             className="play-game-art play-game-art--snake"
+            style={snakeArtStyle}
             aria-hidden="true"
           >
-            <span className="play-game-art-topline">02 / ARCADE CLASSIC</span>
+            <span className="play-game-art-topline" style={artLabelStyle}>02 / ARCADE CLASSIC</span>
             <svg viewBox="0 0 360 150" fill="none" role="presentation">
               <path
                 d="M28 27H332V123H28V27Z"
@@ -196,21 +270,21 @@ export default function GameHub() {
                 strokeLinecap="round"
               />
             </svg>
-            <span className="play-game-art-bottomline">
+            <span className="play-game-art-bottomline" style={artLabelStyle}>
               MOVE / GROW / SURVIVE
             </span>
           </span>
-          <span className="play-game-card-body">
-            <span className="play-game-card-meta">
+          <span className="play-game-card-body" style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'start', gap: '.65rem', padding: '1rem' }}>
+            <span className="play-game-card-meta" style={metaStyle}>
               <span>ARCADE</span>
               <span>4 SPEEDS</span>
             </span>
-            <strong>Snake Game</strong>
-            <span className="play-game-description">
+            <strong style={titleStyle}>Snake Game</strong>
+            <span className="play-game-description" style={mutedStyle}>
               Control the snake, collect food, build combos, and beat your
               personal best.
             </span>
-            <span className="play-game-card-footer">
+            <span className="play-game-card-footer" style={footerStyle}>
               <span>PLAY SNAKE</span>
               <span aria-hidden="true">↗</span>
             </span>
@@ -218,7 +292,7 @@ export default function GameHub() {
         </button>
       </div>
 
-      <p className="play-library-note">
+      <p className="play-library-note" style={{ ...mutedStyle, margin: 0, fontSize: 'var(--text-xs)' }}>
         Both games run without accounts or subscriptions. Progress is stored
         locally in your browser.
       </p>
