@@ -19,8 +19,12 @@ describe('Harvest Rush farm simulation', () => {
         name: /Top-down farm map. Select one of the six garden plots/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Plot 1: empty bed' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Plot 6: empty bed' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Plot 1: empty bed' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Plot 6: empty bed' }),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole('progressbar', { name: 'Starter goal progress' }),
     ).toHaveAttribute('aria-valuenow', '0');
@@ -34,13 +38,16 @@ describe('Harvest Rush farm simulation', () => {
     fireEvent.click(screen.getByRole('button', { name: /Peppers 6 coins/ }));
     fireEvent.click(screen.getByRole('button', { name: /Plant peppers/ }));
 
-    expect(screen.getByRole('button', { name: /Plot 2: Peppers, growing/ })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    expect(
+      screen.getByRole('button', { name: /Plot 2: Peppers, growing/ }),
+    ).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByText('20')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Water this crop/ })).toBeEnabled();
-    expect(screen.getByText(/Water the soil, then end the day/)).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /Water this crop/ }),
+    ).toBeEnabled();
+    expect(
+      screen.getByText(/Water the soil, then end the day/),
+    ).toBeInTheDocument();
   });
 
   it('grows a watered crop over two days and sells it when harvested', () => {
@@ -57,11 +64,12 @@ describe('Harvest Rush farm simulation', () => {
     expect(screen.getByText('Ready to harvest!')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /Harvest tomatoes/ }));
 
-    expect(screen.getByRole('button', { name: 'Plot 1: empty bed' })).toBeInTheDocument();
-    expect(screen.getByRole('progressbar', { name: 'Starter goal progress' })).toHaveAttribute(
-      'aria-valuenow',
-      '1',
-    );
+    expect(
+      screen.getByRole('button', { name: 'Plot 1: empty bed' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('progressbar', { name: 'Starter goal progress' }),
+    ).toHaveAttribute('aria-valuenow', '1');
     expect(screen.getByText('36')).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent(
       'You harvested Tomatoes. +15 coins.',
@@ -75,7 +83,9 @@ describe('Harvest Rush farm simulation', () => {
     fireEvent.click(screen.getByRole('button', { name: /End day/ }));
 
     expect(screen.getByText('Growing · Day 0 of 2')).toBeInTheDocument();
-    expect(screen.getByText(/Water your crops before ending the day/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Water your crops before ending the day/),
+    ).toBeInTheDocument();
   });
 
   it('awards the starter reward once and restores saved farm progress', async () => {
@@ -94,9 +104,9 @@ describe('Harvest Rush farm simulation', () => {
     expect(screen.getByText('Starter farm complete!')).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent(/20-coin reward/);
     await waitFor(() => {
-      expect(window.localStorage.getItem('mohammerd.harvest-rush.farm.v1')).toContain(
-        '"goalComplete":true',
-      );
+      expect(
+        window.localStorage.getItem('mohammerd.harvest-rush.farm.v1'),
+      ).toContain('"goalComplete":true');
     });
 
     unmount();
