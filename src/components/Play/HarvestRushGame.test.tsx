@@ -113,6 +113,24 @@ describe('AgroGuardAI farm simulation', () => {
     expect(screen.getByRole('status')).toHaveTextContent(/Dry crops will not grow/);
   });
 
+  it('uses the equipped tool with E and switches tools with number keys', () => {
+    render(<HarvestRushGame />);
+    const field = screen.getByRole('group', {
+      name: /Farm field. Focus this area and use WASD or arrow keys/i,
+    });
+
+    fireEvent.keyDown(field, { key: 'e' });
+    expect(
+      screen.getByRole('button', { name: 'Plot 6: empty, tilled soil' }),
+    ).toBeInTheDocument();
+
+    fireEvent.keyDown(field, { key: '2' });
+    expect(screen.getByRole('button', { name: 'Tool: Seed bag' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
   it('moves the farmer with the keyboard controls', () => {
     render(<HarvestRushGame />);
     const field = screen.getByRole('group', {
