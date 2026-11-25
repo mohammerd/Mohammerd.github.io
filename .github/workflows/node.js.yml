@@ -58,7 +58,7 @@ jobs:
         run: npm run format:check
 
       - name: Print stylesheet formatting diff
-        if: steps.format_check.outcome == 'failure'
+        if: failure() && steps.format_check.outcome == 'failure'
         run: |
           npx prettier app/styles/pages/play.css > /tmp/play.css.formatted
           diff -u app/styles/pages/play.css /tmp/play.css.formatted || true
