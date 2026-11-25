@@ -22,7 +22,7 @@ describe('homepage', () => {
     render(<HomePage />);
 
     expect(
-      screen.getByRole('heading', { name: 'AgroGuardAI' }),
+      screen.getByRole('heading', { name: 'AgroGuardAI', level: 2 }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('region', { name: 'AgroGuardAI farm simulator' }),
