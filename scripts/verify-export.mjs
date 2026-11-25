@@ -92,13 +92,18 @@ function throughPagesAlias(url) {
 const SNAKE_GAME_INDEX = join(OUT, 'Snakegame', 'index.html');
 const pages = walkFiles(OUT).filter((path) => {
   const relativePath = toUrlPath(relative(OUT, path));
-  return relativePath.endsWith('.html') && !relativePath.startsWith('Snakegame/');
+  return (
+    relativePath.endsWith('.html') && !relativePath.startsWith('Snakegame/')
+  );
 });
 
 if (existsSync(SNAKE_GAME_INDEX)) {
   const snakeHtml = readFileSync(SNAKE_GAME_INDEX, 'utf8');
   if (!snakeHtml.includes('/Snakegame/')) {
-    fail('Snakegame/index.html', 'does not use the expected /Snakegame/ asset base');
+    fail(
+      'Snakegame/index.html',
+      'does not use the expected /Snakegame/ asset base',
+    );
   }
   if (!existsSync(join(OUT, 'Snakegame', 'assets'))) {
     fail('Snakegame/index.html', 'is missing its Vite assets directory');
