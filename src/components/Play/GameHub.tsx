@@ -68,6 +68,60 @@ const embedHeaderStyle = {
   background: '#0b1714',
   color: '#dbe7df',
 } as const;
+const activeLabelStyle = {
+  ...monoStyle,
+  color: 'var(--color-fg-light)',
+} as const;
+const sectionKickerStyle = {
+  ...monoStyle,
+  margin: '0 0 .55rem',
+  color: 'var(--color-fg-light)',
+} as const;
+const selectionTitleStyle = {
+  margin: '0 0 .35rem',
+  color: 'var(--color-fg-bold)',
+  fontFamily: 'var(--font-display)',
+  fontSize: 'clamp(1.45rem,3vw,2rem)',
+  fontWeight: 500,
+} as const;
+const libraryCountStyle = {
+  ...monoStyle,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-end',
+  color: 'var(--color-fg-bold)',
+  fontSize: 'var(--text-lg)',
+} as const;
+const libraryCountLabelStyle = {
+  color: 'var(--color-fg-light)',
+  fontSize: '.62rem',
+  fontWeight: 400,
+} as const;
+const cardBodyStyle = {
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  alignItems: 'start',
+  gap: '.65rem',
+  padding: '1rem',
+} as const;
+const embedParagraphStyle = {
+  margin: 0,
+  color: '#aab9ae',
+  fontSize: 'var(--text-xs)',
+  lineHeight: 1.45,
+} as const;
+const openGameLinkStyle = {
+  color: '#a9e7b5',
+  fontSize: 'var(--text-xs)',
+  textDecoration: 'underline',
+  textUnderlineOffset: '.2em',
+} as const;
+const libraryNoteStyle = {
+  ...mutedStyle,
+  margin: 0,
+  fontSize: 'var(--text-xs)',
+} as const;
 
 export default function GameHub() {
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
@@ -84,7 +138,7 @@ export default function GameHub() {
           >
             <span aria-hidden="true">←</span> All games
           </button>
-          <span className="play-active-game-label" style={{ ...monoStyle, color: 'var(--color-fg-light)' }}>
+          <span className="play-active-game-label" style={activeLabelStyle}>
             NOW PLAYING / 01
           </span>
         </div>
@@ -112,7 +166,7 @@ export default function GameHub() {
 
         <section className="snake-game-embed" aria-label="Snake game">
           <div className="snake-game-embed-heading" style={embedHeaderStyle}>
-            <p style={{ margin: 0, color: '#aab9ae', fontSize: 'var(--text-xs)', lineHeight: 1.45 }}>
+            <p style={embedParagraphStyle}>
               Snake runs entirely in your browser. Your scores and settings stay
               on this device.
             </p>
@@ -120,7 +174,7 @@ export default function GameHub() {
               href={SNAKE_GAME_URL}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#a9e7b5', fontSize: 'var(--text-xs)', textDecoration: 'underline', textUnderlineOffset: '.2em' }}
+              style={openGameLinkStyle}
             >
               Open in new tab <span aria-hidden="true">↗</span>
             </a>
@@ -138,13 +192,16 @@ export default function GameHub() {
   }
 
   return (
-    <section className="play-game-selection" aria-labelledby="play-game-selection-title">
+    <section
+      className="play-game-selection"
+      aria-labelledby="play-game-selection-title"
+    >
       <div className="play-game-selection-heading">
         <div>
-          <p className="play-section-kicker" style={{ ...monoStyle, margin: '0 0 .55rem', color: 'var(--color-fg-light)' }}>
+          <p className="play-section-kicker" style={sectionKickerStyle}>
             THE GAME LIBRARY / 02 TITLES
           </p>
-          <h2 id="play-game-selection-title" style={{ margin: '0 0 .35rem', color: 'var(--color-fg-bold)', fontFamily: 'var(--font-display)', fontSize: 'clamp(1.45rem,3vw,2rem)', fontWeight: 500 }}>
+          <h2 id="play-game-selection-title" style={selectionTitleStyle}>
             Choose a game.
           </h2>
           <p style={{ ...mutedStyle, margin: 0 }}>
@@ -152,8 +209,9 @@ export default function GameHub() {
             required.
           </p>
         </div>
-        <span className="play-library-count" style={{ ...monoStyle, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', color: 'var(--color-fg-bold)', fontSize: 'var(--text-lg)' }}>
-          02 <small style={{ color: 'var(--color-fg-light)', fontSize: '.62rem', fontWeight: 400 }}>GAMES</small>
+        <span className="play-library-count" style={libraryCountStyle}>
+          02{' '}
+          <small style={libraryCountLabelStyle}>GAMES</small>
         </span>
       </div>
 
@@ -169,7 +227,9 @@ export default function GameHub() {
             style={harvestArtStyle}
             aria-hidden="true"
           >
-            <span className="play-game-art-topline" style={artLabelStyle}>01 / FIELD STRATEGY</span>
+            <span className="play-game-art-topline" style={artLabelStyle}>
+              01 / FIELD STRATEGY
+            </span>
             <svg viewBox="0 0 360 150" fill="none" role="presentation">
               <path
                 d="M30 30H330M30 76H330M30 122H330M82 18V134M178 18V134M274 18V134"
@@ -205,7 +265,7 @@ export default function GameHub() {
               PLAN / ALLOCATE / HARVEST
             </span>
           </span>
-          <span className="play-game-card-body" style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'start', gap: '.65rem', padding: '1rem' }}>
+          <span className="play-game-card-body" style={cardBodyStyle}>
             <span className="play-game-card-meta" style={metaStyle}>
               <span>STRATEGY</span>
               <span>3 MISSIONS</span>
@@ -233,7 +293,9 @@ export default function GameHub() {
             style={snakeArtStyle}
             aria-hidden="true"
           >
-            <span className="play-game-art-topline" style={artLabelStyle}>02 / ARCADE CLASSIC</span>
+            <span className="play-game-art-topline" style={artLabelStyle}>
+              02 / ARCADE CLASSIC
+            </span>
             <svg viewBox="0 0 360 150" fill="none" role="presentation">
               <path
                 d="M28 27H332V123H28V27Z"
@@ -274,7 +336,7 @@ export default function GameHub() {
               MOVE / GROW / SURVIVE
             </span>
           </span>
-          <span className="play-game-card-body" style={{ display: 'flex', flex: 1, flexDirection: 'column', alignItems: 'start', gap: '.65rem', padding: '1rem' }}>
+          <span className="play-game-card-body" style={cardBodyStyle}>
             <span className="play-game-card-meta" style={metaStyle}>
               <span>ARCADE</span>
               <span>4 SPEEDS</span>
@@ -292,7 +354,7 @@ export default function GameHub() {
         </button>
       </div>
 
-      <p className="play-library-note" style={{ ...mutedStyle, margin: 0, fontSize: 'var(--text-xs)' }}>
+      <p className="play-library-note" style={libraryNoteStyle}>
         Both games run without accounts or subscriptions. Progress is stored
         locally in your browser.
       </p>
