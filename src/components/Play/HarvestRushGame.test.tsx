@@ -92,7 +92,7 @@ describe('Harvest Rush farm simulation', () => {
     }
 
     expect(screen.getByText('Starter farm complete!')).toBeInTheDocument();
-    expect(screen.getByText(/20 bonus coins/)).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(/20-coin reward/);
     await waitFor(() => {
       expect(window.localStorage.getItem('mohammerd.harvest-rush.farm.v1')).toContain(
         '"goalComplete":true',
