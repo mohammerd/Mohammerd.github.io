@@ -188,7 +188,8 @@ export function isValidFarmState(value: unknown): value is FarmState {
 
   return candidate.plots.every((plot, index) => {
     if (!plot || typeof plot !== 'object') return false;
-    const validCrop = plot.crop === null || FARM_CROPS.some((crop) => crop.id === plot.crop);
+    const validCrop =
+      plot.crop === null || FARM_CROPS.some((crop) => crop.id === plot.crop);
     return (
       plot.id === index + 1 &&
       validCrop &&
