@@ -316,9 +316,6 @@ function FarmWorld({
                 strokeWidth={selected ? '5' : '3'}
               />
               <CropPixels plot={plot} x={0} y={0} />
-              <text x="37" y="97" textAnchor="middle" className="farm-map-plot-label">
-                PLOT 0{plot.id}
-              </text>
               {ready && <rect x="28" y="-13" width="20" height="8" fill="#f3d66c" />}
             </g>
           );
