@@ -53,6 +53,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Inspect Prettier diff for Play CSS
+        run: |
+          npx prettier app/styles/pages/play.css > /tmp/play.css
+          diff -u app/styles/pages/play.css /tmp/play.css || true
+
       - name: Format Check
         run: npm run format:check
 
