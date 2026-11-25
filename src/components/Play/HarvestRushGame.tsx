@@ -220,7 +220,7 @@ export default function HarvestRushGame() {
     setNotice(
       outcome.goalReward > 0
         ? `You harvested ${outcome.crop.name} and completed the starter goal. ` +
-          `+${outcome.crop.sellPrice} coins plus a ${outcome.goalReward}-coin reward!`
+            `+${outcome.crop.sellPrice} coins plus a ${outcome.goalReward}-coin reward!`
         : `You harvested ${outcome.crop.name}. +${outcome.crop.sellPrice} coins.`,
     );
   }
