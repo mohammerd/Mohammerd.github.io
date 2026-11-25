@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 
-import HarvestRushGame from './HarvestRushGame';
 import { withBasePath } from '@/lib/utils';
+import HarvestRushGame from './HarvestRushGame';
 
 type GameId = 'harvest-rush' | 'snake';
 
