@@ -129,7 +129,7 @@ describe('AgroGuardAI farm simulation', () => {
 
     expect(screen.getByText('Growth · 0 of 2 days')).toBeInTheDocument();
     expect(screen.getByRole('status')).toHaveTextContent(
-      /Dry crops will not grow/,
+      /Dry crops did not grow/,
     );
   });
 
@@ -191,7 +191,10 @@ describe('AgroGuardAI farm simulation', () => {
 
   it('migrates the previous AgroGuardAI save format with a full water tank', async () => {
     const { water: _water, ...previousSave } = createInitialFarmState();
-    window.localStorage.setItem(PREVIOUS_FARM_SAVE_KEY, JSON.stringify(previousSave));
+    window.localStorage.setItem(
+      PREVIOUS_FARM_SAVE_KEY,
+      JSON.stringify(previousSave),
+    );
 
     render(<HarvestRushGame />);
 
