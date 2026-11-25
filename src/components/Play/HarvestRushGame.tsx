@@ -108,7 +108,9 @@ function FarmWorld({
                 left: `${position.x}%`,
                 top: `${position.y}%`,
               }}
-              aria-label={`Plot ${plot.id}: ${crop ? crop.name : 'empty bed'}${state}`}
+              aria-label={
+                `Plot ${plot.id}: ${crop ? crop.name : 'empty bed'}${state}`
+              }
               aria-pressed={selected}
               onClick={() => onSelectPlot(plot.id)}
             >
@@ -186,7 +188,8 @@ export default function HarvestRushGame() {
         ? `${crop.name} in Plot ${plotId} are ready to harvest.`
         : plot.watered
           ? `${crop.name} in Plot ${plotId} are watered for today.`
-          : `${crop.name} are growing in Plot ${plotId}. Water them before ending the day.`,
+          : `${crop.name} are growing in Plot ${plotId}. ` +
+            'Water them before ending the day.',
     );
   }
 
@@ -202,8 +205,8 @@ export default function HarvestRushGame() {
     }
     setFarm(next);
     setNotice(
-      `${selectedCrop.name} planted in Plot ${selectedPlotId}. Water the soil, then end the day to help it grow.`,
-
+      `${selectedCrop.name} planted in Plot ${selectedPlotId}. ` +
+        'Water the soil, then end the day to help it grow.',
     );
   }
 
@@ -222,7 +225,8 @@ export default function HarvestRushGame() {
     setFarm(outcome.state);
     setNotice(
       outcome.goalReward > 0
-        ? `You harvested ${outcome.crop.name} and completed the starter goal. +${outcome.crop.sellPrice} coins plus a ${outcome.goalReward}-coin reward!`
+        ? `You harvested ${outcome.crop.name} and completed the starter goal. ` +
+          `+${outcome.crop.sellPrice} coins plus a ${outcome.goalReward}-coin reward!`
         : `You harvested ${outcome.crop.name}. +${outcome.crop.sellPrice} coins.`,
     );
   }
@@ -233,8 +237,10 @@ export default function HarvestRushGame() {
     setFarm(next);
     setNotice(
       wateredCount > 0
-        ? `Day ${next.day} begins. ${wateredCount} watered ${wateredCount === 1 ? 'crop has' : 'crops have'} grown.`
-        : `Day ${next.day} begins. Water your crops before ending the day so they can grow.`,
+        ? `Day ${next.day} begins. ${wateredCount} watered ` +
+          `${wateredCount === 1 ? 'crop has' : 'crops have'} grown.`
+        : `Day ${next.day} begins. ` +
+          'Water your crops before ending the day so they can grow.',
     );
   }
 
@@ -313,7 +319,8 @@ export default function HarvestRushGame() {
         </div>
         <p>
           {farm.goalComplete
-            ? 'You earned the 20-coin starter reward. Keep growing and fill the whole farm.'
+            ? 'You earned the 20-coin starter reward. ' +
+              'Keep growing and fill the whole farm.'
             : 'Complete the task to earn 20 bonus coins.'}
         </p>
       </div>
@@ -378,7 +385,8 @@ export default function HarvestRushGame() {
                 <strong>
                   {selectedReady
                     ? 'Ready to harvest!'
-                    : `Growing · Day ${selectedPlot.growth} of ${plantedCrop.growDays}`}
+                    : `Growing · Day ${selectedPlot.growth} ` +
+                      `of ${plantedCrop.growDays}`}
                 </strong>
                 <span>
                   {selectedReady
