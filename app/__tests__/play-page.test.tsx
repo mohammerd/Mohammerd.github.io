@@ -28,9 +28,7 @@ describe('play page', () => {
     expect(
       screen.getByRole('heading', { name: 'Build a working farm.' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Dig Plot 6/ }),
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Dig Plot 6/ })).toBeEnabled();
     expect(
       screen.getByRole('button', { name: /All games/ }),
     ).toBeInTheDocument();
