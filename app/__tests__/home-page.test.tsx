@@ -27,9 +27,7 @@ describe('homepage', () => {
     expect(
       screen.getByRole('region', { name: 'AgroGuardAI farm simulator' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Dig Plot 6/ }),
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Dig Plot 6/ })).toBeEnabled();
     expect(
       screen.getByRole('link', { name: /Game details/ }).getAttribute('href'),
     ).toMatch(/\/play\/?$/);
