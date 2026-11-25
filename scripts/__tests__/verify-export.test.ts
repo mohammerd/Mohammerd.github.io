@@ -429,6 +429,16 @@ describe('rendered pages', () => {
 
   accepts([
     [
+    [
+      'a standalone static Snake game bundle',
+      both(
+        addFile(
+          'out/Snakegame/index.html',
+          '<script type="module" src="/Snakegame/assets/index.js"></script>',
+        ),
+        addFile('out/Snakegame/assets/index.js', '/* game bundle */'),
+      ),
+    ],
       'a text fragment after a real id, and stylesheet files that exist',
       both(
         inHomeBody('<a href="about/#section:~:text=About">Here</a>'),
