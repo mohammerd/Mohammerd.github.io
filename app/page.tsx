@@ -93,13 +93,13 @@ export default function HomePage() {
         aria-labelledby="home-play-title"
       >
         <div className="home-writing-header home-play-header">
-          <p className="home-play-kicker">INTERACTIVE CAMPAIGN / 001</p>
+          <p className="home-play-kicker">FARM SIMULATION / 001</p>
           <h2 id="home-play-title" className="section-heading">
             Harvest Rush
           </h2>
           <p className="home-play-summary">
-            Plan three field operations around weather, timing, and limited
-            resources. Play the campaign here, with no account required.
+            Plant seeds, water crops, grow your farm, and harvest for coins.
+            Start with six plots and a clear first goal. No account required.
           </p>
           <Link href="/play/" className="home-writing-all">
             Game details <span aria-hidden="true">→</span>
