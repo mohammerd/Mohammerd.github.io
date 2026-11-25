@@ -897,24 +897,3 @@
   }
 }
 
-@variant dark {
-  .farm-state-tag.is-growing {
-    color: #acd39a;
-  }
-
-  .farm-state-tag.is-ready {
-    color: #e7c56d;
-  }
-
-  .farm-watered-note {
-    color: #acd39a;
-  }
-
-  .farm-watered-note span {
-    background: #334b35;
-  }
-
-  .farm-seed-mark {
-    filter: saturate(1.15);
-  }
-}
