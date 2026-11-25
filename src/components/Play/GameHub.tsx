@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { withBasePath } from '@/lib/utils';
 import HarvestRushGame from './HarvestRushGame';
 
-type GameId = 'harvest-rush' | 'snake';
+type GameId = 'agroguardai-farm' | 'snake';
 
 const SNAKE_GAME_URL = withBasePath('/Snakegame/');
 const monoStyle = {
@@ -161,7 +161,7 @@ const libraryNoteStyle = {
 export default function GameHub() {
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
 
-  if (activeGame === 'harvest-rush') {
+  if (activeGame === 'agroguardai-farm') {
     return (
       <div className="play-active-game" style={activeGameStyle}>
         <div className="play-active-game-nav" style={activeGameNavStyle}>
@@ -239,7 +239,7 @@ export default function GameHub() {
       <div className="section-header">
         <div>
           <p className="play-section-kicker" style={sectionKickerStyle}>
-            THE GAME LIBRARY / 02 TITLES
+            THE GAME LIBRARY / 02 GAMES
           </p>
           <h2 id="play-game-selection-title" className="section-heading">
             Choose a game.
@@ -259,8 +259,8 @@ export default function GameHub() {
           type="button"
           className="button button-secondary play-game-card"
           style={gameCardStyle}
-          onClick={() => setActiveGame('harvest-rush')}
-          aria-label="Play Harvest Rush"
+          onClick={() => setActiveGame('agroguardai-farm')}
+          aria-label="Play AgroGuardAI"
         >
           <span
             className="play-game-art play-game-art--harvest"
@@ -268,7 +268,7 @@ export default function GameHub() {
             aria-hidden="true"
           >
             <span className="play-game-art-topline" style={artLabelStyle}>
-              01 / FIELD STRATEGY
+              01 / FARM SIMULATOR
             </span>
             <svg
               viewBox="0 0 360 150"
@@ -307,21 +307,21 @@ export default function GameHub() {
               />
             </svg>
             <span className="play-game-art-bottomline" style={artLabelStyle}>
-              PLAN / ALLOCATE / HARVEST
+              WALK / WORK / GROW
             </span>
           </span>
           <span className="play-game-card-body" style={cardBodyStyle}>
             <span className="play-game-card-meta" style={metaStyle}>
-              <span>STRATEGY</span>
-              <span>3 MISSIONS</span>
+              <span>FARM SIM</span>
+              <span>6 PLOTS · 4 TOOLS</span>
             </span>
-            <strong style={titleStyle}>Harvest Rush</strong>
+            <strong style={titleStyle}>AgroGuardAI</strong>
             <span className="play-game-description" style={mutedStyle}>
-              Plan a farm, manage limited resources, and make decisions before
-              the weather changes.
+              Walk the land, till soil, plant crops, water each plot, and
+              harvest what you grow.
             </span>
             <span className="play-game-card-footer" style={footerStyle}>
-              <span>PLAY HARVEST RUSH</span>
+              <span>ENTER THE FARM</span>
               <span aria-hidden="true">↗</span>
             </span>
           </span>

@@ -13,24 +13,22 @@ describe('play page', () => {
       screen.getByRole('heading', { name: 'Choose a game.' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: 'Play Harvest Rush' }),
+      screen.getByRole('button', { name: 'Play AgroGuardAI' }),
     ).toBeEnabled();
     expect(
       screen.getByRole('button', { name: 'Play Snake Game' }),
     ).toBeEnabled();
   });
 
-  it('opens the existing Harvest Rush game from its card', () => {
+  it('opens the AgroGuardAI farming game from its library entry', () => {
     render(<PlayPage />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Play Harvest Rush' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
 
     expect(
-      screen.getByRole('heading', { name: 'Make this farm yours.' }),
+      screen.getByRole('heading', { name: 'Build a working farm.' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Plant tomatoes/ }),
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Dig Plot 6/ })).toBeEnabled();
     expect(
       screen.getByRole('button', { name: /All games/ }),
     ).toBeInTheDocument();

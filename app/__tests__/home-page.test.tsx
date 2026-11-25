@@ -18,18 +18,16 @@ describe('homepage', () => {
     }
   });
 
-  it('embeds the playable Harvest Rush campaign and keeps its dedicated page', () => {
+  it('embeds the playable AgroGuardAI farm and keeps its dedicated page', () => {
     render(<HomePage />);
 
     expect(
-      screen.getByRole('heading', { name: 'Harvest Rush' }),
+      screen.getByRole('heading', { name: 'AgroGuardAI', level: 2 }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('region', { name: 'Harvest Rush farm simulation' }),
+      screen.getByRole('region', { name: 'AgroGuardAI farm simulator' }),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Plant tomatoes/ }),
-    ).toBeEnabled();
+    expect(screen.getByRole('button', { name: /Dig Plot 6/ })).toBeEnabled();
     expect(
       screen.getByRole('link', { name: /Game details/ }).getAttribute('href'),
     ).toMatch(/\/play\/?$/);
