@@ -270,7 +270,12 @@ export default function GameHub() {
             <span className="play-game-art-topline" style={artLabelStyle}>
               01 / FIELD STRATEGY
             </span>
-            <svg viewBox="0 0 360 150" fill="none" role="presentation" style={gameArtSvgStyle}>
+            <svg
+              viewBox="0 0 360 150"
+              fill="none"
+              role="presentation"
+              style={gameArtSvgStyle}
+            >
               <path
                 d="M30 30H330M30 76H330M30 122H330M82 18V134M178 18V134M274 18V134"
                 stroke="currentColor"
@@ -337,7 +342,12 @@ export default function GameHub() {
             <span className="play-game-art-topline" style={artLabelStyle}>
               02 / ARCADE CLASSIC
             </span>
-            <svg viewBox="0 0 360 150" fill="none" role="presentation" style={gameArtSvgStyle}>
+            <svg
+              viewBox="0 0 360 150"
+              fill="none"
+              role="presentation"
+              style={gameArtSvgStyle}
+            >
               <path
                 d="M28 27H332V123H28V27Z"
                 stroke="currentColor"
