@@ -1030,7 +1030,6 @@
   }
 }
 
-
 /* Hands-on AgroGuardAI farm controls */
 .farm-world:focus-visible {
   outline: 3px solid var(--color-focus-ring);
@@ -1446,7 +1445,6 @@
   }
 }
 
-
 /* Weather, water and farm feedback */
 .farm-weather-chip {
   min-width: 12rem;
@@ -1689,7 +1687,6 @@
     transition: none;
   }
 }
-
 
 /* The forecast changes the field, not just the status chip. */
 .farm-world::before {
