@@ -23,7 +23,7 @@ describe('play page', () => {
   it('opens the AgroGuardAI farming game from its library entry', () => {
     render(<PlayPage />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Play Harvest Rush' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
 
     expect(
       screen.getByRole('heading', { name: 'Build a working farm.' }),
