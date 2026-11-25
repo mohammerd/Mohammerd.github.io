@@ -312,8 +312,8 @@ export default function GameHub() {
           </span>
           <span className="play-game-card-body" style={cardBodyStyle}>
             <span className="play-game-card-meta" style={metaStyle}>
-              <span>STRATEGY</span>
-              <span>3 MISSIONS</span>
+              <span>FARM SIM</span>
+              <span>6 PLOTS · 4 TOOLS</span>
             </span>
             <strong style={titleStyle}>AgroGuardAI</strong>
             <span className="play-game-description" style={mutedStyle}>
