@@ -47,9 +47,13 @@ describe('AgroGuardAI farm simulation', () => {
   it('requires the farmer to be near a plot and the soil to be tilled before planting', () => {
     render(<HarvestRushGame />);
 
-    fireEvent.click(screen.getByRole('button', { name: 'Plot 1: empty, untouched soil' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Plot 1: empty, untouched soil' }),
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Dig Plot 1' }));
-    expect(screen.getByRole('status')).toHaveTextContent(/Walk closer to Plot 1/);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Walk closer to Plot 1/,
+    );
 
     for (let step = 0; step < 6; step += 1) {
       fireEvent.click(screen.getByRole('button', { name: 'Move west' }));
@@ -64,9 +68,12 @@ describe('AgroGuardAI farm simulation', () => {
     ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: 'Tool: Seed bag' }));
-    fireEvent.change(screen.getByRole('combobox', { name: 'Choose crop seed' }), {
-      target: { value: 'pepper' },
-    });
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Choose crop seed' }),
+      {
+        target: { value: 'pepper' },
+      },
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Plant peppers' }));
 
     expect(
@@ -80,9 +87,12 @@ describe('AgroGuardAI farm simulation', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Dig Plot 6' }));
     fireEvent.click(screen.getByRole('button', { name: 'Tool: Seed bag' }));
-    fireEvent.change(screen.getByRole('combobox', { name: 'Choose crop seed' }), {
-      target: { value: 'tomato' },
-    });
+    fireEvent.change(
+      screen.getByRole('combobox', { name: 'Choose crop seed' }),
+      {
+        target: { value: 'tomato' },
+      },
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Plant tomatoes' }));
 
     fireEvent.click(screen.getByRole('button', { name: 'Tool: Water' }));
@@ -118,7 +128,9 @@ describe('AgroGuardAI farm simulation', () => {
     fireEvent.click(screen.getByRole('button', { name: /End day/ }));
 
     expect(screen.getByText('Growth · 0 of 2 days')).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveTextContent(/Dry crops will not grow/);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Dry crops will not grow/,
+    );
   });
 
   it('uses the equipped tool with E and switches tools with number keys', () => {
@@ -133,10 +145,9 @@ describe('AgroGuardAI farm simulation', () => {
     ).toBeInTheDocument();
 
     fireEvent.keyDown(field, { key: '2' });
-    expect(screen.getByRole('button', { name: 'Tool: Seed bag' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
+    expect(
+      screen.getByRole('button', { name: 'Tool: Seed bag' }),
+    ).toHaveAttribute('aria-pressed', 'true');
   });
 
   it('moves the farmer with the keyboard controls', () => {
@@ -155,10 +166,11 @@ describe('AgroGuardAI farm simulation', () => {
   it('migrates saved Harvest Rush progress into the AgroGuardAI save format', async () => {
     const legacy = createInitialFarmState();
     const { water: _water, ...legacyWithoutWater } = legacy;
-    const legacyPlots = legacy.plots.map(({ tilled: _tilled, ...plot }, index) =>
-      index === 5
-        ? { ...plot, crop: 'tomato', growth: 1, watered: false }
-        : plot,
+    const legacyPlots = legacy.plots.map(
+      ({ tilled: _tilled, ...plot }, index) =>
+        index === 5
+          ? { ...plot, crop: 'tomato', growth: 1, watered: false }
+          : plot,
     );
     window.localStorage.setItem(
       LEGACY_FARM_SAVE_KEY,
@@ -174,6 +186,20 @@ describe('AgroGuardAI farm simulation', () => {
       expect(saved).toContain('"tilled":true');
     });
     expect(screen.getByText('26')).toBeInTheDocument();
+    expect(screen.getByText('5/5')).toBeInTheDocument();
+  });
+
+  it('migrates the previous AgroGuardAI save format with a full water tank', async () => {
+    const { water: _water, ...previousSave } = createInitialFarmState();
+    window.localStorage.setItem(PREVIOUS_FARM_SAVE_KEY, JSON.stringify(previousSave));
+
+    render(<HarvestRushGame />);
+
+    await waitFor(() => {
+      const saved = window.localStorage.getItem(FARM_SAVE_KEY);
+      expect(saved).not.toBeNull();
+      expect(saved).toContain('"water":5');
+    });
     expect(screen.getByText('5/5')).toBeInTheDocument();
   });
 
@@ -197,6 +223,8 @@ describe('AgroGuardAI farm simulation', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Refill water tank' }));
 
     expect(screen.getByText('5/5')).toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveTextContent(/Water tank refilled at the well/);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Water tank refilled at the well/,
+    );
   });
 });
