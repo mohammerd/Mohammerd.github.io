@@ -54,7 +54,14 @@ jobs:
         run: npm run lint
 
       - name: Format Check
+        id: format_check
         run: npm run format:check
+
+      - name: Print stylesheet formatting diff
+        if: steps.format_check.outcome == 'failure'
+        run: |
+          npx prettier app/styles/pages/play.css > /tmp/play.css.formatted
+          diff -u app/styles/pages/play.css /tmp/play.css.formatted || true
 
       # Regenerate the profile-bound icon and share-card assets above so a fork
       # never ships the upstream owner's artwork. The ledger and pixel checks
