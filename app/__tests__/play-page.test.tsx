@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import PlayPage from '../play/page';
+import { withBasePath } from '@/lib/utils';
 
 describe('play page', () => {
   it('shows both playable games in the selection grid', () => {
@@ -43,7 +44,7 @@ describe('play page', () => {
     const gameFrame = screen.getByTitle('Snake Game');
     expect(gameFrame).toHaveAttribute(
       'src',
-      'https://mohammerd.github.io/Snakegame/',
+      withBasePath('/Snakegame/'),
     );
     expect(
       screen.getByRole('link', { name: /Open in new tab/ }),
