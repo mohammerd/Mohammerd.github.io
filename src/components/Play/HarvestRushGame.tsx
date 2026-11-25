@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type KeyboardEvent } from 'react';
+import { type KeyboardEvent, useEffect, useState } from 'react';
 
 import {
   advanceFarmDay,
@@ -9,8 +9,6 @@ import {
   FARM_GOAL,
   FARM_SAVE_KEY,
   FARM_WATER_CAPACITY,
-  LEGACY_FARM_SAVE_KEY,
-  PREVIOUS_FARM_SAVE_KEY,
   type FarmCropId,
   type FarmPlot,
   type FarmState,
@@ -19,7 +17,9 @@ import {
   harvestFarmPlot,
   isCropReady,
   isValidFarmState,
+  LEGACY_FARM_SAVE_KEY,
   plantFarmCrop,
+  PREVIOUS_FARM_SAVE_KEY,
   refillFarmWater,
   tillFarmPlot,
   waterFarmPlot,
@@ -53,10 +53,14 @@ const STARTING_POSITION: PlayerPosition = {
 };
 
 const farmWorldStyle = {
-  backgroundImage: "url('" + withBasePath('/images/harvest-rush/farm-world.svg') + "')",
+  backgroundImage:
+    "url('" + withBasePath('/images/harvest-rush/farm-world.svg') + "')",
 } as const;
 
-const TOOL_DETAILS: Record<FarmTool, { label: string; icon: string; key: string }> = {
+const TOOL_DETAILS: Record<
+  FarmTool,
+  { label: string; icon: string; key: string }
+> = {
   hoe: { label: 'Hoe', icon: '⚒', key: '1' },
   seeds: { label: 'Seed bag', icon: '✳', key: '2' },
   water: { label: 'Water', icon: '♧', key: '3' },
@@ -132,7 +136,11 @@ function FarmCropSprite({ plot }: { plot: FarmPlot }) {
   return (
     <span
       className={
-        'farm-plot-sprite is-' + plot.crop + ' is-stage-' + stage + ' ' +
+        'farm-plot-sprite is-' +
+        plot.crop +
+        ' is-stage-' +
+        stage +
+        ' ' +
         (ready ? 'is-ready' : 'is-growing')
       }
       aria-hidden="true"
@@ -354,15 +362,22 @@ export default function HarvestRushGame() {
     const crop = getFarmCrop(plot.crop);
     setNotice(
       isCropReady(plot)
-        ? crop.name + ' in Plot ' + plotId + ' are ready. Bring your harvest basket.'
+        ? crop.name +
+          ' in Plot ' +
+          plotId +
+          ' are ready. Bring your harvest basket.'
         : plot.watered
           ? crop.name + ' in Plot ' + plotId + ' are watered for today.'
-          : crop.name + ' in Plot ' + plotId + ' need water before the day ends.',
+          : crop.name +
+            ' in Plot ' +
+            plotId +
+            ' need water before the day ends.',
     );
   }
 
   function movePlayer(direction: Direction) {
-    const horizontal = direction === 'left' ? -3 : direction === 'right' ? 3 : 0;
+    const horizontal =
+      direction === 'left' ? -3 : direction === 'right' ? 3 : 0;
     const vertical = direction === 'up' ? -5.3 : direction === 'down' ? 5.3 : 0;
     setPlayer((current) => ({
       x: Math.max(8, Math.min(92, current.x + horizontal)),
@@ -385,7 +400,8 @@ export default function HarvestRushGame() {
 
     if (!playerIsNear) {
       setNotice(
-        'Walk closer to Plot ' + selectedPlotId +
+        'Walk closer to Plot ' +
+          selectedPlotId +
           ' before working. Use WASD, arrow keys, or the movement pad.',
       );
       return;
@@ -393,16 +409,24 @@ export default function HarvestRushGame() {
 
     if (tool === 'hoe') {
       if (selectedPlot.crop) {
-        setNotice('There is a crop growing here. Harvest it before preparing the soil again.');
+        setNotice(
+          'There is a crop growing here. Harvest it before preparing the soil again.',
+        );
         return;
       }
       const next = tillFarmPlot(farm, selectedPlotId);
       if (next === farm) {
-        setNotice('Plot ' + selectedPlotId + ' is already prepared for planting.');
+        setNotice(
+          'Plot ' + selectedPlotId + ' is already prepared for planting.',
+        );
         return;
       }
       setFarm(next);
-      setNotice('You turned the soil in Plot ' + selectedPlotId + '. It is ready for seeds.');
+      setNotice(
+        'You turned the soil in Plot ' +
+          selectedPlotId +
+          '. It is ready for seeds.',
+      );
       return;
     }
 
@@ -415,15 +439,22 @@ export default function HarvestRushGame() {
       if (next === farm) {
         setNotice(
           farm.coins < selectedCrop.seedCost
-            ? 'You need ' + selectedCrop.seedCost + ' coins for ' + selectedCrop.name + ' seeds.'
+            ? 'You need ' +
+              selectedCrop.seedCost +
+              ' coins for ' +
+              selectedCrop.name +
+              ' seeds.'
             : 'This plot already has a crop growing.',
         );
         return;
       }
       setFarm(next);
       setNotice(
-        'You planted ' + selectedCrop.name.toLowerCase() + ' in Plot ' +
-          selectedPlotId + '. Equip the watering can.',
+        'You planted ' +
+          selectedCrop.name.toLowerCase() +
+          ' in Plot ' +
+          selectedPlotId +
+          '. Equip the watering can.',
       );
       return;
     }
@@ -462,7 +493,8 @@ export default function HarvestRushGame() {
       setNotice(
         !selectedPlot.crop
           ? 'This plot is empty. Plant a crop before harvesting.'
-          : 'The ' + (plantedCrop?.name.toLowerCase() ?? 'crop') +
+          : 'The ' +
+            (plantedCrop?.name.toLowerCase() ?? 'crop') +
             ' are not ripe yet. Keep watering them.',
       );
       return;
@@ -470,9 +502,18 @@ export default function HarvestRushGame() {
     setFarm(outcome.state);
     setNotice(
       outcome.goalReward > 0
-        ? 'You harvested ' + outcome.crop.name + '. +' + outcome.crop.sellPrice +
-          ' coins and a ' + outcome.goalReward + '-coin farm bonus!'
-        : 'You harvested ' + outcome.crop.name + '. +' + outcome.crop.sellPrice + ' coins.',
+        ? 'You harvested ' +
+          outcome.crop.name +
+          '. +' +
+          outcome.crop.sellPrice +
+          ' coins and a ' +
+          outcome.goalReward +
+          '-coin farm bonus!'
+        : 'You harvested ' +
+          outcome.crop.name +
+          '. +' +
+          outcome.crop.sellPrice +
+          ' coins.',
     );
   }
 
@@ -485,8 +526,10 @@ export default function HarvestRushGame() {
         (weather.id === 'rainy'
           ? 'The rain watered your field overnight.'
           : wateredCount > 0
-            ? wateredCount + ' watered ' +
-              (wateredCount === 1 ? 'crop grew' : 'crops grew') + '.'
+            ? wateredCount +
+              ' watered ' +
+              (wateredCount === 1 ? 'crop grew' : 'crops grew') +
+              '.'
             : 'Dry crops did not grow.'),
     );
   }
@@ -538,7 +581,7 @@ export default function HarvestRushGame() {
           <p>Walk the field, prepare the soil, plant, water and bring in your harvest.</p>
         </div>
         <div className={'farm-weather-chip is-' + weather.id}>
-          <span className="farm-sun" aria-hidden="true">☀</span>
+          <span className="farm-sun" aria-hidden="true">{weather.icon}</span>
           <span>
             <strong>{weather.label}</strong>
             <small>{weather.icon} {weather.description}</small>
