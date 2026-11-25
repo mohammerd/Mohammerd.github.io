@@ -53,6 +53,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Diagnose Play stylesheet formatting
+        run: |
+          npx prettier app/styles/pages/play.css > /tmp/play.css.formatted
+          diff -u app/styles/pages/play.css /tmp/play.css.formatted || true
+
       - name: Format Check
         run: npm run format:check
 
