@@ -1689,3 +1689,58 @@
     transition: none;
   }
 }
+
+
+/* The forecast changes the field, not just the status chip. */
+.farm-world::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: transparent;
+  content: '';
+  pointer-events: none;
+  transition: background 220ms ease;
+}
+
+.farm-world.is-weather-cloudy::before {
+  background: linear-gradient(rgba(85, 105, 111, 0.18), rgba(66, 84, 83, 0.08));
+}
+
+.farm-world.is-weather-rainy::before {
+  background:
+    repeating-linear-gradient(
+      110deg,
+      transparent 0 13px,
+      rgba(225, 242, 249, 0.32) 14px 15px,
+      transparent 16px 27px
+    ),
+    linear-gradient(rgba(62, 98, 119, 0.23), rgba(62, 98, 119, 0.12));
+  background-size: 100% 100%, 100% 100%;
+  animation: farm-rain-drift 650ms linear infinite;
+}
+
+.farm-world.is-weather-heatwave::before {
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 20%, rgba(203, 143, 64, 0.22)),
+    linear-gradient(rgba(231, 177, 91, 0.12), rgba(164, 109, 55, 0.08));
+}
+
+@keyframes farm-rain-drift {
+  from {
+    background-position: 0 0, 0 0;
+  }
+
+  to {
+    background-position: -27px 34px, 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .farm-world::before {
+    transition: none;
+  }
+
+  .farm-world.is-weather-rainy::before {
+    animation: none;
+  }
+}
