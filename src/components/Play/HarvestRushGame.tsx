@@ -11,8 +11,8 @@ import {
   FARM_WATER_CAPACITY,
   type FarmCropId,
   type FarmPlot,
-  type FarmWeatherId,
   type FarmState,
+  type FarmWeatherId,
   getFarmCrop,
   getFarmWeather,
   harvestFarmPlot,
@@ -520,7 +520,7 @@ export default function HarvestRushGame() {
             ' coins and a ' +
             outcome.goalReward +
             '-coin farm bonus!'
-          : 'You harvested ' +
+        : 'You harvested ' +
             outcome.crop.name +
             '. +' +
             outcome.crop.sellPrice +
@@ -629,7 +629,9 @@ export default function HarvestRushGame() {
                 : 'Grow and harvest 4 crops'}
             </strong>
           </div>
-          <span className="farm-goal-count">{goalProgress}/{FARM_GOAL}</span>
+          <span className="farm-goal-count">
+            {goalProgress}/{FARM_GOAL}
+          </span>
         </div>
         <div
           className="farm-goal-track"
@@ -679,18 +681,50 @@ export default function HarvestRushGame() {
             </div>
             <div className="farm-direction-pad" aria-label="Movement pad">
               <span />
-              <button type="button" aria-label="Move north" onClick={() => movePlayer('up')}>↑</button>
+              <button
+                type="button"
+                aria-label="Move north"
+                onClick={() => movePlayer('up')}
+              >
+                ↑
+              </button>
               <span />
-              <button type="button" aria-label="Move west" onClick={() => movePlayer('left')}>←</button>
-              <button type="button" aria-label="Move south" onClick={() => movePlayer('down')}>↓</button>
-              <button type="button" aria-label="Move east" onClick={() => movePlayer('right')}>→</button>
+              <button
+                type="button"
+                aria-label="Move west"
+                onClick={() => movePlayer('left')}
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                aria-label="Move south"
+                onClick={() => movePlayer('down')}
+              >
+                ↓
+              </button>
+              <button
+                type="button"
+                aria-label="Move east"
+                onClick={() => movePlayer('right')}
+              >
+                →
+              </button>
             </div>
           </div>
           <div className="farm-legend" aria-label="Map legend">
-            <span><i className="is-empty" /> Untouched soil</span>
-            <span><i className="is-tilled" /> Prepared soil</span>
-            <span><i className="is-growing" /> Growing</span>
-            <span><i className="is-ready" /> Ready to harvest</span>
+            <span>
+              <i className="is-empty" /> Untouched soil
+            </span>
+            <span>
+              <i className="is-tilled" /> Prepared soil
+            </span>
+            <span>
+              <i className="is-growing" /> Growing
+            </span>
+            <span>
+              <i className="is-ready" /> Ready to harvest
+            </span>
           </div>
         </div>
 
@@ -735,7 +769,12 @@ export default function HarvestRushGame() {
                 <span
                   className={
                     'farm-crop-preview-plant is-stage-' +
-                    Math.min(2, Math.ceil((selectedPlot.growth / plantedCrop.growDays) * 2))
+                    Math.min(
+                      2,
+                      Math.ceil(
+                        (selectedPlot.growth / plantedCrop.growDays) * 2,
+                      ),
+                    )
                   }
                 />
               </div>
@@ -743,7 +782,11 @@ export default function HarvestRushGame() {
                 <strong>
                   {selectedReady
                     ? 'Crop is ready to pick'
-                    : 'Growth · ' + selectedPlot.growth + ' of ' + plantedCrop.growDays + ' days'}
+                    : 'Growth · ' +
+                      selectedPlot.growth +
+                      ' of ' +
+                      plantedCrop.growDays +
+                      ' days'}
                 </strong>
                 <span>
                   {selectedReady
@@ -775,7 +818,9 @@ export default function HarvestRushGame() {
           <div className="farm-water-reserve">
             <div className="farm-water-reserve-heading">
               <span className="farm-eyebrow">WATER SUPPLY</span>
-              <strong>{farm.water}/{FARM_WATER_CAPACITY} units</strong>
+              <strong>
+                {farm.water}/{FARM_WATER_CAPACITY} units
+              </strong>
             </div>
             <div
               className="farm-water-reserve-track"
@@ -785,7 +830,11 @@ export default function HarvestRushGame() {
               aria-valuemax={FARM_WATER_CAPACITY}
               aria-valuenow={farm.water}
             >
-              <span style={{ width: (farm.water / FARM_WATER_CAPACITY) * 100 + '%' }} />
+              <span
+                style={{
+                  width: (farm.water / FARM_WATER_CAPACITY) * 100 + '%',
+                }}
+              />
             </div>
             <p>
               {weather.id === 'rainy'
@@ -798,17 +847,27 @@ export default function HarvestRushGame() {
 
           <div className="farm-tool-section">
             <span className="farm-eyebrow">YOUR TOOL BELT</span>
-            <div className="farm-toolbelt" role="group" aria-label="Choose a farming tool">
+            <div
+              className="farm-toolbelt"
+              role="group"
+              aria-label="Choose a farming tool"
+            >
               {(Object.keys(TOOL_DETAILS) as FarmTool[]).map((toolId) => (
                 <button
                   key={toolId}
                   type="button"
-                  className={tool === toolId ? 'farm-tool-button is-active' : 'farm-tool-button'}
+                  className={
+                    tool === toolId
+                      ? 'farm-tool-button is-active'
+                      : 'farm-tool-button'
+                  }
                   aria-label={'Tool: ' + TOOL_DETAILS[toolId].label}
                   aria-pressed={tool === toolId}
                   onClick={() => setTool(toolId)}
                 >
-                  <span className="farm-tool-icon" aria-hidden="true">{TOOL_DETAILS[toolId].icon}</span>
+                  <span className="farm-tool-icon" aria-hidden="true">
+                    {TOOL_DETAILS[toolId].icon}
+                  </span>
                   <span>{TOOL_DETAILS[toolId].label}</span>
                   <kbd>{TOOL_DETAILS[toolId].key}</kbd>
                 </button>
@@ -822,7 +881,9 @@ export default function HarvestRushGame() {
               <select
                 aria-label="Choose crop seed"
                 value={selectedSeed}
-                onChange={(event) => setSelectedSeed(event.target.value as FarmCropId)}
+                onChange={(event) =>
+                  setSelectedSeed(event.target.value as FarmCropId)
+                }
               >
                 {FARM_CROPS.map((crop) => (
                   <option key={crop.id} value={crop.id}>
@@ -833,7 +894,11 @@ export default function HarvestRushGame() {
             </label>
           )}
 
-          <div className={playerIsNear ? 'farm-reach-status is-near' : 'farm-reach-status'}>
+          <div
+            className={
+              playerIsNear ? 'farm-reach-status is-near' : 'farm-reach-status'
+            }
+          >
             <span className="farm-reach-dot" />
             <span>
               {tool === 'water' && playerIsNearWell
@@ -855,19 +920,27 @@ export default function HarvestRushGame() {
           </button>
 
           <div className="farm-action-divider" />
-          <button type="button" className="farm-secondary-action" onClick={endDay}>
+          <button
+            type="button"
+            className="farm-secondary-action"
+            onClick={endDay}
+          >
             End day <span aria-hidden="true">→</span>
           </button>
           <p className="farm-action-hint">
-            The day only advances when you choose to rest. Watered crops grow overnight.
+            The day only advances when you choose to rest. Watered crops grow
+            overnight.
           </p>
         </aside>
       </div>
 
-      <p className="farm-notice" role="status" aria-live="polite">{notice}</p>
+      <p className="farm-notice" role="status" aria-live="polite">
+        {notice}
+      </p>
       <p className="farm-disclaimer">
-        Crop prices and growth times are fictional game rules, not farming or market advice.
-        Progress is saved on this device. This is a browser game; no account or backend is used.
+        Crop prices and growth times are fictional game rules, not farming or
+        market advice. Progress is saved on this device. This is a browser game;
+        no account or backend is used.
       </p>
     </section>
   );
