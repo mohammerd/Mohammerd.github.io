@@ -4,10 +4,13 @@ import {
   advanceFarmDay,
   createInitialFarmState,
   FARM_GOAL_REWARD,
+  FARM_WATER_CAPACITY,
+  getFarmWeather,
   harvestFarmPlot,
   isCropReady,
   isValidFarmState,
   plantFarmCrop,
+  refillFarmWater,
   tillFarmPlot,
   waterFarmPlot,
 } from '../farm-game';
@@ -17,6 +20,7 @@ describe('farm simulation rules', () => {
     const farm = createInitialFarmState();
     expect(farm.day).toBe(1);
     expect(farm.coins).toBe(26);
+    expect(farm.water).toBe(FARM_WATER_CAPACITY);
     expect(farm.plots).toHaveLength(6);
     expect(farm.plots.every((plot) => plot.crop === null && !plot.tilled)).toBe(true);
   });
@@ -53,6 +57,44 @@ describe('farm simulation rules', () => {
     const grown = advanceFarmDay(watered);
     expect(grown.plots[0].growth).toBe(1);
     expect(grown.plots[0].watered).toBe(false);
+  });
+
+  it('uses water from the tank and lets the farmer refill at the well', () => {
+    const prepared = tillFarmPlot(createInitialFarmState(), 1);
+    const planted = plantFarmCrop(prepared, 1, 'tomato');
+    const watered = waterFarmPlot(planted, 1);
+
+    expect(watered.water).toBe(FARM_WATER_CAPACITY - 1);
+    expect(waterFarmPlot(watered, 1)).toBe(watered);
+
+    const refilled = refillFarmWater(watered);
+    expect(refilled.water).toBe(FARM_WATER_CAPACITY);
+    expect(refillFarmWater(refilled)).toBe(refilled);
+  });
+
+  it('uses two water units during a heatwave', () => {
+    let farm = createInitialFarmState();
+    for (let day = 1; day < 5; day += 1) {
+      farm = advanceFarmDay(farm);
+    }
+
+    expect(getFarmWeather(farm.day).id).toBe('heatwave');
+    farm = plantFarmCrop(tillFarmPlot(farm, 1), 1, 'tomato');
+    const watered = waterFarmPlot(farm, 1);
+
+    expect(watered.water).toBe(FARM_WATER_CAPACITY - 2);
+    expect(watered.plots[0].watered).toBe(true);
+  });
+
+  it('lets rain water growing crops automatically overnight', () => {
+    let farm = createInitialFarmState();
+    farm = plantFarmCrop(tillFarmPlot(farm, 1), 1, 'tomato');
+    farm = advanceFarmDay(advanceFarmDay(farm));
+
+    expect(getFarmWeather(farm.day).id).toBe('rainy');
+    const rainyMorning = advanceFarmDay(farm);
+    expect(rainyMorning.plots[0].growth).toBe(1);
+    expect(rainyMorning.plots[0].watered).toBe(false);
   });
 
   it('keeps harvest locked until the crop reaches its final growth stage', () => {
