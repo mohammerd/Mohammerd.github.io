@@ -1,6 +1,7 @@
 export const FARM_GOAL = 4;
 export const FARM_GOAL_REWARD = 20;
 export const FARM_PLOT_COUNT = 6;
+export const FARM_WATER_CAPACITY = 5;
 
 export const FARM_CROPS = [
   {
@@ -39,10 +40,95 @@ export const FARM_CROPS = [
     description: 'Quick harvest',
     color: '#70a957',
   },
+  {
+    id: 'beans',
+    name: 'Beans',
+    seedCost: 5,
+    sellPrice: 16,
+    growDays: 2,
+    description: 'Reliable harvest',
+    color: '#8e9c4f',
+  },
+  {
+    id: 'groundnut',
+    name: 'Groundnuts',
+    seedCost: 6,
+    sellPrice: 20,
+    growDays: 3,
+    description: 'Slow-growing, high value',
+    color: '#c68b45',
+  },
 ] as const;
 
 export type FarmCropId = (typeof FARM_CROPS)[number]['id'];
 export type FarmCrop = (typeof FARM_CROPS)[number];
+
+export type FarmWeatherId = 'sunny' | 'cloudy' | 'rainy' | 'heatwave';
+
+export interface FarmWeather {
+  id: FarmWeatherId;
+  label: string;
+  icon: string;
+  description: string;
+  tip: string;
+}
+
+const FARM_WEATHER_CYCLE: FarmWeather[] = [
+  {
+    id: 'sunny',
+    label: 'Sunny',
+    icon: '☀',
+    description: 'Warm and bright',
+    tip: 'Water your crops before nightfall.',
+  },
+  {
+    id: 'cloudy',
+    label: 'Cloudy',
+    icon: '☁',
+    description: 'Cool with cloud cover',
+    tip: 'A good day to work the field.',
+  },
+  {
+    id: 'rainy',
+    label: 'Rain',
+    icon: '☂',
+    description: 'Rain showers expected',
+    tip: 'Rain waters every planted crop overnight.',
+  },
+  {
+    id: 'sunny',
+    label: 'Sunny',
+    icon: '☀',
+    description: 'Warm and bright',
+    tip: 'Water your crops before nightfall.',
+  },
+  {
+    id: 'heatwave',
+    label: 'Heatwave',
+    icon: '☼',
+    description: 'Hot, dry conditions',
+    tip: 'Crops need double water today.',
+  },
+  {
+    id: 'cloudy',
+    label: 'Cloudy',
+    icon: '☁',
+    description: 'Cool with cloud cover',
+    tip: 'A good day to work the field.',
+  },
+  {
+    id: 'rainy',
+    label: 'Rain',
+    icon: '☂',
+    description: 'Rain showers expected',
+    tip: 'Rain waters every planted crop overnight.',
+  },
+];
+
+export function getFarmWeather(day: number): FarmWeather {
+  const safeDay = Number.isFinite(day) ? Math.max(1, Math.floor(day)) : 1;
+  return FARM_WEATHER_CYCLE[(safeDay - 1) % FARM_WEATHER_CYCLE.length];
+}
 
 export interface FarmPlot {
   id: number;
@@ -55,18 +141,21 @@ export interface FarmPlot {
 export interface FarmState {
   day: number;
   coins: number;
+  water: number;
   harvested: number;
   goalComplete: boolean;
   plots: FarmPlot[];
 }
 
-export const FARM_SAVE_KEY = 'mohammerd.agroguardai.farm.v2';
+export const FARM_SAVE_KEY = 'mohammerd.agroguardai.farm.v3';
+export const PREVIOUS_FARM_SAVE_KEY = 'mohammerd.agroguardai.farm.v2';
 export const LEGACY_FARM_SAVE_KEY = 'mohammerd.harvest-rush.farm.v1';
 
 export function createInitialFarmState(): FarmState {
   return {
     day: 1,
     coins: 26,
+    water: FARM_WATER_CAPACITY,
     harvested: 0,
     goalComplete: false,
     plots: Array.from({ length: FARM_PLOT_COUNT }, (_, index) => ({
@@ -91,7 +180,11 @@ export function isCropReady(plot: FarmPlot): boolean {
 
 export function tillFarmPlot(state: FarmState, plotId: number): FarmState {
   const index = state.plots.findIndex((plot) => plot.id === plotId);
-  if (index < 0 || state.plots[index].crop !== null || state.plots[index].tilled) {
+  if (
+    index < 0 ||
+    state.plots[index].crop !== null ||
+    state.plots[index].tilled
+  ) {
     return state;
   }
 
@@ -128,29 +221,42 @@ export function plantFarmCrop(
 
 export function waterFarmPlot(state: FarmState, plotId: number): FarmState {
   const index = state.plots.findIndex((plot) => plot.id === plotId);
+  const plot = index >= 0 ? state.plots[index] : null;
+  const waterCost = getFarmWeather(state.day).id === 'heatwave' ? 2 : 1;
+
   if (
-    index < 0 ||
-    state.plots[index].crop === null ||
-    state.plots[index].watered ||
-    isCropReady(state.plots[index])
+    !plot ||
+    plot.crop === null ||
+    plot.watered ||
+    isCropReady(plot) ||
+    state.water < waterCost
   ) {
     return state;
   }
 
   const plots = [...state.plots];
   plots[index] = { ...plots[index], watered: true };
-  return { ...state, plots };
+  return { ...state, water: state.water - waterCost, plots };
+}
+
+export function refillFarmWater(state: FarmState): FarmState {
+  if (state.water >= FARM_WATER_CAPACITY) return state;
+  return { ...state, water: FARM_WATER_CAPACITY };
 }
 
 export function advanceFarmDay(state: FarmState): FarmState {
+  const weather = getFarmWeather(state.day);
+  const rainWatersCrops = weather.id === 'rainy';
+
   return {
     ...state,
     day: state.day + 1,
     plots: state.plots.map((plot) => {
       if (!plot.crop) return plot;
+      const receivedWater = plot.watered || rainWatersCrops;
       return {
         ...plot,
-        growth: plot.watered
+        growth: receivedWater
           ? Math.min(getFarmCrop(plot.crop).growDays, plot.growth + 1)
           : plot.growth,
         watered: false,
@@ -203,6 +309,9 @@ export function isValidFarmState(value: unknown): value is FarmState {
     Number(candidate.day) < 1 ||
     !Number.isInteger(candidate.coins) ||
     Number(candidate.coins) < 0 ||
+    !Number.isInteger(candidate.water) ||
+    Number(candidate.water) < 0 ||
+    Number(candidate.water) > FARM_WATER_CAPACITY ||
     !Number.isInteger(candidate.harvested) ||
     Number(candidate.harvested) < 0 ||
     typeof candidate.goalComplete !== 'boolean' ||
