@@ -134,6 +134,8 @@ function FarmWorld({
   tool,
   onSelectPlot,
   onMovePlayer,
+  onSelectTool,
+  onUseTool,
 }: {
   plots: FarmPlot[];
   selectedPlotId: number;
@@ -141,6 +143,8 @@ function FarmWorld({
   tool: FarmTool;
   onSelectPlot: (plotId: number) => void;
   onMovePlayer: (direction: Direction) => void;
+  onSelectTool: (tool: FarmTool) => void;
+  onUseTool: () => void;
 }) {
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const key = event.key.toLowerCase();
@@ -156,9 +160,28 @@ function FarmWorld({
     };
     const direction = directionByKey[key];
 
-    if (!direction) return;
-    event.preventDefault();
-    onMovePlayer(direction);
+    if (direction) {
+      event.preventDefault();
+      onMovePlayer(direction);
+      return;
+    }
+
+    if (key === 'e') {
+      event.preventDefault();
+      onUseTool();
+      return;
+    }
+
+    const toolByKey: Record<string, FarmTool> = {
+      '1': 'hoe',
+      '2': 'seeds',
+      '3': 'water',
+      '4': 'basket',
+    };
+    if (toolByKey[key]) {
+      event.preventDefault();
+      onSelectTool(toolByKey[key]);
+    }
   }
 
   return (
@@ -500,6 +523,8 @@ export default function HarvestRushGame() {
             tool={tool}
             onSelectPlot={selectPlot}
             onMovePlayer={movePlayer}
+            onSelectTool={setTool}
+            onUseTool={useEquippedTool}
           />
           <div className="farm-movement-controls">
             <div className="farm-movement-copy">
