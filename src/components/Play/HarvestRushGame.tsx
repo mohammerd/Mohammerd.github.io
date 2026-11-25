@@ -153,6 +153,7 @@ function FarmWorld({
   selectedPlotId,
   player,
   tool,
+  playerIsNearWell,
   onSelectPlot,
   onMovePlayer,
   onSelectTool,
@@ -162,6 +163,7 @@ function FarmWorld({
   selectedPlotId: number;
   player: PlayerPosition;
   tool: FarmTool;
+  playerIsNearWell: boolean;
   onSelectPlot: (plotId: number) => void;
   onMovePlayer: (direction: Direction) => void;
   onSelectTool: (tool: FarmTool) => void;
@@ -258,6 +260,18 @@ function FarmWorld({
             </button>
           );
         })}
+        <div
+          className={
+            playerIsNearWell ? 'farm-well-marker is-near' : 'farm-well-marker'
+          }
+          style={{
+            left: FARM_WELL_POSITION.x + '%',
+            top: FARM_WELL_POSITION.y + '%',
+          }}
+          aria-hidden="true"
+        >
+          <span>WELL</span>
+        </div>
         <div
           className={'farm-player is-facing-' + player.direction}
           style={{ left: player.x + '%', top: player.y + '%' }}
@@ -578,6 +592,7 @@ export default function HarvestRushGame() {
             selectedPlotId={selectedPlotId}
             player={player}
             tool={tool}
+            playerIsNearWell={playerIsNearWell}
             onSelectPlot={selectPlot}
             onMovePlayer={movePlayer}
             onSelectTool={setTool}
@@ -682,6 +697,30 @@ export default function HarvestRushGame() {
                 : 'This bed has not been worked. Use the hoe to loosen the soil first.'}
             </p>
           )}
+
+          <div className="farm-water-reserve">
+            <div className="farm-water-reserve-heading">
+              <span className="farm-eyebrow">WATER SUPPLY</span>
+              <strong>{farm.water}/{FARM_WATER_CAPACITY} units</strong>
+            </div>
+            <div
+              className="farm-water-reserve-track"
+              role="progressbar"
+              aria-label="Water tank level"
+              aria-valuemin={0}
+              aria-valuemax={FARM_WATER_CAPACITY}
+              aria-valuenow={farm.water}
+            >
+              <span style={{ width: (farm.water / FARM_WATER_CAPACITY) * 100 + '%' }} />
+            </div>
+            <p>
+              {weather.id === 'rainy'
+                ? 'Rain will water your crops overnight.'
+                : weather.id === 'heatwave'
+                  ? 'Heatwave: each crop uses two water units.'
+                  : 'Refill at the well when your tank runs low.'}
+            </p>
+          </div>
 
           <div className="farm-tool-section">
             <span className="farm-eyebrow">YOUR TOOL BELT</span>
