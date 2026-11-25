@@ -1,4 +1,4 @@
-import HarvestRushGame from '@/components/Play/HarvestRushGame';
+import GameHub from '@/components/Play/GameHub';
 import { SchemaGraph } from '@/components/Schema';
 import PageWrapper from '@/components/Template/PageWrapper';
 import { createPageMetadata } from '@/lib/metadata';
@@ -6,7 +6,7 @@ import { collectionPageNode, sectionPageNodes } from '@/lib/schema';
 
 const PAGE_TITLE = 'Play';
 const DESCRIPTION =
-  'Play a three-mission agricultural strategy campaign built around harvest planning, weather risk, and resource management.';
+  'Choose between Harvest Rush, an agricultural strategy game, and Snake, a modern arcade classic. Both run in your browser without an account.';
 
 export const metadata = createPageMetadata({
   title: PAGE_TITLE,
@@ -30,17 +30,12 @@ export default function PlayPage() {
           <p className="play-eyebrow">INTERACTIVE PLAYGROUND / 001</p>
           <h1 className="page-title">{PAGE_TITLE}</h1>
           <p className="page-subtitle">
-            A compact strategy campaign about timing, trade-offs, and making the
-            best use of limited resources. No account required.
+            Two browser-based games. Choose a strategy challenge or an arcade
+            classic, then play without creating an account.
           </p>
         </header>
 
-        <HarvestRushGame />
-
-        <p className="play-next-note">
-          More games, including Guess the Crop and Farm Memory, are in
-          development.
-        </p>
+        <GameHub />
       </div>
     </PageWrapper>
   );
