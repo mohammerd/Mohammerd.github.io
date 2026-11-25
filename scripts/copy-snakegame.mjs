@@ -2,8 +2,8 @@ import {
   cpSync,
   existsSync,
   mkdirSync,
-  readFileSync,
   readdirSync,
+  readFileSync,
   rmSync,
 } from 'node:fs';
 import { resolve } from 'node:path';
@@ -30,10 +30,11 @@ mkdirSync(destinationDirectory, { recursive: true });
 cpSync(sourceDirectory, destinationDirectory, { recursive: true });
 
 const copiedEntries = readdirSync(destinationDirectory);
-if (!copiedEntries.includes('index.html') || !copiedEntries.includes('assets')) {
-  throw new Error(
-    'Snakegame static output is incomplete after copying.',
-  );
+if (
+  !copiedEntries.includes('index.html') ||
+  !copiedEntries.includes('assets')
+) {
+  throw new Error('Snakegame static output is incomplete after copying.');
 }
 
 console.log(
