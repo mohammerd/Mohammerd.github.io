@@ -22,7 +22,9 @@ describe('farm simulation rules', () => {
     expect(farm.coins).toBe(26);
     expect(farm.water).toBe(FARM_WATER_CAPACITY);
     expect(farm.plots).toHaveLength(6);
-    expect(farm.plots.every((plot) => plot.crop === null && !plot.tilled)).toBe(true);
+    expect(farm.plots.every((plot) => plot.crop === null && !plot.tilled)).toBe(
+      true,
+    );
   });
 
   it('requires soil preparation before planting and charges for seeds', () => {
