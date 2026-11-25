@@ -159,7 +159,10 @@ export default function GameHub() {
           >
             <span aria-hidden="true">←</span> All games
           </button>
-          <span className="play-active-game-label" style={{ ...monoStyle, color: 'var(--color-fg-light)' }}>
+          <span
+            className="play-active-game-label"
+            style={activeLabelStyle}
+          >
             NOW PLAYING / 02
           </span>
         </div>
@@ -210,8 +213,7 @@ export default function GameHub() {
           </p>
         </div>
         <span className="play-library-count" style={libraryCountStyle}>
-          02{' '}
-          <small style={libraryCountLabelStyle}>GAMES</small>
+          02 <small style={libraryCountLabelStyle}>GAMES</small>
         </span>
       </div>
 
