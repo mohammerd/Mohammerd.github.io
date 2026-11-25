@@ -159,10 +159,7 @@ export default function GameHub() {
           >
             <span aria-hidden="true">←</span> All games
           </button>
-          <span
-            className="play-active-game-label"
-            style={activeLabelStyle}
-          >
+          <span className="play-active-game-label" style={activeLabelStyle}>
             NOW PLAYING / 02
           </span>
         </div>
