@@ -89,11 +89,7 @@ function FarmWorld({
           const crop = plot.crop ? getFarmCrop(plot.crop) : null;
           const ready = isCropReady(plot);
           const selected = plot.id === selectedPlotId;
-          const state = ready
-            ? ', ready to harvest'
-            : crop
-              ? ', growing'
-              : ', empty bed';
+          const state = ready ? ', ready to harvest' : crop ? ', growing' : '';
 
           return (
             <button
