@@ -229,6 +229,7 @@ export function waterFarmPlot(state: FarmState, plotId: number): FarmState {
     plot.crop === null ||
     plot.watered ||
     isCropReady(plot) ||
+    getFarmWeather(state.day).id === 'rainy' ||
     state.water < waterCost
   ) {
     return state;
