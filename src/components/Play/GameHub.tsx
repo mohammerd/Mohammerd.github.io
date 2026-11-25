@@ -317,7 +317,8 @@ export default function GameHub() {
             </span>
             <strong style={titleStyle}>AgroGuardAI</strong>
             <span className="play-game-description" style={mutedStyle}>
-              Walk the land, till soil, plant crops, water each plot, and harvest what you grow.
+              Walk the land, till soil, plant crops, water each plot, and
+              harvest what you grow.
             </span>
             <span className="play-game-card-footer" style={footerStyle}>
               <span>ENTER THE FARM</span>
