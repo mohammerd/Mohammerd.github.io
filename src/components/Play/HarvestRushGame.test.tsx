@@ -1,7 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { createInitialFarmState, FARM_SAVE_KEY, LEGACY_FARM_SAVE_KEY } from '@/lib/farm-game';
+import {
+  createInitialFarmState,
+  FARM_SAVE_KEY,
+  LEGACY_FARM_SAVE_KEY,
+  PREVIOUS_FARM_SAVE_KEY,
+} from '@/lib/farm-game';
 import HarvestRushGame from './HarvestRushGame';
 
 describe('AgroGuardAI farm simulation', () => {
@@ -29,6 +34,9 @@ describe('AgroGuardAI farm simulation', () => {
     expect(
       screen.getByRole('progressbar', { name: 'First farm contract progress' }),
     ).toHaveAttribute('aria-valuenow', '0');
+    expect(screen.getByText('Sunny')).toBeInTheDocument();
+    expect(screen.getByText(/Tomorrow: ☁ Cloudy/)).toBeInTheDocument();
+    expect(screen.getByText('5/5')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Move north' })).toBeEnabled();
     expect(screen.getByRole('button', { name: 'Tool: Hoe' })).toHaveAttribute(
       'aria-pressed',
@@ -146,6 +154,7 @@ describe('AgroGuardAI farm simulation', () => {
 
   it('migrates saved Harvest Rush progress into the AgroGuardAI save format', async () => {
     const legacy = createInitialFarmState();
+    const { water: _water, ...legacyWithoutWater } = legacy;
     const legacyPlots = legacy.plots.map(({ tilled: _tilled, ...plot }, index) =>
       index === 5
         ? { ...plot, crop: 'tomato', growth: 1, watered: false }
@@ -153,7 +162,7 @@ describe('AgroGuardAI farm simulation', () => {
     );
     window.localStorage.setItem(
       LEGACY_FARM_SAVE_KEY,
-      JSON.stringify({ ...legacy, plots: legacyPlots }),
+      JSON.stringify({ ...legacyWithoutWater, plots: legacyPlots }),
     );
 
     render(<HarvestRushGame />);
@@ -165,5 +174,29 @@ describe('AgroGuardAI farm simulation', () => {
       expect(saved).toContain('"tilled":true');
     });
     expect(screen.getByText('26')).toBeInTheDocument();
+    expect(screen.getByText('5/5')).toBeInTheDocument();
+  });
+
+  it('refills the water tank only after walking to the well', async () => {
+    const savedFarm = { ...createInitialFarmState(), water: 0 };
+    window.localStorage.setItem(FARM_SAVE_KEY, JSON.stringify(savedFarm));
+    render(<HarvestRushGame />);
+
+    await waitFor(() => {
+      expect(screen.getByText('0/5')).toBeInTheDocument();
+    });
+
+    for (let step = 0; step < 8; step += 1) {
+      fireEvent.click(screen.getByRole('button', { name: 'Move east' }));
+    }
+    for (let step = 0; step < 3; step += 1) {
+      fireEvent.click(screen.getByRole('button', { name: 'Move south' }));
+    }
+
+    fireEvent.click(screen.getByRole('button', { name: 'Tool: Water' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Refill water tank' }));
+
+    expect(screen.getByText('5/5')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(/Water tank refilled at the well/);
   });
 });
