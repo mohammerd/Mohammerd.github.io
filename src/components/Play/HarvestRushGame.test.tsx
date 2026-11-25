@@ -35,7 +35,7 @@ describe('Harvest Rush farm simulation', () => {
     render(<HarvestRushGame />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Plot 2: empty bed' }));
-    fireEvent.click(screen.getByRole('button', { name: /Peppers 6 coins/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Peppers, 6 coins/ }));
     fireEvent.click(screen.getByRole('button', { name: /Plant peppers/ }));
 
     expect(
@@ -94,7 +94,7 @@ describe('Harvest Rush farm simulation', () => {
     for (let harvest = 0; harvest < 4; harvest += 1) {
       const plotName = `Plot ${harvest + 1}: empty bed`;
       fireEvent.click(screen.getByRole('button', { name: plotName }));
-      fireEvent.click(screen.getByRole('button', { name: /Okra 4 coins/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Okra, 4 coins/ }));
       fireEvent.click(screen.getByRole('button', { name: /Plant okra/ }));
       fireEvent.click(screen.getByRole('button', { name: /Water this crop/ }));
       fireEvent.click(screen.getByRole('button', { name: /End day/ }));
