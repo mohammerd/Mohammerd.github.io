@@ -8,15 +8,19 @@ import {
   FARM_CROPS,
   FARM_GOAL,
   FARM_SAVE_KEY,
+  FARM_WATER_CAPACITY,
   LEGACY_FARM_SAVE_KEY,
+  PREVIOUS_FARM_SAVE_KEY,
   type FarmCropId,
   type FarmPlot,
   type FarmState,
   getFarmCrop,
+  getFarmWeather,
   harvestFarmPlot,
   isCropReady,
   isValidFarmState,
   plantFarmCrop,
+  refillFarmWater,
   tillFarmPlot,
   waterFarmPlot,
 } from '@/lib/farm-game';
@@ -41,6 +45,7 @@ const FARM_PLOT_CENTERS = FARM_PLOT_POSITIONS.map((position) => ({
 }));
 
 const FARM_WORK_RANGE = 15;
+const FARM_WELL_POSITION = { x: 87, y: 77 };
 const STARTING_POSITION: PlayerPosition = {
   x: 63,
   y: 62,
@@ -79,13 +84,22 @@ function normalizeSavedFarm(value: unknown): FarmState {
     }),
   };
 
-  return isValidFarmState(migrated) ? migrated : createInitialFarmState();
+  const withWater = {
+    ...migrated,
+    water:
+      Number.isInteger(candidate.water) && Number(candidate.water) >= 0
+        ? Number(candidate.water)
+        : FARM_WATER_CAPACITY,
+  };
+
+  return isValidFarmState(withWater) ? withWater : createInitialFarmState();
 }
 
 function readSavedFarm(): FarmState {
   try {
     const saved =
       window.localStorage.getItem(FARM_SAVE_KEY) ??
+      window.localStorage.getItem(PREVIOUS_FARM_SAVE_KEY) ??
       window.localStorage.getItem(LEGACY_FARM_SAVE_KEY);
     if (!saved) return createInitialFarmState();
     return normalizeSavedFarm(JSON.parse(saved) as unknown);
@@ -94,11 +108,18 @@ function readSavedFarm(): FarmState {
   }
 }
 
+function getPointDistance(
+  player: PlayerPosition,
+  point: { x: number; y: number },
+): number {
+  return Math.hypot((player.x - point.x) * (16 / 9), player.y - point.y);
+}
+
 function getPlayerDistance(player: PlayerPosition, plotId: number): number {
   const center = FARM_PLOT_CENTERS[plotId - 1];
   if (!center) return Number.POSITIVE_INFINITY;
   // The map is 16:9, so horizontal percentage steps cover more pixels.
-  return Math.hypot((player.x - center.x) * (16 / 9), player.y - center.y);
+  return getPointDistance(player, center);
 }
 
 function FarmCropSprite({ plot }: { plot: FarmPlot }) {
@@ -249,7 +270,7 @@ function FarmWorld({
           <span className="farm-player-body" />
           <span className="farm-player-legs" />
         </div>
-        <span className="farm-map-hint">WASD / arrows to walk</span>
+        <span className="farm-map-hint">WASD / arrows · E to work</span>
       </div>
       <span className="farm-map-caption">
         Walk up to a plot, equip the right tool, then work the soil.
@@ -291,6 +312,10 @@ export default function HarvestRushGame() {
   const selectedReady = isCropReady(selectedPlot);
   const playerDistance = getPlayerDistance(player, selectedPlotId);
   const playerIsNear = playerDistance <= FARM_WORK_RANGE;
+  const playerIsNearWell =
+    getPointDistance(player, FARM_WELL_POSITION) <= FARM_WORK_RANGE;
+  const weather = getFarmWeather(farm.day);
+  const tomorrowWeather = getFarmWeather(farm.day + 1);
   const growthPercent = plantedCrop
     ? Math.min(100, (selectedPlot.growth / plantedCrop.growDays) * 100)
     : 0;
@@ -333,6 +358,17 @@ export default function HarvestRushGame() {
   }
 
   function useEquippedTool() {
+    if (tool === 'water' && playerIsNearWell) {
+      const next = refillFarmWater(farm);
+      if (next === farm) {
+        setNotice('Your water tank is already full. Head back to the field.');
+        return;
+      }
+      setFarm(next);
+      setNotice('Water tank refilled at the well. You have ' + next.water + ' water uses.');
+      return;
+    }
+
     if (!playerIsNear) {
       setNotice(
         'Walk closer to Plot ' + selectedPlotId +
@@ -386,12 +422,22 @@ export default function HarvestRushGame() {
             ? 'There is nothing planted here to water.'
             : selectedPlot.watered
               ? 'This plot has already been watered today.'
-              : 'This crop is ready. Use your harvest basket.',
+              : selectedReady
+                ? 'This crop is ready. Use your harvest basket.'
+                : farm.water === 0
+                  ? 'Your water tank is empty. Walk to the well on the east side of the farm.'
+                  : weather.id === 'heatwave' && farm.water < 2
+                    ? 'A heatwave needs two water uses per crop. Refill at the well.'
+                    : 'This crop cannot be watered right now.',
         );
         return;
       }
       setFarm(next);
-      setNotice('You watered Plot ' + selectedPlotId + '. End the day to grow this crop.');
+      setNotice(
+        weather.id === 'heatwave'
+          ? 'You used two water units on Plot ' + selectedPlotId + '. Protect crops from the heat.'
+          : 'You watered Plot ' + selectedPlotId + '. End the day to grow this crop.',
+      );
       return;
     }
 
@@ -417,19 +463,27 @@ export default function HarvestRushGame() {
   function endDay() {
     const wateredCount = farm.plots.filter((plot) => plot.watered).length;
     const next = advanceFarmDay(farm);
+    const rainMessage =
+      weather.id === 'rainy'
+        ? ' Rain watered every planted crop.'
+        : '';
     setFarm(next);
     setNotice(
-      wateredCount > 0
-        ? 'Day ' + next.day + ' begins. ' + wateredCount + ' watered ' +
-          (wateredCount === 1 ? 'crop has' : 'crops have') + ' grown.'
-        : 'Day ' + next.day + ' begins. Dry crops will not grow. Water them before ending the next day.',
+      'Day ' + next.day + ' begins. ' +
+        (weather.id === 'rainy'
+          ? 'The rain watered your field overnight.'
+          : wateredCount > 0
+            ? wateredCount + ' watered ' +
+              (wateredCount === 1 ? 'crop grew' : 'crops grew') + '.'
+            : 'Dry crops did not grow.') +
+        rainMessage,
     );
   }
 
   const actionLabel = {
     hoe: 'Dig Plot ' + selectedPlotId,
     seeds: 'Plant ' + selectedCrop.name.toLowerCase(),
-    water: 'Water Plot ' + selectedPlotId,
+    water: playerIsNearWell ? 'Refill water tank' : 'Water Plot ' + selectedPlotId,
     basket: 'Harvest Plot ' + selectedPlotId,
   }[tool];
 
@@ -456,6 +510,10 @@ export default function HarvestRushGame() {
             <strong>{farm.coins}</strong>
           </div>
           <div className="farm-hud-item">
+            <span>WATER</span>
+            <strong>{farm.water}/{FARM_WATER_CAPACITY}</strong>
+          </div>
+          <div className="farm-hud-item">
             <span>IN THE GROUND</span>
             <strong>{plantedCount}/6</strong>
           </div>
@@ -471,8 +529,11 @@ export default function HarvestRushGame() {
         <div className="farm-weather-chip">
           <span className="farm-sun" aria-hidden="true">☀</span>
           <span>
-            <strong>Clear skies</strong>
-            <small>Daylight on the farm</small>
+            <strong>{weather.icon} {weather.label}</strong>
+            <small>{weather.tip}</small>
+            <small className="farm-weather-forecast">
+              Tomorrow: {tomorrowWeather.icon} {tomorrowWeather.label}
+            </small>
           </span>
         </div>
       </div>
@@ -513,7 +574,7 @@ export default function HarvestRushGame() {
             </div>
             <div className="farm-map-stats">
               <span>{readyCount} ready</span>
-              <span>{plantedCount} growing</span>
+              <span>{plantedCount} planted</span>
             </div>
           </div>
           <FarmWorld
@@ -666,9 +727,11 @@ export default function HarvestRushGame() {
           <div className={playerIsNear ? 'farm-reach-status is-near' : 'farm-reach-status'}>
             <span className="farm-reach-dot" />
             <span>
-              {playerIsNear
-                ? 'You are close enough to work this plot.'
-                : 'Walk closer to the selected plot to use your tool.'}
+              {tool === 'water' && playerIsNearWell
+                ? 'You are at the well. Refill your water tank.'
+                : playerIsNear
+                  ? 'You are close enough to work this plot.'
+                  : 'Walk closer to the selected plot to use your tool.'}
             </span>
           </div>
 
