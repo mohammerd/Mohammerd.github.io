@@ -1089,7 +1089,9 @@
   pointer-events: none;
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 1px rgba(28, 35, 22, 0.36));
-  transition: left 110ms linear, top 110ms linear;
+  transition:
+    left 110ms linear,
+    top 110ms linear;
 }
 
 .farm-player > span {
@@ -1712,7 +1714,9 @@
       transparent 16px 27px
     ),
     linear-gradient(rgba(62, 98, 119, 0.23), rgba(62, 98, 119, 0.12));
-  background-size: 100% 100%, 100% 100%;
+  background-size:
+    100% 100%,
+    100% 100%;
   animation: farm-rain-drift 650ms linear infinite;
 }
 
@@ -1724,11 +1728,15 @@
 
 @keyframes farm-rain-drift {
   from {
-    background-position: 0 0, 0 0;
+    background-position:
+      0 0,
+      0 0;
   }
 
   to {
-    background-position: -27px 34px, 0 0;
+    background-position:
+      -27px 34px,
+      0 0;
   }
 }
 
