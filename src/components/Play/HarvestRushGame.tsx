@@ -463,10 +463,6 @@ export default function HarvestRushGame() {
   function endDay() {
     const wateredCount = farm.plots.filter((plot) => plot.watered).length;
     const next = advanceFarmDay(farm);
-    const rainMessage =
-      weather.id === 'rainy'
-        ? ' Rain watered every planted crop.'
-        : '';
     setFarm(next);
     setNotice(
       'Day ' + next.day + ' begins. ' +
@@ -475,8 +471,7 @@ export default function HarvestRushGame() {
           : wateredCount > 0
             ? wateredCount + ' watered ' +
               (wateredCount === 1 ? 'crop grew' : 'crops grew') + '.'
-            : 'Dry crops did not grow.') +
-        rainMessage,
+            : 'Dry crops did not grow.'),
     );
   }
 
@@ -514,7 +509,7 @@ export default function HarvestRushGame() {
             <strong>{farm.water}/{FARM_WATER_CAPACITY}</strong>
           </div>
           <div className="farm-hud-item">
-            <span>IN THE GROUND</span>
+            <span>PLOTS</span>
             <strong>{plantedCount}/6</strong>
           </div>
         </div>
@@ -529,7 +524,8 @@ export default function HarvestRushGame() {
         <div className="farm-weather-chip">
           <span className="farm-sun" aria-hidden="true">☀</span>
           <span>
-            <strong>{weather.icon} {weather.label}</strong>
+            <strong>{weather.label}</strong>
+            <small>{weather.icon} {weather.description}</small>
             <small>{weather.tip}</small>
             <small className="farm-weather-forecast">
               Tomorrow: {tomorrowWeather.icon} {tomorrowWeather.label}
@@ -735,9 +731,14 @@ export default function HarvestRushGame() {
             </span>
           </div>
 
-          <button type="button" className="farm-primary-action" onClick={useEquippedTool}>
+          <button
+            type="button"
+            className="farm-primary-action"
+            onClick={useEquippedTool}
+            aria-label={actionLabel}
+          >
             <span>{actionLabel}</span>
-            <span>Press E / Use tool</span>
+            <span aria-hidden="true">Press E / Use tool</span>
           </button>
 
           <div className="farm-action-divider" />
