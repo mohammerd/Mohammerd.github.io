@@ -3,239 +3,117 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import HarvestRushGame from './HarvestRushGame';
 
-const planStrongStormRun = () => {
-  fireEvent.click(screen.getByRole('button', { name: /Tomatoes, 4 crates/ }));
-  fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
-  fireEvent.click(screen.getByRole('button', { name: /Cassava, 4 crates/ }));
-};
-
-describe('Harvest Rush campaign experience', () => {
+describe('Harvest Rush farm simulation', () => {
   beforeEach(() => {
     window.localStorage.clear();
   });
 
-  it('starts with a clear briefing and keeps later missions locked', () => {
+  it('opens with a visible farm map and a four-harvest starter goal', () => {
     render(<HarvestRushGame />);
 
     expect(
-      screen.getByRole('heading', { name: 'Every decision has a cost.' }),
+      screen.getByRole('heading', { name: 'Make this farm yours.' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'The Storm Front' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('group', { name: 'Weather timeline' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Keep rain-sensitive crops out of the final slot/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', {
-        name: /Mission 02: The Heat Window, locked/i,
+      screen.getByRole('group', {
+        name: /Top-down farm map. Select one of the six garden plots/i,
       }),
-    ).toBeDisabled();
-    expect(
-      screen.getByRole('button', { name: /Mission 03: The Dust Run, locked/i }),
-    ).toBeDisabled();
-  });
-
-  it('opens the planning board with live weather and resource feedback', () => {
-    render(<HarvestRushGame />);
-
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-
-    expect(
-      screen.getByRole('heading', { name: 'Choose your fields' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: 'Your harvest order' }),
+      screen.getByRole('button', { name: 'Plot 1: empty bed' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('progressbar', { name: 'Crew assigned' }),
+      screen.getByRole('button', { name: 'Plot 6: empty bed' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('progressbar', { name: 'Starter goal progress' }),
     ).toHaveAttribute('aria-valuenow', '0');
-    expect(
-      screen.getByRole('button', { name: /Dispatch harvest/ }),
-    ).toBeDisabled();
+    expect(screen.getByText(/Four simple steps/)).toBeInTheDocument();
   });
 
-  it('prevents resource overflow and allows selected fields to be removed again', () => {
+  it('lets a player select a plot, choose seeds, and plant within their budget', () => {
     render(<HarvestRushGame />);
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
 
-    const tomatoes = screen.getByRole('button', { name: /Tomatoes, 4 crates/ });
-    fireEvent.click(tomatoes);
-    fireEvent.click(screen.getByRole('button', { name: /Peppers, 3 crates/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Plot 2: empty bed' }));
+    fireEvent.click(screen.getByRole('button', { name: /Peppers, 6 coins/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Plant peppers/ }));
 
     expect(
-      screen.getByRole('button', { name: /Cassava, 4 crates/ }),
-    ).toBeDisabled();
-    expect(screen.getByText('Crew limit reached')).toBeInTheDocument();
-
-    fireEvent.click(tomatoes);
-    expect(tomatoes).toHaveAttribute('aria-pressed', 'false');
+      screen.getByRole('button', { name: /Plot 2: Peppers, growing/ }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText('20')).toBeInTheDocument();
     expect(
-      screen.getByRole('progressbar', { name: 'Crew assigned' }),
-    ).toHaveAttribute('aria-valuenow', '2');
+      screen.getByRole('button', { name: /Water this crop/ }),
+    ).toBeEnabled();
+    expect(
+      screen.getByText(/Water the soil, then end the day/),
+    ).toBeInTheDocument();
   });
 
-  it('recalculates the score when a field is moved ahead of the storm', () => {
+  it('grows a watered crop over two days and sells it when harvested', () => {
     render(<HarvestRushGame />);
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Tomatoes, 4 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Cassava, 4 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Plant tomatoes/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Water this crop/ }));
+    fireEvent.click(screen.getByRole('button', { name: /End day/ }));
 
-    const summary = screen.getByText('Projected operation score').parentElement;
-    expect(summary).toHaveTextContent('45');
-    expect(screen.getByText(/−3 pts · exposed/i)).toBeInTheDocument();
+    expect(screen.getByText('Growing · Day 1 of 2')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Water this crop/ }));
+    fireEvent.click(screen.getByRole('button', { name: /End day/ }));
 
-    fireEvent.click(screen.getByRole('button', { name: 'Move Okra earlier' }));
-
-    expect(summary).toHaveTextContent('48');
-    expect(screen.getByText(/Weather resilient/i)).toBeInTheDocument();
-  });
-
-  it('clears the opening mission, saves the best, and unlocks the heat mission', async () => {
-    render(<HarvestRushGame />);
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-    planStrongStormRun();
-
-    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
+    expect(screen.getByText('Ready to harvest!')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Harvest tomatoes/ }));
 
     expect(
-      screen.getByRole('heading', { name: 'You managed the operation well.' }),
+      screen.getByRole('button', { name: 'Plot 1: empty bed' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText('FINAL HARVEST SCORE').parentElement,
-    ).toHaveTextContent('48');
+      screen.getByRole('progressbar', { name: 'Starter goal progress' }),
+    ).toHaveAttribute('aria-valuenow', '1');
+    expect(screen.getByText('36')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'You harvested Tomatoes. +15 coins.',
+    );
+  });
 
+  it('does not grow a crop that was left dry before ending the day', () => {
+    render(<HarvestRushGame />);
+
+    fireEvent.click(screen.getByRole('button', { name: /Plant tomatoes/ }));
+    fireEvent.click(screen.getByRole('button', { name: /End day/ }));
+
+    expect(screen.getByText('Growing · Day 0 of 2')).toBeInTheDocument();
+    expect(
+      screen.getByText(/Water your crops before ending the day/),
+    ).toBeInTheDocument();
+  });
+
+  it('awards the starter reward once and restores saved farm progress', async () => {
+    const { unmount } = render(<HarvestRushGame />);
+
+    for (let harvest = 0; harvest < 4; harvest += 1) {
+      const plotName = `Plot ${harvest + 1}: empty bed`;
+      fireEvent.click(screen.getByRole('button', { name: plotName }));
+      fireEvent.click(screen.getByRole('button', { name: /Okra, 4 coins/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Plant okra/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Water this crop/ }));
+      fireEvent.click(screen.getByRole('button', { name: /End day/ }));
+      fireEvent.click(screen.getByRole('button', { name: /Harvest okra/ }));
+    }
+
+    expect(screen.getByText('Starter farm complete!')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent(/20-coin reward/);
     await waitFor(() => {
-      const saved = JSON.parse(
-        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ??
-          '{}',
-      );
-      expect(saved.completed).toContain('storm-front');
-      expect(saved.bestScores['storm-front']).toBe(48);
+      expect(
+        window.localStorage.getItem('mohammerd.harvest-rush.farm.v1'),
+      ).toContain('"goalComplete":true');
     });
 
-    expect(
-      screen.getByRole('button', { name: /Continue to next mission/ }),
-    ).toBeEnabled();
-    fireEvent.click(
-      screen.getByRole('button', { name: /Continue to next mission/ }),
-    );
-
-    expect(
-      screen.getByRole('heading', { name: 'The Heat Window' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Mission 03: The Dust Run, locked/i }),
-    ).toBeDisabled();
-  });
-
-  it('applies the second mission weather and unlocks the final scenario', () => {
+    unmount();
     render(<HarvestRushGame />);
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-    planStrongStormRun();
-    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
-    fireEvent.click(
-      screen.getByRole('button', { name: /Continue to next mission/ }),
-    );
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-
+    expect(screen.getByText('Starter farm complete!')).toBeInTheDocument();
     expect(
-      screen.getByText(/High temperatures begin after harvest 01/i),
-    ).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: /Tomatoes, 4 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Cassava, 4 crates/ }));
-    expect(
-      screen.getByText('Projected operation score').parentElement,
-    ).toHaveTextContent('44');
-
-    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
-
-    expect(
-      screen.getByRole('button', { name: /Continue to next mission/ }),
-    ).toBeEnabled();
-    fireEvent.click(
-      screen.getByRole('button', { name: /Continue to next mission/ }),
-    );
-
-    expect(
-      screen.getByRole('heading', { name: 'The Dust Run' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', {
-        name: /Mission 03: The Dust Run, available/i,
-      }),
-    ).toBeEnabled();
-  });
-
-  it('does not unlock the next mission when the score is below bronze', async () => {
-    render(<HarvestRushGame />);
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Peppers, 3 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Maize, 5 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Okra, 3 crates/ }));
-    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
-
-    expect(
-      screen.getByRole('heading', {
-        name: 'This plan did not meet the mission standard.',
-      }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /Earn Bronze to unlock next/ }),
-    ).toBeDisabled();
-
-    await waitFor(() => {
-      const saved = JSON.parse(
-        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ??
-          '{}',
-      );
-      expect(saved.completed).not.toContain('storm-front');
-      expect(saved.bestScores['storm-front']).toBe(42);
-    });
-  });
-
-  it('migrates the previous personal-best score into the campaign record', async () => {
-    window.localStorage.setItem('mohammerd.harvest-rush.best.v1', '52');
-    render(<HarvestRushGame />);
-
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-    planStrongStormRun();
-    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
-
-    await waitFor(() => {
-      const saved = JSON.parse(
-        window.localStorage.getItem('mohammerd.harvest-rush.campaign.v2') ??
-          '{}',
-      );
-      expect(saved.bestScores['storm-front']).toBe(52);
-    });
-  });
-
-  it('keeps a completed mission replayable without relocking campaign progress', () => {
-    render(<HarvestRushGame />);
-    fireEvent.click(screen.getByRole('button', { name: /Open field plan/ }));
-    planStrongStormRun();
-    fireEvent.click(screen.getByRole('button', { name: /Dispatch harvest/ }));
-
-    fireEvent.click(screen.getByRole('button', { name: /Replay mission/ }));
-
-    expect(
-      screen.getByRole('heading', { name: 'Choose your fields' }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', {
-        name: /Mission 02: The Heat Window, available/i,
-      }),
-    ).toBeEnabled();
-    expect(
-      screen.getByRole('button', { name: /Dispatch harvest/ }),
-    ).toBeDisabled();
+      screen.getByRole('progressbar', { name: 'Starter goal progress' }),
+    ).toHaveAttribute('aria-valuenow', '4');
   });
 });

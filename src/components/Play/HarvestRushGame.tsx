@@ -1,1012 +1,522 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
-  evaluateHarvestPlan,
-  getFieldAvailability,
-  getHarvestMetrics,
-  getHarvestMission,
-  getWeatherRiskLabel,
-  HARVEST_FIELDS,
-  HARVEST_MISSIONS,
-  HARVEST_RUSH_RULES,
-  type HarvestFieldId,
-  type HarvestMissionId,
-  type HarvestResult,
-  previewHarvestPlan,
-  type WeatherType,
-} from '@/lib/harvest-rush';
+  advanceFarmDay,
+  createInitialFarmState,
+  FARM_CROPS,
+  FARM_GOAL,
+  FARM_SAVE_KEY,
+  type FarmCropId,
+  type FarmPlot,
+  type FarmState,
+  getFarmCrop,
+  harvestFarmPlot,
+  isCropReady,
+  isValidFarmState,
+  plantFarmCrop,
+  waterFarmPlot,
+} from '@/lib/farm-game';
 import { withBasePath } from '@/lib/utils';
 
-const PROGRESS_KEY = 'mohammerd.harvest-rush.campaign.v2';
-
-interface PlayerProgress {
-  bestScores: Partial<Record<HarvestMissionId, number>>;
-  completed: HarvestMissionId[];
-}
-
-const EMPTY_PROGRESS: PlayerProgress = {
-  bestScores: {},
-  completed: [],
-};
-
-function readProgress(): PlayerProgress {
+function readSavedFarm(): FarmState {
   try {
-    const raw = window.localStorage.getItem(PROGRESS_KEY);
-    if (!raw) {
-      const legacyScore = Number(
-        window.localStorage.getItem('mohammerd.harvest-rush.best.v1'),
-      );
-      return Number.isFinite(legacyScore) && legacyScore > 0
-        ? { bestScores: { 'storm-front': legacyScore }, completed: [] }
-        : EMPTY_PROGRESS;
-    }
-
+    const raw = window.localStorage.getItem(FARM_SAVE_KEY);
+    if (!raw) return createInitialFarmState();
     const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== 'object') return EMPTY_PROGRESS;
-
-    const candidate = parsed as Partial<PlayerProgress>;
-    const validIds = HARVEST_MISSIONS.map((mission) => mission.id);
-    const completed = Array.isArray(candidate.completed)
-      ? candidate.completed.filter(
-          (id): id is HarvestMissionId =>
-            typeof id === 'string' && validIds.includes(id as HarvestMissionId),
-        )
-      : [];
-    const bestScores: PlayerProgress['bestScores'] = {};
-
-    if (candidate.bestScores && typeof candidate.bestScores === 'object') {
-      for (const id of validIds) {
-        const score = candidate.bestScores[id];
-        if (typeof score === 'number' && Number.isFinite(score) && score >= 0) {
-          bestScores[id] = score;
-        }
-      }
-    }
-
-    const legacyScore = Number(
-      window.localStorage.getItem('mohammerd.harvest-rush.best.v1'),
-    );
-    if (
-      bestScores['storm-front'] === undefined &&
-      Number.isFinite(legacyScore) &&
-      legacyScore > 0
-    ) {
-      bestScores['storm-front'] = legacyScore;
-    }
-
-    return {
-      bestScores,
-      completed: [...new Set(completed)],
-    };
+    return isValidFarmState(parsed) ? parsed : createInitialFarmState();
   } catch {
-    return EMPTY_PROGRESS;
+    return createInitialFarmState();
   }
 }
 
-const CROP_ILLUSTRATIONS: Record<HarvestFieldId, string> = {
-  tomatoes: '/images/harvest-rush/tomatoes.svg',
-  peppers: '/images/harvest-rush/peppers.svg',
-  maize: '/images/harvest-rush/maize.svg',
-  cassava: '/images/harvest-rush/cassava.svg',
-  okra: '/images/harvest-rush/okra.svg',
-};
+const FARM_PLOT_POSITIONS = [
+  { x: 35.1, y: 29.3 },
+  { x: 44.5, y: 29.3 },
+  { x: 53.9, y: 29.3 },
+  { x: 35.1, y: 48.9 },
+  { x: 44.5, y: 48.9 },
+  { x: 53.9, y: 48.9 },
+];
 
-const WEATHER_ILLUSTRATIONS: Record<WeatherType, string> = {
-  rain: '/images/harvest-rush/rain.svg',
-  heat: '/images/harvest-rush/heat.svg',
-  dust: '/images/harvest-rush/dust.svg',
-};
+const farmWorldStyle = {
+  backgroundImage: `url("${withBasePath('/images/harvest-rush/farm-world.svg')}")`,
+} as const;
 
-function CropArt({ fieldId }: { fieldId: HarvestFieldId }) {
+function FarmCropSprite({ plot }: { plot: FarmPlot }) {
+  if (!plot.crop) return null;
+
+  const ready = isCropReady(plot);
   return (
-    <img
-      className="harvest-crop-illustration"
-      src={withBasePath(CROP_ILLUSTRATIONS[fieldId])}
-      alt=""
+    <span
+      className={
+        `farm-plot-sprite is-${plot.crop} ` +
+        (ready ? 'is-ready' : 'is-growing')
+      }
       aria-hidden="true"
-      width={96}
-      height={96}
-      loading="lazy"
-      decoding="async"
-    />
-  );
-}
-
-function WeatherMark({ weather }: { weather: WeatherType }) {
-  return (
-    <img
-      src={withBasePath(WEATHER_ILLUSTRATIONS[weather])}
-      alt=""
-      aria-hidden="true"
-      width={48}
-      height={48}
-      decoding="async"
-    />
-  );
-}
-
-function ResourceMeter({
-  label,
-  used,
-  limit,
-  unit,
-}: {
-  label: string;
-  used: number;
-  limit: number;
-  unit: string;
-}) {
-  const ratio = Math.min(100, (used / limit) * 100);
-  const tone =
-    ratio >= 90 ? 'is-near-limit' : ratio >= 70 ? 'is-mid-limit' : '';
-
-  return (
-    <div className={'harvest-resource ' + tone}>
-      <div className="harvest-resource-heading">
-        <span>{label}</span>
-        <strong>
-          {used}
-          <small>
-            {' '}
-            / {limit} {unit}
-          </small>
-        </strong>
-      </div>
-      <div
-        className="harvest-resource-track"
-        role="progressbar"
-        aria-label={label}
-        aria-valuemin={0}
-        aria-valuemax={limit}
-        aria-valuenow={used}
-      >
-        <span style={{ width: ratio + '%' }} />
-      </div>
-    </div>
-  );
-}
-
-function Metric({
-  label,
-  value,
-  detail,
-}: {
-  label: string;
-  value: string;
-  detail: string;
-}) {
-  return (
-    <div className="harvest-hero-metric">
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{detail}</small>
-    </div>
-  );
-}
-
-function WeatherTimeline({
-  mission,
-}: {
-  mission: ReturnType<typeof getHarvestMission>;
-}) {
-  return (
-    <div
-      className="harvest-weather-timeline"
-      role="group"
-      aria-label="Weather timeline"
     >
-      {[1, 2, 3].map((slot) => {
-        const exposed = slot > mission.exposureAfterSlots;
-        return (
-          <div
-            key={slot}
-            className={
-              'harvest-weather-step ' + (exposed ? 'is-exposed' : 'is-clear')
-            }
-          >
-            <span className="harvest-weather-step-index">0{slot}</span>
-            <strong>{exposed ? mission.weatherName : 'Clear window'}</strong>
-            <small>{exposed ? 'Weather risk' : 'Full quality'}</small>
-          </div>
-        );
-      })}
-    </div>
+      <i className="farm-plot-stem" />
+      <i className="farm-plot-leaf is-left" />
+      <i className="farm-plot-leaf is-right" />
+      <i className="farm-plot-leaf is-top" />
+      <i className="farm-plot-fruit is-left" />
+      <i className="farm-plot-fruit is-right" />
+      <i className="farm-plot-fruit is-center" />
+    </span>
   );
 }
 
-function CampaignProgress({
-  completed,
-  unlockedCount,
+function FarmWorld({
+  plots,
+  selectedPlotId,
+  onSelectPlot,
 }: {
-  completed: HarvestMissionId[];
-  unlockedCount: number;
+  plots: FarmPlot[];
+  selectedPlotId: number;
+  onSelectPlot: (plotId: number) => void;
 }) {
   return (
-    <div className="harvest-campaign-progress">
-      <div className="harvest-campaign-progress-copy">
-        <span className="harvest-micro-label">CAMPAIGN PROGRESS</span>
-        <strong>
-          {completed.length}{' '}
-          <small>of {HARVEST_MISSIONS.length} missions cleared</small>
-        </strong>
-      </div>
+    <div className="farm-world-frame">
       <div
-        className="harvest-campaign-track"
-        role="progressbar"
-        aria-label="Campaign progress"
-        aria-valuemin={0}
-        aria-valuemax={HARVEST_MISSIONS.length}
-        aria-valuenow={completed.length}
+        className="farm-world"
+        role="group"
+        aria-label="Top-down farm map. Select one of the six garden plots."
+        style={farmWorldStyle}
       >
-        <span
-          style={{
-            width: (completed.length / HARVEST_MISSIONS.length) * 100 + '%',
-          }}
-        />
+        {plots.map((plot, index) => {
+          const position = FARM_PLOT_POSITIONS[index];
+          const crop = plot.crop ? getFarmCrop(plot.crop) : null;
+          const ready = isCropReady(plot);
+          const selected = plot.id === selectedPlotId;
+          const state = ready ? ', ready to harvest' : crop ? ', growing' : '';
+
+          return (
+            <button
+              key={plot.id}
+              type="button"
+              className={
+                'farm-map-plot-button' +
+                (selected ? ' is-selected' : '') +
+                (crop ? ' is-planted' : '')
+              }
+              style={{
+                left: `${position.x}%`,
+                top: `${position.y}%`,
+              }}
+              aria-label={`Plot ${plot.id}: ${crop ? crop.name : 'empty bed'}${state}`}
+              aria-pressed={selected}
+              onClick={() => onSelectPlot(plot.id)}
+            >
+              {crop ? (
+                <FarmCropSprite plot={plot} />
+              ) : (
+                <span className="farm-plot-empty-mark" aria-hidden="true">
+                  +
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
-      <span className="harvest-campaign-unlocked">
-        {unlockedCount} {unlockedCount === 1 ? 'mission' : 'missions'} available
-      </span>
+      <span className="farm-map-hint">Tap a plot to select it</span>
     </div>
   );
 }
 
-function MissionSelector({
-  selectedId,
-  completed,
-  unlockedCount,
-  onSelect,
-}: {
-  selectedId: HarvestMissionId;
-  completed: HarvestMissionId[];
-  unlockedCount: number;
-  onSelect: (id: HarvestMissionId) => void;
-}) {
+function SeedMark({ cropId }: { cropId: FarmCropId }) {
   return (
-    <nav className="harvest-mission-selector" aria-label="Campaign missions">
-      {HARVEST_MISSIONS.map((mission, index) => {
-        const isUnlocked = index < unlockedCount;
-        const isCompleted = completed.includes(mission.id);
-        const isSelected = mission.id === selectedId;
-
-        return (
-          <button
-            key={mission.id}
-            type="button"
-            className={
-              'harvest-mission-tab' +
-              (isSelected ? ' is-selected' : '') +
-              (isCompleted ? ' is-completed' : '') +
-              (!isUnlocked ? ' is-locked' : '')
-            }
-            onClick={() => onSelect(mission.id)}
-            disabled={!isUnlocked}
-            aria-current={isSelected ? 'step' : undefined}
-            aria-label={
-              'Mission ' +
-              mission.number +
-              ': ' +
-              mission.title +
-              (isCompleted
-                ? ', completed'
-                : !isUnlocked
-                  ? ', locked'
-                  : ', available')
-            }
-          >
-            <span className="harvest-mission-tab-number">
-              {isCompleted ? '✓' : mission.number}
-            </span>
-            <span className="harvest-mission-tab-copy">
-              <strong>{mission.title}</strong>
-              <small>
-                {isCompleted
-                  ? 'Cleared'
-                  : isUnlocked
-                    ? mission.weatherName
-                    : 'Complete previous mission'}
-              </small>
-            </span>
-            <span className="harvest-mission-tab-status" aria-hidden="true">
-              {!isUnlocked ? '–' : isCompleted ? '✓' : isSelected ? '●' : '○'}
-            </span>
-          </button>
-        );
-      })}
-    </nav>
+    <span className={`farm-seed-mark is-${cropId}`} aria-hidden="true">
+      <span />
+      <span />
+      <span />
+    </span>
   );
 }
 
 export default function HarvestRushGame() {
-  const [selectedMissionId, setSelectedMissionId] =
-    useState<HarvestMissionId>('storm-front');
-  const [phase, setPhase] = useState<'briefing' | 'planning'>('briefing');
-  const [plan, setPlan] = useState<HarvestFieldId[]>([]);
-  const [result, setResult] = useState<HarvestResult | null>(null);
-  const [progress, setProgress] = useState<PlayerProgress>(EMPTY_PROGRESS);
-  const [progressReady, setProgressReady] = useState(false);
-
-  const mission = useMemo(
-    () => getHarvestMission(selectedMissionId),
-    [selectedMissionId],
+  const [farm, setFarm] = useState<FarmState>(createInitialFarmState);
+  const [selectedPlotId, setSelectedPlotId] = useState(1);
+  const [selectedSeed, setSelectedSeed] = useState<FarmCropId>('tomato');
+  const [notice, setNotice] = useState(
+    'Welcome to your farm. Select a plot and plant your first seeds.',
   );
-  const metrics = useMemo(() => getHarvestMetrics(plan), [plan]);
-  const preview = useMemo(
-    () => previewHarvestPlan(plan, mission),
-    [plan, mission],
-  );
-  const projectedScore = preview.reduce(
-    (total, outcome) => total + outcome.score,
-    0,
-  );
-  const planIsComplete = plan.length === HARVEST_RUSH_RULES.harvestSlots;
-  const missionIndex = HARVEST_MISSIONS.findIndex(
-    (candidate) => candidate.id === selectedMissionId,
-  );
-  const firstIncompleteMission = HARVEST_MISSIONS.findIndex(
-    (candidate) => !progress.completed.includes(candidate.id),
-  );
-  const unlockedCount =
-    firstIncompleteMission === -1
-      ? HARVEST_MISSIONS.length
-      : firstIncompleteMission + 1;
-  const bestScore = progress.bestScores[selectedMissionId] ?? null;
-  const nextMission = HARVEST_MISSIONS[missionIndex + 1] ?? null;
-  const nextMissionUnlocked = nextMission
-    ? progress.completed.includes(selectedMissionId)
-    : false;
+  const [saveReady, setSaveReady] = useState(false);
 
   useEffect(() => {
-    setProgress(readProgress());
-    setProgressReady(true);
+    setFarm(readSavedFarm());
+    setSaveReady(true);
   }, []);
 
   useEffect(() => {
-    if (!progressReady) return;
-
+    if (!saveReady) return;
     try {
-      window.localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+      window.localStorage.setItem(FARM_SAVE_KEY, JSON.stringify(farm));
     } catch {
-      // The campaign remains playable when browser storage is unavailable.
+      // The farm remains playable when local storage is unavailable.
     }
-  }, [progress, progressReady]);
+  }, [farm, saveReady]);
 
-  function selectMission(id: HarvestMissionId) {
-    const index = HARVEST_MISSIONS.findIndex(
-      (candidate) => candidate.id === id,
-    );
-    if (index < 0 || index >= unlockedCount) return;
+  const selectedPlot =
+    farm.plots.find((plot) => plot.id === selectedPlotId) ?? farm.plots[0];
+  const selectedCrop =
+    FARM_CROPS.find((crop) => crop.id === selectedSeed) ?? FARM_CROPS[0];
+  const plantedCrop = selectedPlot.crop ? getFarmCrop(selectedPlot.crop) : null;
+  const selectedReady = isCropReady(selectedPlot);
+  const growthPercent = plantedCrop
+    ? Math.min(100, (selectedPlot.growth / plantedCrop.growDays) * 100)
+    : 0;
+  const goalProgress = Math.min(farm.harvested, FARM_GOAL);
 
-    setSelectedMissionId(id);
-    setPhase('briefing');
-    setPlan([]);
-    setResult(null);
-  }
-
-  function beginPlanning() {
-    setPlan([]);
-    setResult(null);
-    setPhase('planning');
-  }
-
-  function toggleField(fieldId: HarvestFieldId) {
-    if (result) return;
-
-    if (plan.includes(fieldId)) {
-      setPlan((current) => current.filter((id) => id !== fieldId));
+  function selectPlot(plotId: number) {
+    setSelectedPlotId(plotId);
+    const plot = farm.plots.find((candidate) => candidate.id === plotId);
+    if (!plot) return;
+    if (!plot.crop) {
+      setNotice(`Plot ${plotId} is ready. Choose a seed and plant it here.`);
       return;
     }
-
-    if (getFieldAvailability(plan, fieldId, mission)) return;
-    setPlan((current) => [...current, fieldId]);
+    const crop = getFarmCrop(plot.crop);
+    setNotice(
+      isCropReady(plot)
+        ? `${crop.name} in Plot ${plotId} are ready to harvest.`
+        : plot.watered
+          ? `${crop.name} in Plot ${plotId} are watered for today.`
+          : `${crop.name} are growing in Plot ${plotId}. ` +
+            'Water them before ending the day.',
+    );
   }
 
-  function moveField(fieldId: HarvestFieldId, direction: -1 | 1) {
-    if (result) return;
-
-    setPlan((current) => {
-      const from = current.indexOf(fieldId);
-      const to = from + direction;
-      if (from < 0 || to < 0 || to >= current.length) return current;
-
-      const next = [...current];
-      [next[from], next[to]] = [next[to], next[from]];
-      return next;
-    });
+  function plantSelectedSeed() {
+    const next = plantFarmCrop(farm, selectedPlotId, selectedSeed);
+    if (next === farm) {
+      setNotice(
+        farm.coins < selectedCrop.seedCost
+          ? `You need ${selectedCrop.seedCost} coins for ${selectedCrop.name} seeds.`
+          : 'Choose an empty plot before planting.',
+      );
+      return;
+    }
+    setFarm(next);
+    setNotice(
+      `${selectedCrop.name} planted in Plot ${selectedPlotId}. ` +
+        'Water the soil, then end the day to help it grow.',
+    );
   }
 
-  function dispatchHarvest() {
-    if (!planIsComplete || result) return;
-
-    const outcome = evaluateHarvestPlan(plan, mission);
-    setResult(outcome);
-    setProgress((current) => {
-      const currentBest = current.bestScores[selectedMissionId] ?? 0;
-      return {
-        bestScores: {
-          ...current.bestScores,
-          [selectedMissionId]: Math.max(currentBest, outcome.score),
-        },
-        completed:
-          outcome.grade === 'Developing' ||
-          current.completed.includes(selectedMissionId)
-            ? current.completed
-            : [...current.completed, selectedMissionId],
-      };
-    });
+  function waterSelectedPlot() {
+    const next = waterFarmPlot(farm, selectedPlotId);
+    if (next === farm) return;
+    setFarm(next);
+    setNotice(
+      `${plantedCrop?.name ?? 'Crop'} watered. End the day to grow it.`,
+    );
   }
 
-  function replayMission() {
-    setPlan([]);
-    setResult(null);
-    setPhase('planning');
+  function harvestSelectedPlot() {
+    const outcome = harvestFarmPlot(farm, selectedPlotId);
+    if (!outcome.crop) return;
+    setFarm(outcome.state);
+    setNotice(
+      outcome.goalReward > 0
+        ? `You harvested ${outcome.crop.name} and completed the starter goal. ` +
+            `+${outcome.crop.sellPrice} coins plus a ${outcome.goalReward}-coin reward!`
+        : `You harvested ${outcome.crop.name}. +${outcome.crop.sellPrice} coins.`,
+    );
   }
 
-  function returnToBriefing() {
-    setPlan([]);
-    setResult(null);
-    setPhase('briefing');
+  function endDay() {
+    const wateredCount = farm.plots.filter((plot) => plot.watered).length;
+    const next = advanceFarmDay(farm);
+    setFarm(next);
+    setNotice(
+      wateredCount > 0
+        ? `Day ${next.day} begins. ${wateredCount} watered ` +
+            `${wateredCount === 1 ? 'crop has' : 'crops have'} grown.`
+        : `Day ${next.day} begins. ` +
+            'Water your crops before ending the day so they can grow.',
+    );
   }
 
-  const completionBest = result
-    ? Math.max(bestScore ?? 0, result.score)
-    : bestScore;
+  const plantedCount = farm.plots.filter((plot) => plot.crop !== null).length;
+  const readyCount = farm.plots.filter(isCropReady).length;
 
   return (
-    <section className="harvest-game" aria-label="Harvest Rush campaign">
-      <div className="harvest-game-topbar">
-        <div className="harvest-game-brand">
-          <span className="harvest-brand-mark" aria-hidden="true">
-            <img
-              src={withBasePath('/images/harvest-rush/brand-mark.svg')}
-              alt=""
-              width={36}
-              height={36}
-              decoding="async"
-            />
+    <section
+      className="harvest-game farm-sim"
+      aria-label="Harvest Rush farm simulation"
+    >
+      <header className="farm-topbar">
+        <div className="farm-brand">
+          <span className="farm-brand-mark" aria-hidden="true">
+            ✦
           </span>
           <span>
             <strong>HARVEST RUSH</strong>
-            <small>FIELD OPERATIONS SIMULATOR</small>
+            <small>YOUR LITTLE FARM</small>
           </span>
         </div>
-        <div className="harvest-game-topbar-meta">
-          <span className="harvest-local-badge">
-            <span aria-hidden="true" /> SAVES ON THIS DEVICE
-          </span>
-          <span className="harvest-game-version">CAMPAIGN 01 / 03</span>
-        </div>
-      </div>
-
-      <div className="harvest-campaign-header">
-        <div className="harvest-campaign-title-block">
-          <span className="harvest-micro-label">THE HARVEST CAMPAIGN</span>
-          <h2>Every decision has a cost.</h2>
-          <p>
-            Plan the work, protect the crop, and get the best return from the
-            crew and truck you have.
-          </p>
-        </div>
-        <CampaignProgress
-          completed={progress.completed}
-          unlockedCount={unlockedCount}
-        />
-      </div>
-
-      <MissionSelector
-        selectedId={selectedMissionId}
-        completed={progress.completed}
-        unlockedCount={unlockedCount}
-        onSelect={selectMission}
-      />
-
-      <div className="harvest-mission-context">
-        <div className="harvest-mission-context-main">
-          <div className="harvest-mission-heading">
-            <span className="harvest-mission-number">
-              MISSION {mission.number}
-            </span>
-            <span className="harvest-mission-divider" />
-            <span className="harvest-mission-status">
-              {progress.completed.includes(mission.id)
-                ? 'PREVIOUSLY CLEARED'
-                : 'AVAILABLE FOR DISPATCH'}
-            </span>
+        <div className="farm-hud" aria-label="Farm status">
+          <div className="farm-hud-item">
+            <span>DAY</span>
+            <strong>{farm.day}</strong>
           </div>
-          <h3>{mission.title}</h3>
-          <p>{mission.subtitle}</p>
+          <div className="farm-hud-item">
+            <span>COINS</span>
+            <strong>{farm.coins}</strong>
+          </div>
+          <div className="farm-hud-item">
+            <span>IN THE GROUND</span>
+            <strong>{plantedCount}/6</strong>
+          </div>
         </div>
-        <div className="harvest-mission-weather">
-          <span className="harvest-weather-art">
-            <WeatherMark weather={mission.weather} />
+      </header>
+
+      <div className="farm-welcome">
+        <div>
+          <p className="farm-eyebrow">A SMALL PLACE TO GROW</p>
+          <h2>Make this farm yours.</h2>
+          <p>Plant a few seeds, care for your crops, and sell what you grow.</p>
+        </div>
+        <div className="farm-weather-chip">
+          <span className="farm-sun" aria-hidden="true">
+            ☀
           </span>
           <span>
-            <small>FIELD CONDITION</small>
-            <strong>{mission.weatherName}</strong>
-            <em>{mission.weatherDetail}</em>
+            <strong>Clear skies</strong>
+            <small>Good day for the farm</small>
           </span>
         </div>
       </div>
 
-      {phase === 'briefing' && !result && (
-        <div className="harvest-briefing-screen">
-          <div className="harvest-briefing-copy">
-            <span className="harvest-section-kicker">OPERATIONS BRIEFING</span>
-            <h3>Know the conditions before you commit.</h3>
-            <p>{mission.briefing}</p>
-            <div className="harvest-objective">
-              <span className="harvest-objective-icon" aria-hidden="true">
-                !
-              </span>
-              <span>
-                <small>MISSION OBJECTIVE</small>
-                <strong>{mission.objective}</strong>
-              </span>
-            </div>
-            <div className="harvest-mission-limits">
-              <Metric
-                label="Harvest slots"
-                value={'03'}
-                detail="Three field runs"
-              />
-              <Metric
-                label="Available crew"
-                value={String(mission.crewLimit)}
-                detail="Work units"
-              />
-              <Metric
-                label="Truck capacity"
-                value={String(mission.truckCapacity)}
-                detail="Crates maximum"
-              />
-            </div>
-            <button
-              type="button"
-              className="harvest-primary-button"
-              onClick={beginPlanning}
-            >
-              Open field plan <span aria-hidden="true">→</span>
-            </button>
+      <div className="farm-goal">
+        <div className="farm-goal-copy">
+          <div>
+            <span className="farm-eyebrow">YOUR FIRST TASK</span>
+            <strong>
+              {farm.goalComplete ? 'Starter farm complete!' : 'Harvest 4 crops'}
+            </strong>
           </div>
-          <div className="harvest-briefing-visual">
-            <div className="harvest-weather-card">
-              <div className="harvest-weather-card-heading">
-                <span>WEATHER WINDOW</span>
-                <span>03 HARVESTS</span>
-              </div>
-              <WeatherTimeline mission={mission} />
-              <p>
-                Plan the first harvests carefully. Once the weather turns,
-                sensitive produce loses value.
-              </p>
+          <span className="farm-goal-count">
+            {goalProgress}/{FARM_GOAL}
+          </span>
+        </div>
+        <div
+          className="farm-goal-track"
+          role="progressbar"
+          aria-label="Starter goal progress"
+          aria-valuemin={0}
+          aria-valuemax={FARM_GOAL}
+          aria-valuenow={goalProgress}
+        >
+          <span style={{ width: `${(goalProgress / FARM_GOAL) * 100}%` }} />
+        </div>
+        <p>
+          {farm.goalComplete
+            ? 'You earned the 20-coin starter reward. ' +
+              'Keep growing and fill the whole farm.'
+            : 'Complete the task to earn 20 bonus coins.'}
+        </p>
+      </div>
+
+      <div className="farm-game-layout">
+        <div className="farm-map-column">
+          <div className="farm-map-heading">
+            <div>
+              <span className="farm-eyebrow">YOUR FARM</span>
+              <strong>Garden & homestead</strong>
             </div>
-            <div className="harvest-target-card">
-              <span className="harvest-target-label">GOLD TARGET</span>
-              <strong>
-                {mission.goldScore}
-                <small> pts</small>
-              </strong>
-              <span className="harvest-target-note">Three-star operation</span>
+            <div className="farm-map-stats">
+              <span>{readyCount} ready</span>
+              <span>{plantedCount} growing</span>
             </div>
+          </div>
+          <FarmWorld
+            plots={farm.plots}
+            selectedPlotId={selectedPlotId}
+            onSelectPlot={selectPlot}
+          />
+          <div className="farm-legend" aria-label="Map legend">
+            <span>
+              <i className="is-empty" /> Empty plot
+            </span>
+            <span>
+              <i className="is-growing" /> Growing
+            </span>
+            <span>
+              <i className="is-ready" /> Ready to harvest
+            </span>
           </div>
         </div>
-      )}
 
-      {phase === 'planning' && !result && (
-        <>
-          <div className="harvest-stage-guide">
-            <span>SELECT FIELDS · SET ORDER · DISPATCH</span>
+        <aside className="farm-side-panel" aria-label="Farm actions">
+          <div className="farm-panel-heading">
+            <div>
+              <span className="farm-eyebrow">
+                PLOT {String(selectedPlotId).padStart(2, '0')}
+              </span>
+              <h3>{plantedCrop ? plantedCrop.name : 'Empty garden bed'}</h3>
+            </div>
+            <span
+              className={
+                selectedReady
+                  ? 'farm-state-tag is-ready'
+                  : plantedCrop
+                    ? 'farm-state-tag is-growing'
+                    : 'farm-state-tag'
+              }
+            >
+              {selectedReady ? 'Ready' : plantedCrop ? 'Growing' : 'Empty'}
+            </span>
+          </div>
+
+          {plantedCrop ? (
+            <div className="farm-crop-status">
+              <div className={`farm-crop-preview is-${plantedCrop.id}`}>
+                <SeedMark cropId={plantedCrop.id} />
+              </div>
+              <div className="farm-crop-progress-copy">
+                <strong>
+                  {selectedReady
+                    ? 'Ready to harvest!'
+                    : `Growing · Day ${selectedPlot.growth} ` +
+                      `of ${plantedCrop.growDays}`}
+                </strong>
+                <span>
+                  {selectedReady
+                    ? `Sell this harvest for ${plantedCrop.sellPrice} coins.`
+                    : selectedPlot.watered
+                      ? 'Watered today. End the day to help it grow.'
+                      : 'Give this crop water before you end the day.'}
+                </span>
+              </div>
+              <div
+                className="farm-growth-track"
+                role="progressbar"
+                aria-label={`${plantedCrop.name} growth`}
+                aria-valuemin={0}
+                aria-valuemax={plantedCrop.growDays}
+                aria-valuenow={selectedPlot.growth}
+              >
+                <span style={{ width: `${growthPercent}%` }} />
+              </div>
+            </div>
+          ) : (
+            <div className="farm-seed-picker">
+              <p>Choose a seed to plant in Plot {selectedPlotId}.</p>
+              <div className="farm-seed-grid">
+                {FARM_CROPS.map((crop) => (
+                  <button
+                    key={crop.id}
+                    type="button"
+                    className={
+                      selectedSeed === crop.id
+                        ? 'farm-seed-option is-selected'
+                        : 'farm-seed-option'
+                    }
+                    aria-label={`${crop.name}, ${crop.seedCost} coins, ${crop.growDays} days`}
+                    onClick={() => setSelectedSeed(crop.id)}
+                    aria-pressed={selectedSeed === crop.id}
+                  >
+                    <SeedMark cropId={crop.id} />
+                    <span className="farm-seed-option-name">{crop.name}</span>
+                    <span className="farm-seed-option-meta">
+                      {crop.seedCost} coins · {crop.growDays} days
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="farm-primary-action"
+                onClick={plantSelectedSeed}
+                disabled={farm.coins < selectedCrop.seedCost}
+              >
+                Plant {selectedCrop.name.toLowerCase()}
+                <span>{selectedCrop.seedCost} coins</span>
+              </button>
+            </div>
+          )}
+
+          {plantedCrop && selectedReady && (
             <button
               type="button"
-              className="harvest-brief-link"
-              onClick={returnToBriefing}
+              className="farm-primary-action"
+              onClick={harvestSelectedPlot}
             >
-              View briefing
+              Harvest {plantedCrop.name.toLowerCase()}
+              <span>+{plantedCrop.sellPrice} coins</span>
             </button>
-          </div>
-
-          <div className="harvest-planning-layout">
-            <section
-              className="harvest-fields-section"
-              aria-labelledby="harvest-fields-title"
+          )}
+          {plantedCrop && !selectedReady && !selectedPlot.watered && (
+            <button
+              type="button"
+              className="farm-primary-action"
+              onClick={waterSelectedPlot}
             >
-              <div className="harvest-section-heading">
-                <div>
-                  <span className="harvest-section-kicker">
-                    FIELD REGISTER / 05 PLOTS
-                  </span>
-                  <h3 id="harvest-fields-title">Choose your fields</h3>
-                  <p>
-                    Select up to three plots. Tap a selected plot to remove it.
-                  </p>
-                </div>
-                <span className="harvest-selection-count">
-                  {plan.length}
-                  <small> / 03</small>
-                </span>
-              </div>
+              Water this crop <span>Free</span>
+            </button>
+          )}
+          {plantedCrop && !selectedReady && selectedPlot.watered && (
+            <div className="farm-watered-note">
+              <span aria-hidden="true">✓</span>
+              This crop is watered for today.
+            </div>
+          )}
 
-              <div className="harvest-field-grid">
-                {HARVEST_FIELDS.map((field) => {
-                  const selectedAt = plan.indexOf(field.id);
-                  const selected = selectedAt >= 0;
-                  const availability = getFieldAvailability(
-                    plan,
-                    field.id,
-                    mission,
-                  );
-                  const disabled =
-                    Boolean(result) || (!selected && Boolean(availability));
-                  const risk = getWeatherRiskLabel(field, mission);
+          <div className="farm-action-divider" />
+          <button
+            type="button"
+            className="farm-secondary-action"
+            onClick={endDay}
+          >
+            End day <span aria-hidden="true">→</span>
+          </button>
+          <p className="farm-action-hint">
+            Watered crops grow when you end the day. Dry crops stay the same.
+          </p>
+        </aside>
+      </div>
 
-                  return (
-                    <button
-                      key={field.id}
-                      type="button"
-                      className={
-                        'harvest-field' +
-                        (selected ? ' is-selected' : '') +
-                        (disabled && !selected ? ' is-unavailable' : '')
-                      }
-                      onClick={() => toggleField(field.id)}
-                      disabled={disabled}
-                      aria-pressed={selected}
-                      aria-label={
-                        field.crop +
-                        ', ' +
-                        field.crates +
-                        ' crates, ' +
-                        field.crew +
-                        ' crew, ' +
-                        risk +
-                        (selected
-                          ? ', selected in slot ' + (selectedAt + 1)
-                          : '')
-                      }
-                    >
-                      <span className="harvest-field-art">
-                        <CropArt fieldId={field.id} />
-                        <span className="harvest-field-number">
-                          PLOT {field.number}
-                        </span>
-                        {selected && (
-                          <span
-                            className="harvest-field-selected-mark"
-                            aria-hidden="true"
-                          >
-                            {String(selectedAt + 1).padStart(2, '0')}
-                          </span>
-                        )}
-                      </span>
-                      <span className="harvest-field-content">
-                        <span className="harvest-field-card-heading">
-                          <strong>{field.crop}</strong>
-                          <span
-                            className={
-                              'harvest-risk-tag ' +
-                              risk.toLowerCase().replaceAll(' ', '-')
-                            }
-                          >
-                            {risk}
-                          </span>
-                        </span>
-                        <span className="harvest-field-description">
-                          {field.description}
-                        </span>
-                        <span className="harvest-field-stats">
-                          <span>
-                            <strong>{field.crates}</strong> crates
-                          </span>
-                          <span>
-                            <strong>{field.crew}</strong> crew
-                          </span>
-                          <span>
-                            <strong>
-                              {field.crates * field.pointsPerCrate}
-                            </strong>{' '}
-                            base pts
-                          </span>
-                        </span>
-                        {availability && !selected && (
-                          <span className="harvest-field-blocked">
-                            {availability}
-                          </span>
-                        )}
-                        {selected && (
-                          <span className="harvest-field-selected-label">
-                            ADDED TO SLOT{' '}
-                            {String(selectedAt + 1).padStart(2, '0')}
-                          </span>
-                        )}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-
-            <aside
-              className="harvest-dispatch-panel"
-              aria-labelledby="harvest-plan-title"
-            >
-              <div className="harvest-dispatch-panel-heading">
-                <div>
-                  <span className="harvest-section-kicker">
-                    LIVE DISPATCH BOARD
-                  </span>
-                  <h3 id="harvest-plan-title">Your harvest order</h3>
-                </div>
-                <span className="harvest-dispatch-live">
-                  <i /> LIVE PREVIEW
-                </span>
-              </div>
-
-              <div className="harvest-resource-stack">
-                <ResourceMeter
-                  label="Crew assigned"
-                  used={metrics.crew}
-                  limit={mission.crewLimit}
-                  unit="units"
-                />
-                <ResourceMeter
-                  label="Truck load"
-                  used={metrics.crates}
-                  limit={mission.truckCapacity}
-                  unit="crates"
-                />
-              </div>
-
-              <ol className="harvest-plan-list">
-                {Array.from(
-                  { length: HARVEST_RUSH_RULES.harvestSlots },
-                  (_, index) => {
-                    const outcome = preview[index];
-                    const slotClass =
-                      'harvest-plan-slot' +
-                      (outcome?.weatherAffected ? ' is-exposed' : '') +
-                      (outcome ? ' has-field' : '');
-                    const weatherClass = outcome?.weatherAffected
-                      ? 'has-weather-loss'
-                      : 'has-weather-clear';
-
-                    return (
-                      <li key={index} className={slotClass}>
-                        <span className="harvest-plan-slot-number">
-                          0{index + 1}
-                        </span>
-                        {outcome ? (
-                          <div className="harvest-plan-slot-content">
-                            <div className="harvest-plan-slot-main">
-                              <span className="harvest-plan-crop-name">
-                                {outcome.field.crop}
-                              </span>
-                              <strong>
-                                {outcome.score}
-                                <small> pts</small>
-                              </strong>
-                            </div>
-                            <div className="harvest-plan-slot-meta">
-                              <span>
-                                {outcome.field.crates} crates ·{' '}
-                                {outcome.field.crew} crew
-                              </span>
-                              <span className={weatherClass}>
-                                {outcome.weatherAffected
-                                  ? '−' + outcome.lostPoints + ' pts · exposed'
-                                  : outcome.slot > mission.exposureAfterSlots
-                                    ? 'Weather resilient'
-                                    : 'Clear window'}
-                              </span>
-                            </div>
-                            <div className="harvest-plan-controls">
-                              <button
-                                type="button"
-                                onClick={() => moveField(outcome.field.id, -1)}
-                                disabled={index === 0}
-                                aria-label={
-                                  'Move ' + outcome.field.crop + ' earlier'
-                                }
-                              >
-                                ↑
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => moveField(outcome.field.id, 1)}
-                                disabled={index === plan.length - 1}
-                                aria-label={
-                                  'Move ' + outcome.field.crop + ' later'
-                                }
-                              >
-                                ↓
-                              </button>
-                              <button
-                                type="button"
-                                className="harvest-plan-remove"
-                                onClick={() => toggleField(outcome.field.id)}
-                                aria-label={'Remove ' + outcome.field.crop}
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="harvest-plan-empty">
-                            <strong>Awaiting field selection</strong>
-                            <span>
-                              {index + 1 > mission.exposureAfterSlots
-                                ? mission.weatherName + ' window'
-                                : 'Choose a plot to fill this slot'}
-                            </span>
-                          </div>
-                        )}
-                      </li>
-                    );
-                  },
-                )}
-              </ol>
-
-              <div className="harvest-score-preview" aria-live="polite">
-                <div>
-                  <span>Projected operation score</span>
-                  <strong>
-                    {plan.length ? projectedScore : '—'}
-                    <small>{plan.length ? ' pts' : ''}</small>
-                  </strong>
-                </div>
-                <span>
-                  {plan.length === 0
-                    ? 'Your score updates as you select and reorder fields.'
-                    : planIsComplete
-                      ? 'Gold standard: ' + mission.goldScore + ' points.'
-                      : HARVEST_RUSH_RULES.harvestSlots -
-                        plan.length +
-                        ' more field' +
-                        (HARVEST_RUSH_RULES.harvestSlots - plan.length === 1
-                          ? ''
-                          : 's') +
-                        ' required.'}
-                </span>
-              </div>
-
-              <div className="harvest-dispatch-actions">
-                <button
-                  type="button"
-                  className="harvest-primary-button"
-                  onClick={dispatchHarvest}
-                  disabled={!planIsComplete}
-                >
-                  Dispatch harvest <span aria-hidden="true">→</span>
-                </button>
-                <button
-                  type="button"
-                  className="harvest-secondary-button"
-                  onClick={() => setPlan([])}
-                  disabled={plan.length === 0}
-                >
-                  Clear plan
-                </button>
-              </div>
-            </aside>
+      <div className="farm-how-to">
+        <div className="farm-how-to-heading">
+          <div>
+            <span className="farm-eyebrow">HOW TO PLAY</span>
+            <strong>Four simple steps</strong>
           </div>
-        </>
-      )}
+          <span className="farm-how-to-progress">No timer · No pressure</span>
+        </div>
+        <ol>
+          <li>
+            <span>1</span>
+            <strong>Choose a plot</strong>
+            <small>Tap any empty soil bed on the map.</small>
+          </li>
+          <li>
+            <span>2</span>
+            <strong>Plant a seed</strong>
+            <small>Pick a crop you can afford.</small>
+          </li>
+          <li>
+            <span>3</span>
+            <strong>Water & rest</strong>
+            <small>Water it, then press End day.</small>
+          </li>
+          <li>
+            <span>4</span>
+            <strong>Harvest & sell</strong>
+            <small>When it is ready, collect your coins.</small>
+          </li>
+        </ol>
+      </div>
 
-      {result && (
-        <section
-          className="harvest-result-screen"
-          aria-labelledby="harvest-result-title"
-          aria-live="polite"
-        >
-          <div className="harvest-result-primary">
-            <div className="harvest-result-grade-mark">
-              <span>{result.stars ? '★'.repeat(result.stars) : '—'}</span>
-              <small>
-                {result.grade === 'Gold'
-                  ? 'EXCELLENT OPERATION'
-                  : result.grade === 'Silver'
-                    ? 'STRONG OPERATION'
-                    : result.grade === 'Bronze'
-                      ? 'OPERATION COMPLETE'
-                      : 'ROOM TO IMPROVE'}
-              </small>
-            </div>
-            <div className="harvest-result-score-block">
-              <span className="harvest-section-kicker">
-                FINAL HARVEST SCORE
-              </span>
-              <strong>
-                {result.score}
-                <small> / {result.baseScore} pts</small>
-              </strong>
-              <span>{result.lostPoints} points lost to weather exposure</span>
-            </div>
-          </div>
-          <div className="harvest-result-detail">
-            <div className="harvest-result-heading">
-              <span className="harvest-section-kicker">
-                AFTER-ACTION REPORT / MISSION {mission.number}
-              </span>
-              <h3 id="harvest-result-title">
-                {result.grade === 'Gold'
-                  ? 'You managed the operation well.'
-                  : result.grade === 'Developing'
-                    ? 'This plan did not meet the mission standard.'
-                    : 'Mission complete.'}
-              </h3>
-              <p>
-                {result.grade === 'Gold'
-                  ? 'Your team balanced crop value, timing, and available resources. ' +
-                    'This mission is cleared.'
-                  : result.grade === 'Developing'
-                    ? 'Your score is below the bronze target. Rework the crop mix or ' +
-                      'harvest order and dispatch again. Earn Bronze or better to ' +
-                      'unlock the next mission.'
-                    : 'You cleared the mission. Review where weather reduced your ' +
-                      'return, then try a different field order or crop mix.'}
-              </p>
-            </div>
-            <div className="harvest-result-breakdown">
-              {result.outcomes.map((outcome) => (
-                <div key={outcome.field.id} className="harvest-result-row">
-                  <span className="harvest-result-row-number">
-                    0{outcome.slot}
-                  </span>
-                  <span className="harvest-result-row-name">
-                    {outcome.field.crop}
-                  </span>
-                  <span className="harvest-result-row-condition">
-                    {outcome.weatherAffected
-                      ? mission.weatherName +
-                        ' · −' +
-                        outcome.lostPoints +
-                        ' pts'
-                      : outcome.slot > mission.exposureAfterSlots
-                        ? 'Weather resilient'
-                        : 'Harvested in clear window'}
-                  </span>
-                  <strong>+{outcome.score}</strong>
-                </div>
-              ))}
-            </div>
-            <p className="harvest-result-record">
-              Personal best: {completionBest ?? result.score} · Gold target:{' '}
-              {mission.goldScore} pts · Campaign: {progress.completed.length}/3
-              cleared
-            </p>
-            <div className="harvest-result-actions">
-              <button
-                type="button"
-                className="harvest-primary-button"
-                onClick={() => nextMission && selectMission(nextMission.id)}
-                disabled={!nextMission || !nextMissionUnlocked}
-              >
-                {nextMission
-                  ? nextMissionUnlocked
-                    ? 'Continue to next mission'
-                    : 'Earn Bronze to unlock next'
-                  : 'Campaign complete'}
-                <span aria-hidden="true">→</span>
-              </button>
-              <button
-                type="button"
-                className="harvest-secondary-button"
-                onClick={replayMission}
-              >
-                Replay mission
-              </button>
-              <button
-                type="button"
-                className="harvest-text-button"
-                onClick={returnToBriefing}
-              >
-                Return to briefing
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
+      <p className="farm-notice" role="status" aria-live="polite">
+        {notice}
+      </p>
+      <p className="farm-disclaimer">
+        Crop prices and growing times are fictional game rules, not farming or
+        market advice. Your progress is saved on this device.
+      </p>
     </section>
   );
 }

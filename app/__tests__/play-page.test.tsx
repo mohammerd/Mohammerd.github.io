@@ -26,10 +26,10 @@ describe('play page', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Play Harvest Rush' }));
 
     expect(
-      screen.getByRole('heading', { name: 'Every decision has a cost.' }),
+      screen.getByRole('heading', { name: 'Make this farm yours.' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Open field plan/ }),
+      screen.getByRole('button', { name: /Plant tomatoes/ }),
     ).toBeEnabled();
     expect(
       screen.getByRole('button', { name: /All games/ }),

@@ -25,10 +25,10 @@ describe('homepage', () => {
       screen.getByRole('heading', { name: 'Harvest Rush' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('region', { name: 'Harvest Rush campaign' }),
+      screen.getByRole('region', { name: 'Harvest Rush farm simulation' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /Open field plan/ }),
+      screen.getByRole('button', { name: /Plant tomatoes/ }),
     ).toBeEnabled();
     expect(
       screen.getByRole('link', { name: /Game details/ }).getAttribute('href'),
