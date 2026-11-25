@@ -414,6 +414,7 @@ export default function HarvestRushGame() {
                         ? 'farm-seed-option is-selected'
                         : 'farm-seed-option'
                     }
+                    aria-label={`${crop.name}, ${crop.seedCost} coins, ${crop.growDays} days`}
                     onClick={() => setSelectedSeed(crop.id)}
                     aria-pressed={selectedSeed === crop.id}
                   >
