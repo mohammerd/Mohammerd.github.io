@@ -89,7 +89,11 @@ function FarmWorld({
           const crop = plot.crop ? getFarmCrop(plot.crop) : null;
           const ready = isCropReady(plot);
           const selected = plot.id === selectedPlotId;
-          const state = ready ? ', ready to harvest' : crop ? ', growing' : ', empty bed';
+          const state = ready
+            ? ', ready to harvest'
+            : crop
+              ? ', growing'
+              : ', empty bed';
 
           return (
             <button
@@ -136,7 +140,9 @@ export default function HarvestRushGame() {
   const [farm, setFarm] = useState<FarmState>(createInitialFarmState);
   const [selectedPlotId, setSelectedPlotId] = useState(1);
   const [selectedSeed, setSelectedSeed] = useState<FarmCropId>('tomato');
-  const [notice, setNotice] = useState('Welcome to your farm. Select a plot and plant your first seeds.');
+  const [notice, setNotice] = useState(
+    'Welcome to your farm. Select a plot and plant your first seeds.',
+  );
   const [saveReady, setSaveReady] = useState(false);
 
   useEffect(() => {
@@ -155,7 +161,8 @@ export default function HarvestRushGame() {
 
   const selectedPlot =
     farm.plots.find((plot) => plot.id === selectedPlotId) ?? farm.plots[0];
-  const selectedCrop = FARM_CROPS.find((crop) => crop.id === selectedSeed) ?? FARM_CROPS[0];
+  const selectedCrop =
+    FARM_CROPS.find((crop) => crop.id === selectedSeed) ?? FARM_CROPS[0];
   const plantedCrop = selectedPlot.crop ? getFarmCrop(selectedPlot.crop) : null;
   const selectedReady = isCropReady(selectedPlot);
   const growthPercent = plantedCrop
@@ -194,6 +201,7 @@ export default function HarvestRushGame() {
     setFarm(next);
     setNotice(
       `${selectedCrop.name} planted in Plot ${selectedPlotId}. Water the soil, then end the day to help it grow.`,
+
     );
   }
 
@@ -230,7 +238,10 @@ export default function HarvestRushGame() {
   const readyCount = farm.plots.filter(isCropReady).length;
 
   return (
-    <section className="harvest-game farm-sim" aria-label="Harvest Rush farm simulation">
+    <section
+      className="harvest-game farm-sim"
+      aria-label="Harvest Rush farm simulation"
+    >
       <header className="farm-topbar">
         <div className="farm-brand">
           <span className="farm-brand-mark" aria-hidden="true">✦</span>
@@ -271,7 +282,9 @@ export default function HarvestRushGame() {
         <div className="farm-goal-copy">
           <div>
             <span className="farm-eyebrow">YOUR FIRST TASK</span>
-            <strong>{farm.goalComplete ? 'Starter farm complete!' : 'Harvest 4 crops'}</strong>
+            <strong>
+              {farm.goalComplete ? 'Starter farm complete!' : 'Harvest 4 crops'}
+            </strong>
           </div>
           <span className="farm-goal-count">{goalProgress}/{FARM_GOAL}</span>
         </div>
@@ -319,7 +332,9 @@ export default function HarvestRushGame() {
         <aside className="farm-side-panel" aria-label="Farm actions">
           <div className="farm-panel-heading">
             <div>
-              <span className="farm-eyebrow">PLOT {String(selectedPlotId).padStart(2, '0')}</span>
+              <span className="farm-eyebrow">
+                PLOT {String(selectedPlotId).padStart(2, '0')}
+              </span>
               <h3>{plantedCrop ? plantedCrop.name : 'Empty garden bed'}</h3>
             </div>
             <span className={selectedReady ? 'farm-state-tag is-ready' : plantedCrop ? 'farm-state-tag is-growing' : 'farm-state-tag'}>
@@ -333,7 +348,11 @@ export default function HarvestRushGame() {
                 <SeedMark cropId={plantedCrop.id} />
               </div>
               <div className="farm-crop-progress-copy">
-                <strong>{selectedReady ? 'Ready to harvest!' : `Growing · Day ${selectedPlot.growth} of ${plantedCrop.growDays}`}</strong>
+                <strong>
+                  {selectedReady
+                    ? 'Ready to harvest!'
+                    : `Growing · Day ${selectedPlot.growth} of ${plantedCrop.growDays}`}
+                </strong>
                 <span>
                   {selectedReady
                     ? `Sell this harvest for ${plantedCrop.sellPrice} coins.`
