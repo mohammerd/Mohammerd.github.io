@@ -363,9 +363,9 @@ export default function HarvestRushGame() {
     setNotice(
       isCropReady(plot)
         ? crop.name +
-          ' in Plot ' +
-          plotId +
-          ' are ready. Bring your harvest basket.'
+            ' in Plot ' +
+            plotId +
+            ' are ready. Bring your harvest basket.'
         : plot.watered
           ? crop.name + ' in Plot ' + plotId + ' are watered for today.'
           : crop.name +
@@ -394,7 +394,11 @@ export default function HarvestRushGame() {
         return;
       }
       setFarm(next);
-      setNotice('Water tank refilled at the well. You have ' + next.water + ' water uses.');
+      setNotice(
+        'Water tank refilled at the well. You have ' +
+          next.water +
+          ' water uses.',
+      );
       return;
     }
 
@@ -440,10 +444,10 @@ export default function HarvestRushGame() {
         setNotice(
           farm.coins < selectedCrop.seedCost
             ? 'You need ' +
-              selectedCrop.seedCost +
-              ' coins for ' +
-              selectedCrop.name +
-              ' seeds.'
+                selectedCrop.seedCost +
+                ' coins for ' +
+                selectedCrop.name +
+                ' seeds.'
             : 'This plot already has a crop growing.',
         );
         return;
@@ -472,18 +476,22 @@ export default function HarvestRushGame() {
                 : weather.id === 'rainy'
                   ? 'Rain is coming. Save your water; the field will be watered overnight.'
                   : farm.water === 0
-                  ? 'Your water tank is empty. Walk to the well on the east side of the farm.'
-                  : weather.id === 'heatwave' && farm.water < 2
-                    ? 'A heatwave needs two water uses per crop. Refill at the well.'
-                    : 'This crop cannot be watered right now.',
+                    ? 'Your water tank is empty. Walk to the well on the east side of the farm.'
+                    : weather.id === 'heatwave' && farm.water < 2
+                      ? 'A heatwave needs two water uses per crop. Refill at the well.'
+                      : 'This crop cannot be watered right now.',
         );
         return;
       }
       setFarm(next);
       setNotice(
         weather.id === 'heatwave'
-          ? 'You used two water units on Plot ' + selectedPlotId + '. Protect crops from the heat.'
-          : 'You watered Plot ' + selectedPlotId + '. End the day to grow this crop.',
+          ? 'You used two water units on Plot ' +
+              selectedPlotId +
+              '. Protect crops from the heat.'
+          : 'You watered Plot ' +
+              selectedPlotId +
+              '. End the day to grow this crop.',
       );
       return;
     }
@@ -494,8 +502,8 @@ export default function HarvestRushGame() {
         !selectedPlot.crop
           ? 'This plot is empty. Plant a crop before harvesting.'
           : 'The ' +
-            (plantedCrop?.name.toLowerCase() ?? 'crop') +
-            ' are not ripe yet. Keep watering them.',
+              (plantedCrop?.name.toLowerCase() ?? 'crop') +
+              ' are not ripe yet. Keep watering them.',
       );
       return;
     }
@@ -503,17 +511,17 @@ export default function HarvestRushGame() {
     setNotice(
       outcome.goalReward > 0
         ? 'You harvested ' +
-          outcome.crop.name +
-          '. +' +
-          outcome.crop.sellPrice +
-          ' coins and a ' +
-          outcome.goalReward +
-          '-coin farm bonus!'
-        : 'You harvested ' +
-          outcome.crop.name +
-          '. +' +
-          outcome.crop.sellPrice +
-          ' coins.',
+            outcome.crop.name +
+            '. +' +
+            outcome.crop.sellPrice +
+            ' coins and a ' +
+            outcome.goalReward +
+            '-coin farm bonus!'
+          : 'You harvested ' +
+            outcome.crop.name +
+            '. +' +
+            outcome.crop.sellPrice +
+            ' coins.',
     );
   }
 
@@ -522,7 +530,9 @@ export default function HarvestRushGame() {
     const next = advanceFarmDay(farm);
     setFarm(next);
     setNotice(
-      'Day ' + next.day + ' begins. ' +
+      'Day ' +
+        next.day +
+        ' begins. ' +
         (weather.id === 'rainy'
           ? 'The rain watered your field overnight.'
           : wateredCount > 0
@@ -537,7 +547,9 @@ export default function HarvestRushGame() {
   const actionLabel = {
     hoe: 'Dig Plot ' + selectedPlotId,
     seeds: 'Plant ' + selectedCrop.name.toLowerCase(),
-    water: playerIsNearWell ? 'Refill water tank' : 'Water Plot ' + selectedPlotId,
+    water: playerIsNearWell
+      ? 'Refill water tank'
+      : 'Water Plot ' + selectedPlotId,
     basket: 'Harvest Plot ' + selectedPlotId,
   }[tool];
 
@@ -548,7 +560,9 @@ export default function HarvestRushGame() {
     >
       <header className="farm-topbar">
         <div className="farm-brand">
-          <span className="farm-brand-mark" aria-hidden="true">✦</span>
+          <span className="farm-brand-mark" aria-hidden="true">
+            ✦
+          </span>
           <span>
             <strong>AGROGUARDAI</strong>
             <small>FARM SIMULATOR</small>
@@ -565,7 +579,9 @@ export default function HarvestRushGame() {
           </div>
           <div className="farm-hud-item">
             <span>WATER</span>
-            <strong>{farm.water}/{FARM_WATER_CAPACITY}</strong>
+            <strong>
+              {farm.water}/{FARM_WATER_CAPACITY}
+            </strong>
           </div>
           <div className="farm-hud-item">
             <span>PLOTS</span>
@@ -578,13 +594,20 @@ export default function HarvestRushGame() {
         <div>
           <p className="farm-eyebrow">YOUR LAND / YOUR WORK</p>
           <h2>Build a working farm.</h2>
-          <p>Walk the field, prepare the soil, plant, water and bring in your harvest.</p>
+          <p>
+            Walk the field, prepare the soil, plant, water and bring in your
+            harvest.
+          </p>
         </div>
         <div className={'farm-weather-chip is-' + weather.id}>
-          <span className="farm-sun" aria-hidden="true">{weather.icon}</span>
+          <span className="farm-sun" aria-hidden="true">
+            {weather.icon}
+          </span>
           <span>
             <strong>{weather.label}</strong>
-            <small>{weather.icon} {weather.description}</small>
+            <small>
+              {weather.icon} {weather.description}
+            </small>
             <small>{weather.tip}</small>
             <small className="farm-weather-forecast">
               Tomorrow: {tomorrowWeather.icon} {tomorrowWeather.label}
@@ -598,7 +621,9 @@ export default function HarvestRushGame() {
           <div>
             <span className="farm-eyebrow">FIRST FARM CONTRACT</span>
             <strong>
-              {farm.goalComplete ? 'First contract complete!' : 'Grow and harvest 4 crops'}
+              {farm.goalComplete
+                ? 'First contract complete!'
+                : 'Grow and harvest 4 crops'}
             </strong>
           </div>
           <span className="farm-goal-count">{goalProgress}/{FARM_GOAL}</span>
