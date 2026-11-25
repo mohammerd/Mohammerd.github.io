@@ -36,9 +36,9 @@ const footerStyle = {
 } as const;
 const titleStyle = {
   color: 'var(--color-fg-bold)',
-  fontFamily: 'var(--font-display)',
+  fontFamily: 'var(--font-body)',
   fontSize: 'var(--text-xl)',
-  fontWeight: 600,
+  fontWeight: 500,
 } as const;
 const harvestArtStyle = {
   background:
@@ -53,10 +53,52 @@ const snakeArtStyle = {
 const backButtonStyle = {
   minHeight: '2.5rem',
   padding: '.45rem .75rem',
-  border: '1px solid var(--color-border)',
-  background: 'var(--color-bg-alt)',
-  color: 'var(--color-fg)',
-  cursor: 'pointer',
+} as const;
+const activeGameStyle = { display: 'grid', gap: '.85rem' } as const;
+const activeGameNavStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexWrap: 'wrap',
+  gap: '1rem',
+} as const;
+const gameGridStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 18rem), 1fr))',
+  gap: '1rem',
+} as const;
+const gameCardStyle = {
+  display: 'flex',
+  width: '100%',
+  minWidth: 0,
+  minHeight: 0,
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  overflow: 'hidden',
+  padding: 0,
+  textAlign: 'left',
+} as const;
+const gameArtStyle = {
+  display: 'flex',
+  width: '100%',
+  minHeight: '11rem',
+  boxSizing: 'border-box',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  padding: '1rem',
+} as const;
+const gameArtSvgStyle = { width: '100%', maxHeight: '7rem' } as const;
+const snakeGameEmbedStyle = {
+  overflow: 'hidden',
+  border: '1px solid var(--color-border-alt)',
+  borderRadius: 'var(--radius-sm)',
+  background: '#030712',
+} as const;
+const snakeGameFrameStyle = {
+  display: 'block',
+  width: '100%',
+  height: 'min(860px, max(640px, 80vh))',
+  border: 0,
 } as const;
 const embedHeaderStyle = {
   display: 'flex',
@@ -77,13 +119,6 @@ const sectionKickerStyle = {
   margin: '0 0 .55rem',
   color: 'var(--color-fg-light)',
 } as const;
-const selectionTitleStyle = {
-  margin: '0 0 .35rem',
-  color: 'var(--color-fg-bold)',
-  fontFamily: 'var(--font-display)',
-  fontSize: 'clamp(1.45rem,3vw,2rem)',
-  fontWeight: 500,
-} as const;
 const libraryCountStyle = {
   ...monoStyle,
   display: 'flex',
@@ -94,7 +129,7 @@ const libraryCountStyle = {
 } as const;
 const libraryCountLabelStyle = {
   color: 'var(--color-fg-light)',
-  fontSize: '.62rem',
+  fontSize: 'var(--text-xs)',
   fontWeight: 400,
 } as const;
 const cardBodyStyle = {
@@ -128,11 +163,11 @@ export default function GameHub() {
 
   if (activeGame === 'harvest-rush') {
     return (
-      <div className="play-active-game">
-        <div className="play-active-game-nav">
+      <div className="play-active-game" style={activeGameStyle}>
+        <div className="play-active-game-nav" style={activeGameNavStyle}>
           <button
             type="button"
-            className="play-back-button"
+            className="button button-secondary button-compact play-back-button"
             style={backButtonStyle}
             onClick={() => setActiveGame(null)}
           >
@@ -149,11 +184,11 @@ export default function GameHub() {
 
   if (activeGame === 'snake') {
     return (
-      <div className="play-active-game">
-        <div className="play-active-game-nav">
+      <div className="play-active-game" style={activeGameStyle}>
+        <div className="play-active-game-nav" style={activeGameNavStyle}>
           <button
             type="button"
-            className="play-back-button"
+            className="button button-secondary button-compact play-back-button"
             style={backButtonStyle}
             onClick={() => setActiveGame(null)}
           >
@@ -164,7 +199,11 @@ export default function GameHub() {
           </span>
         </div>
 
-        <section className="snake-game-embed" aria-label="Snake game">
+        <section
+          className="snake-game-embed"
+          style={snakeGameEmbedStyle}
+          aria-label="Snake game"
+        >
           <div className="snake-game-embed-heading" style={embedHeaderStyle}>
             <p style={embedParagraphStyle}>
               Snake runs entirely in your browser. Your scores and settings stay
@@ -180,7 +219,7 @@ export default function GameHub() {
             </a>
           </div>
           <iframe
-            className="snake-game-iframe"
+            style={snakeGameFrameStyle}
             src={SNAKE_GAME_URL}
             title="Snake Game"
             loading="lazy"
@@ -194,14 +233,15 @@ export default function GameHub() {
   return (
     <section
       className="play-game-selection"
+      style={{ display: 'grid', gap: '1rem' }}
       aria-labelledby="play-game-selection-title"
     >
-      <div className="play-game-selection-heading">
+      <div className="section-header">
         <div>
           <p className="play-section-kicker" style={sectionKickerStyle}>
             THE GAME LIBRARY / 02 TITLES
           </p>
-          <h2 id="play-game-selection-title" style={selectionTitleStyle}>
+          <h2 id="play-game-selection-title" className="section-heading">
             Choose a game.
           </h2>
           <p style={{ ...mutedStyle, margin: 0 }}>
@@ -214,22 +254,23 @@ export default function GameHub() {
         </span>
       </div>
 
-      <div className="play-games-grid">
+      <div className="play-games-grid" style={gameGridStyle}>
         <button
           type="button"
-          className="play-game-card"
+          className="button button-secondary play-game-card"
+          style={gameCardStyle}
           onClick={() => setActiveGame('harvest-rush')}
           aria-label="Play Harvest Rush"
         >
           <span
             className="play-game-art play-game-art--harvest"
-            style={harvestArtStyle}
+            style={{ ...gameArtStyle, ...harvestArtStyle }}
             aria-hidden="true"
           >
             <span className="play-game-art-topline" style={artLabelStyle}>
               01 / FIELD STRATEGY
             </span>
-            <svg viewBox="0 0 360 150" fill="none" role="presentation">
+            <svg viewBox="0 0 360 150" fill="none" role="presentation" style={gameArtSvgStyle}>
               <path
                 d="M30 30H330M30 76H330M30 122H330M82 18V134M178 18V134M274 18V134"
                 stroke="currentColor"
@@ -283,19 +324,20 @@ export default function GameHub() {
 
         <button
           type="button"
-          className="play-game-card"
+          className="button button-secondary play-game-card"
+          style={gameCardStyle}
           onClick={() => setActiveGame('snake')}
           aria-label="Play Snake Game"
         >
           <span
             className="play-game-art play-game-art--snake"
-            style={snakeArtStyle}
+            style={{ ...gameArtStyle, ...snakeArtStyle }}
             aria-hidden="true"
           >
             <span className="play-game-art-topline" style={artLabelStyle}>
               02 / ARCADE CLASSIC
             </span>
-            <svg viewBox="0 0 360 150" fill="none" role="presentation">
+            <svg viewBox="0 0 360 150" fill="none" role="presentation" style={gameArtSvgStyle}>
               <path
                 d="M28 27H332V123H28V27Z"
                 stroke="currentColor"
