@@ -93,13 +93,13 @@ export default function HomePage() {
         aria-labelledby="home-play-title"
       >
         <div className="home-writing-header home-play-header">
-          <p className="home-play-kicker">FARM SIMULATION / 001</p>
+          <p className="home-play-kicker">FARM SIMULATOR / 001</p>
           <h2 id="home-play-title" className="section-heading">
-            Harvest Rush
+            AgroGuardAI
           </h2>
           <p className="home-play-summary">
-            Plant seeds, water crops, grow your farm, and harvest for coins.
-            Start with six plots and a clear first goal. No account required.
+            Walk your land, prepare the soil, plant crops, water them, and harvest
+            what you grow. Build a working farm directly in your browser.
           </p>
           <Link href="/play/" className="home-writing-all">
             Game details <span aria-hidden="true">→</span>
