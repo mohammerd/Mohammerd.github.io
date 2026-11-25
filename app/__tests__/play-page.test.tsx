@@ -8,9 +8,15 @@ describe('play page', () => {
     render(<PlayPage />);
 
     expect(screen.getByRole('heading', { name: 'Play' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Choose a game.' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Play Harvest Rush' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Play Snake Game' })).toBeEnabled();
+    expect(
+      screen.getByRole('heading', { name: 'Choose a game.' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Play Harvest Rush' }),
+    ).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: 'Play Snake Game' }),
+    ).toBeEnabled();
   });
 
   it('opens the existing Harvest Rush game from its card', () => {
@@ -24,7 +30,9 @@ describe('play page', () => {
     expect(
       screen.getByRole('button', { name: /Open field plan/ }),
     ).toBeEnabled();
-    expect(screen.getByRole('button', { name: /All games/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /All games/ }),
+    ).toBeInTheDocument();
   });
 
   it('loads the static Snake game when its card is selected', () => {
@@ -37,9 +45,8 @@ describe('play page', () => {
       'src',
       'https://mohammerd.github.io/Snakegame/',
     );
-    expect(screen.getByRole('link', { name: /Open in new tab/ })).toHaveAttribute(
-      'href',
-      'https://mohammerd.github.io/Snakegame/',
-    );
+    expect(
+      screen.getByRole('link', { name: /Open in new tab/ }),
+    ).toHaveAttribute('href', 'https://mohammerd.github.io/Snakegame/');
   });
 });
