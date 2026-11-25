@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { withBasePath } from '@/lib/utils';
-
 import {
   advanceFarmDay,
   createInitialFarmState,
@@ -20,6 +18,7 @@ import {
   type FarmPlot,
   type FarmState,
 } from '@/lib/farm-game';
+import { withBasePath } from '@/lib/utils';
 
 function readSavedFarm(): FarmState {
   try {
