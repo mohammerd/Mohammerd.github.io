@@ -43,8 +43,7 @@
   font: inherit;
 }
 
-.farm-sim button:focus-visible,
-.farm-map-plot:focus-visible {
+.farm-sim button:focus-visible {
   outline: 2px solid var(--color-focus-ring);
   outline-offset: 3px;
 }
@@ -359,7 +358,7 @@
 
 .farm-map-plot-button:focus-visible {
   z-index: 2;
-  outline: 3px solid #fff4bc;
+  outline: 3px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
