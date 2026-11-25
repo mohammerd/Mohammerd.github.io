@@ -220,7 +220,9 @@ describe('measurements', () => {
     const { status, report } = reportFor(root);
 
     expect(status).toBe(0);
-    expect(report.groups.find(({ id }) => id === 'css')?.bytes).toBe(CSS.length);
+    expect(report.groups.find(({ id }) => id === 'css')?.bytes).toBe(
+      CSS.length,
+    );
     expect(report.groups.find(({ id }) => id === 'javascript')?.bytes).toBe(
       JS.length,
     );
@@ -237,9 +239,7 @@ describe('measurements', () => {
       javascriptBytes: snakeJs,
       cssBytes: snakeCss,
     });
-    expect(report.total.bytes).toBeGreaterThan(
-      report.embeddedGame.bytes,
-    );
+    expect(report.total.bytes).toBeGreaterThan(report.embeddedGame.bytes);
     expect(report.budget.checks).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: 'snakeGameJavascriptBytes', ok: true }),
