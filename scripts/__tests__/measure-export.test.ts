@@ -39,6 +39,8 @@ const GENEROUS_BUDGET = {
   _policy: ['fixture'],
   javascriptBytes: 1_000_000,
   cssBytes: 1_000_000,
+  snakeGameJavascriptBytes: 1_000_000,
+  snakeGameCssBytes: 1_000_000,
   fontBytes: 1_000_000,
   maxFileBytes: 1_000_000,
   maxRouteBootstrapBytes: 1_000_000,
@@ -48,6 +50,12 @@ const GENEROUS_BUDGET = {
 type Report = {
   total: { bytes: number };
   groups: { id: string; files: number; bytes: number }[];
+  embeddedGame: {
+    files: number;
+    bytes: number;
+    javascriptBytes: number;
+    cssBytes: number;
+  };
   routes: { route: string; linkedAssetBytes: number }[];
   budget: { checks: { id: string }[] };
 };
@@ -189,6 +197,55 @@ describe('measurements', () => {
       linkedAssetBytes: LINKED_ASSET_BYTES,
       bootstrapBytes: documents['/about/'] + LINKED_ASSET_BYTES,
     });
+  });
+
+  it('measures Snake separately from the personal site bundles', () => {
+    const { root } = createFixture();
+    const snakeIndex = write(
+      root,
+      'out/Snakegame/index.html',
+      '<!doctype html><html><body><div id="root"></div></body></html>',
+    );
+    const snakeCss = write(
+      root,
+      'out/Snakegame/assets/game.css',
+      'body{background:#030712}',
+    );
+    const snakeJs = write(
+      root,
+      'out/Snakegame/assets/game.js',
+      'document.body.dataset.game="snake";',
+    );
+
+    const { status, report } = reportFor(root);
+
+    expect(status).toBe(0);
+    expect(report.groups.find(({ id }) => id === 'css')?.bytes).toBe(
+      CSS.length,
+    );
+    expect(report.groups.find(({ id }) => id === 'javascript')?.bytes).toBe(
+      JS.length,
+    );
+    expect(report.groups.find(({ id }) => id === 'snakeGame')).toEqual({
+      id: 'snakeGame',
+      label: 'Embedded Snake game',
+      files: 3,
+      bytes: snakeIndex + snakeCss + snakeJs,
+      share: expect.any(Number),
+    });
+    expect(report.embeddedGame).toEqual({
+      files: 3,
+      bytes: snakeIndex + snakeCss + snakeJs,
+      javascriptBytes: snakeJs,
+      cssBytes: snakeCss,
+    });
+    expect(report.total.bytes).toBeGreaterThan(report.embeddedGame.bytes);
+    expect(report.budget.checks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: 'snakeGameJavascriptBytes', ok: true }),
+        expect.objectContaining({ id: 'snakeGameCssBytes', ok: true }),
+      ]),
+    );
   });
 
   // No gated metric may be a function of the page count: emitted and repeated

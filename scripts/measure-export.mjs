@@ -105,6 +105,11 @@ const isRscPayload = ({ extension, name }) =>
 /** First match wins; the last entry is the catch-all. */
 const GROUPS = [
   {
+    id: 'snakeGame',
+    label: 'Embedded Snake game',
+    match: ({ relativePath }) => relativePath.startsWith('Snakegame/'),
+  },
+  {
     id: 'documents',
     label: 'HTML documents',
     match: ({ extension }) => extension === '.html',
@@ -150,7 +155,11 @@ const files = paths
   .map((path) => {
     const relativePath = toUrlPath(relative(OUT, path));
     const name = relativePath.slice(relativePath.lastIndexOf('/') + 1);
-    const descriptor = { extension: extname(name).toLowerCase(), name };
+    const descriptor = {
+      extension: extname(name).toLowerCase(),
+      name,
+      relativePath,
+    };
     return {
       path,
       relativePath,
@@ -179,6 +188,18 @@ const groups = GROUPS.map(({ id, label }) => {
 
 const bytesForGroup = (id) =>
   groups.find((group) => group.id === id)?.bytes ?? 0;
+
+const snakeGameFiles = files.filter((file) => file.group === 'snakeGame');
+const snakeGameBytes = (extension) =>
+  snakeGameFiles
+    .filter((file) => file.relativePath.endsWith(extension))
+    .reduce((sum, file) => sum + file.bytes, 0);
+const embeddedGame = {
+  files: snakeGameFiles.length,
+  bytes: snakeGameFiles.reduce((sum, file) => sum + file.bytes, 0),
+  javascriptBytes: snakeGameBytes('.js'),
+  cssBytes: snakeGameBytes('.css'),
+};
 
 /**
  * A route's bootstrap set is its document plus directly linked stylesheets,
@@ -291,6 +312,7 @@ const report = {
   basePath,
   total: { files: files.length, bytes: totalBytes },
   groups,
+  embeddedGame,
   largestFiles: files.slice(0, 12).map(({ relativePath, bytes, group }) => ({
     path: relativePath,
     bytes,
@@ -328,6 +350,18 @@ const BUDGET_METRICS = [
     label: 'CSS',
     headroom: 0.15,
     read: () => bytesForGroup('css'),
+  },
+  {
+    id: 'snakeGameJavascriptBytes',
+    label: 'Snake game JavaScript',
+    headroom: 0.15,
+    read: (data) => data.embeddedGame.javascriptBytes,
+  },
+  {
+    id: 'snakeGameCssBytes',
+    label: 'Snake game CSS',
+    headroom: 0.15,
+    read: (data) => data.embeddedGame.cssBytes,
   },
   {
     id: 'fontBytes',

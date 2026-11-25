@@ -20,6 +20,12 @@
     "maxRouteBootstrapBytes    +15%  document plus linked styles, scripts, preloads",
     "distinctInlineSvgBytes    +20%  the icon set itself, each icon counted once",
     "",
+    "snakeGameJavascriptBytes  +15%  isolated embedded game's JavaScript bundle",
+    "snakeGameCssBytes         +15%  isolated embedded game's stylesheet bundle",
+    "",
+    "The embedded Snake app is measured separately because it runs in its own iframe",
+    "and is not part of the personal site's page bootstrap. Its files still count in",
+    "the total export size and have their own JavaScript and CSS limits.",
     "No gated metric may be a function of the page count. That is the rule the",
     "list above is built to satisfy, because a gate a third blog post trips is a",
     "gate people learn to ratchet without reading it.",
@@ -46,5 +52,7 @@
   "fontBytes": 271360,
   "maxFileBytes": 273408,
   "maxRouteBootstrapBytes": 1275904,
-  "distinctInlineSvgBytes": 7168
+  "distinctInlineSvgBytes": 7168,
+  "snakeGameJavascriptBytes": 204800,
+  "snakeGameCssBytes": 40960
 }

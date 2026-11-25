@@ -137,6 +137,27 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      # The Snake game remains in its own public repository. Build it only on
+      # Linux runners and include its static output in the Pages export.
+      - name: Check out Snakegame source
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: mohammerd/Snakegame
+          ref: main
+          path: snakegame-source
+          persist-credentials: false
+
+      - name: Build Snakegame static app
+        if: matrix.os == 'ubuntu-latest'
+        working-directory: snakegame-source
+        run: npm ci && npm run typecheck && npm run build
+
+      - name: Include Snakegame in the static website
+        if: matrix.os == 'ubuntu-latest'
+        run: node scripts/copy-snakegame.mjs
+
       # Every matrix leg runs the export verifier, which checks that each
       # published post's generated OpenGraph image is present in out/. The
       # image is generated from the Markdown source, so it must exist in each

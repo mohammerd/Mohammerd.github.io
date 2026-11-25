@@ -86,7 +86,29 @@ function throughPagesAlias(url) {
   return new URL(`${siteUrlForRoute(rest)}${url.search}${url.hash}`);
 }
 
-const pages = walkFiles(OUT).filter((path) => path.endsWith('.html'));
+// The embedded Snake game is a standalone static app, not a content page
+// in the personal site's page graph or sitemap. Validate its bundle separately
+// while keeping its HTML out of the site's canonical/SEO page checks.
+const SNAKE_GAME_INDEX = join(OUT, 'Snakegame', 'index.html');
+const pages = walkFiles(OUT).filter((path) => {
+  const relativePath = toUrlPath(relative(OUT, path));
+  return (
+    relativePath.endsWith('.html') && !relativePath.startsWith('Snakegame/')
+  );
+});
+
+if (existsSync(SNAKE_GAME_INDEX)) {
+  const snakeHtml = readFileSync(SNAKE_GAME_INDEX, 'utf8');
+  if (!snakeHtml.includes('/Snakegame/')) {
+    fail(
+      'Snakegame/index.html',
+      'does not use the expected /Snakegame/ asset base',
+    );
+  }
+  if (!existsSync(join(OUT, 'Snakegame', 'assets'))) {
+    fail('Snakegame/index.html', 'is missing its Vite assets directory');
+  }
+}
 
 if (pages.length === 0) {
   console.error('verify-export: no HTML found in out/. Did the build run?');
