@@ -3,10 +3,11 @@
 import { useState } from 'react';
 
 import HarvestRushGame from './HarvestRushGame';
+import { withBasePath } from '@/lib/utils';
 
 type GameId = 'harvest-rush' | 'snake';
 
-const SNAKE_GAME_URL = 'https://mohammerd.github.io/Snakegame/';
+const SNAKE_GAME_URL = withBasePath('/Snakegame/');
 
 export default function GameHub() {
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
