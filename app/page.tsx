@@ -98,8 +98,9 @@ export default function HomePage() {
             AgroGuardAI
           </h2>
           <p className="home-play-summary">
-            Walk your land, prepare the soil, plant crops, water them, and harvest
-            what you grow. Build a working farm directly in your browser.
+            Walk your land, prepare the soil, plant crops, water them, and
+            harvest what you grow. Build a working farm directly in your
+            browser.
           </p>
           <Link href="/play/" className="home-writing-all">
             Game details <span aria-hidden="true">→</span>
