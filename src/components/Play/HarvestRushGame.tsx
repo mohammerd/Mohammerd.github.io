@@ -11,6 +11,7 @@ import {
   FARM_WATER_CAPACITY,
   type FarmCropId,
   type FarmPlot,
+  type FarmWeatherId,
   type FarmState,
   getFarmCrop,
   getFarmWeather,
@@ -162,6 +163,7 @@ function FarmWorld({
   player,
   tool,
   playerIsNearWell,
+  weatherId,
   onSelectPlot,
   onMovePlayer,
   onSelectTool,
@@ -172,6 +174,7 @@ function FarmWorld({
   player: PlayerPosition;
   tool: FarmTool;
   playerIsNearWell: boolean;
+  weatherId: FarmWeatherId;
   onSelectPlot: (plotId: number) => void;
   onMovePlayer: (direction: Direction) => void;
   onSelectTool: (tool: FarmTool) => void;
@@ -218,7 +221,7 @@ function FarmWorld({
   return (
     <div className="farm-world-frame">
       <div
-        className="farm-world"
+        className={'farm-world is-weather-' + weatherId}
         role="group"
         aria-label="Farm field. Focus this area and use WASD or arrow keys to move the farmer."
         tabIndex={0}
@@ -663,6 +666,7 @@ export default function HarvestRushGame() {
             player={player}
             tool={tool}
             playerIsNearWell={playerIsNearWell}
+            weatherId={weather.id}
             onSelectPlot={selectPlot}
             onMovePlayer={movePlayer}
             onSelectTool={setTool}
