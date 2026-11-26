@@ -111,7 +111,8 @@ const gameToolbarStyle = {
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: '.45rem',
-  padding: 'max(.65rem, env(safe-area-inset-top, 0px)) clamp(.45rem, 1vw, .9rem)',
+  padding:
+    'max(.65rem, env(safe-area-inset-top, 0px)) clamp(.45rem, 1vw, .9rem)',
   borderBottom: 'var(--rule) solid var(--color-border)',
   background: 'var(--color-bg-alt)',
 } as const;
@@ -289,7 +290,12 @@ export default function GameHub() {
           <span className="play-game-screen-label" style={gameScreenLabelStyle}>
             NOW PLAYING / {gameNumber}
           </span>
-          <strong className="play-game-screen-title" style={gameScreenTitleStyle}>{title}</strong>
+          <strong
+            className="play-game-screen-title"
+            style={gameScreenTitleStyle}
+          >
+            {title}
+          </strong>
         </div>
         <button
           type="button"
@@ -319,7 +325,10 @@ export default function GameHub() {
         aria-label="Full-screen AgroGuardAI farm game"
       >
         {renderScreenHeader('01', 'AgroGuardAI')}
-        <div className="play-game-screen-content" style={gameScreenContentStyle}>
+        <div
+          className="play-game-screen-content"
+          style={gameScreenContentStyle}
+        >
           <div className="play-active-game" style={activeGameFrameStyle}>
             <HarvestRushGame />
           </div>
@@ -338,7 +347,10 @@ export default function GameHub() {
         aria-label="Full-screen Snake game"
       >
         {renderScreenHeader('02', 'Snake Game')}
-        <div className="play-game-screen-content" style={gameScreenContentStyle}>
+        <div
+          className="play-game-screen-content"
+          style={gameScreenContentStyle}
+        >
           <div className="play-active-game" style={activeGameFrameStyle}>
             <section
               className="snake-game-embed"
