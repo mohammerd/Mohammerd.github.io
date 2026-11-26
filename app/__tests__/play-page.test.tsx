@@ -46,6 +46,30 @@ describe('play page', () => {
     ).toBeEnabled();
   });
 
+  it('places farm controls below a full-width field', () => {
+    const { container } = render(<PlayPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
+
+    const layout = container.querySelector('.farm-game-layout');
+    const mapColumn = layout?.querySelector('.farm-map-column');
+    const sidePanel = layout?.querySelector('.farm-side-panel');
+
+    expect(layout?.children[0]).toBe(mapColumn);
+    expect(layout?.children[1]).toBe(sidePanel);
+    expect(mapColumn?.querySelector('.farm-world')).toBeInTheDocument();
+    expect(
+      mapColumn?.querySelector('.farm-movement-controls'),
+    ).toBeInTheDocument();
+    expect(sidePanel?.querySelector('.farm-toolbelt')).toBeInTheDocument();
+    expect(
+      sidePanel?.querySelector('.farm-primary-action'),
+    ).toBeInTheDocument();
+    expect(
+      sidePanel?.querySelector('.farm-secondary-action'),
+    ).toBeInTheDocument();
+  });
+
   it('automatically equips the next tool as a plot moves through a growing cycle', () => {
     render(<PlayPage />);
 
