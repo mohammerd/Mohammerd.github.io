@@ -1,10 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { withBasePath } from '@/lib/utils';
 import PlayPage from '../play/page';
 
 describe('play page', () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   it('shows both playable games in the selection grid', () => {
     render(<PlayPage />);
 
@@ -43,7 +47,6 @@ describe('play page', () => {
   });
 
   it('automatically equips the next tool as a plot moves through a growing cycle', () => {
-    window.localStorage.clear();
     render(<PlayPage />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
