@@ -255,7 +255,7 @@
 
 .farm-game-layout {
   display: grid;
-  grid-template-columns: minmax(0, 2.25fr) minmax(17rem, 0.78fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 1rem;
   padding: 0 1.25rem 1.1rem;
 }
