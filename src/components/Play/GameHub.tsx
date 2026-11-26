@@ -77,10 +77,86 @@ const gameArtStyle = {
 } as const;
 const gameArtSvgStyle = { width: '100%', maxHeight: '7rem' } as const;
 const snakeGameEmbedStyle = {
+  display: 'flex',
+  minHeight: 'min(78vh, 850px)',
+  flexDirection: 'column',
   overflow: 'hidden',
   border: '1px solid var(--color-border-alt)',
   borderRadius: 'var(--radius-sm)',
   background: '#030712',
+} as const;
+const snakeGameFrameStyle = {
+  display: 'block',
+  width: '100%',
+  minHeight: 'min(70vh, 720px)',
+  flex: 1,
+  border: 0,
+} as const;
+const gameScreenStyle = {
+  position: 'fixed',
+  zIndex: 9999,
+  inset: 0,
+  display: 'flex',
+  width: '100%',
+  height: '100vh',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  isolation: 'isolate',
+  background: 'var(--color-bg)',
+  color: 'var(--color-fg)',
+} as const;
+const gameToolbarStyle = {
+  display: 'flex',
+  flex: '0 0 auto',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '.45rem',
+  padding: 'max(.65rem, env(safe-area-inset-top, 0px)) clamp(.45rem, 1vw, .9rem)',
+  borderBottom: 'var(--rule) solid var(--color-border)',
+  background: 'var(--color-bg-alt)',
+} as const;
+const gameScreenBrandStyle = {
+  display: 'grid',
+  minWidth: 0,
+  flex: 1,
+  justifyItems: 'center',
+  gap: '.12rem',
+  textAlign: 'center',
+} as const;
+const gameScreenLabelStyle = {
+  ...monoStyle,
+  color: 'var(--color-fg-light)',
+} as const;
+const gameScreenTitleStyle = {
+  overflow: 'hidden',
+  maxWidth: '100%',
+  color: 'var(--color-fg-bold)',
+  fontFamily: 'var(--font-display)',
+  fontSize: 'var(--text-sm)',
+  fontWeight: 600,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+} as const;
+const gameScreenButtonStyle = {
+  minHeight: '2.4rem',
+  flex: '0 0 auto',
+  padding: '.4rem .5rem',
+  fontSize: 'var(--text-xs)',
+  whiteSpace: 'nowrap',
+} as const;
+const gameScreenContentStyle = {
+  minHeight: 0,
+  flex: 1,
+  overflow: 'auto',
+  overscrollBehavior: 'contain',
+  padding: 'clamp(.45rem, 1.2vw, .9rem)',
+} as const;
+const activeGameFrameStyle = {
+  display: 'grid',
+  width: '100%',
+  maxWidth: '1800px',
+  gap: '.85rem',
+  marginInline: 'auto',
 } as const;
 const embedHeaderStyle = {
   display: 'flex',
@@ -200,23 +276,25 @@ export default function GameHub() {
 
   function renderScreenHeader(gameNumber: string, title: string) {
     return (
-      <header className="play-game-screen-toolbar">
+      <header className="play-game-screen-toolbar" style={gameToolbarStyle}>
         <button
           type="button"
           className="button button-secondary button-compact play-screen-action"
+          style={gameScreenButtonStyle}
           onClick={returnToLibrary}
         >
           <span aria-hidden="true">←</span> All games
         </button>
-        <div className="play-game-screen-brand">
-          <span className="play-game-screen-label">
+        <div className="play-game-screen-brand" style={gameScreenBrandStyle}>
+          <span className="play-game-screen-label" style={gameScreenLabelStyle}>
             NOW PLAYING / {gameNumber}
           </span>
-          <strong className="play-game-screen-title">{title}</strong>
+          <strong className="play-game-screen-title" style={gameScreenTitleStyle}>{title}</strong>
         </div>
         <button
           type="button"
           className="button button-secondary button-compact play-screen-action"
+          style={gameScreenButtonStyle}
           onClick={() => void toggleFullscreen()}
           aria-label={
             isFullscreen
@@ -236,12 +314,13 @@ export default function GameHub() {
       <div
         ref={screenRef}
         className="play-game-screen"
+        style={gameScreenStyle}
         role="region"
         aria-label="Full-screen AgroGuardAI farm game"
       >
         {renderScreenHeader('01', 'AgroGuardAI')}
-        <div className="play-game-screen-content">
-          <div className="play-active-game">
+        <div className="play-game-screen-content" style={gameScreenContentStyle}>
+          <div className="play-active-game" style={activeGameFrameStyle}>
             <HarvestRushGame />
           </div>
         </div>
@@ -254,12 +333,13 @@ export default function GameHub() {
       <div
         ref={screenRef}
         className="play-game-screen"
+        style={gameScreenStyle}
         role="region"
         aria-label="Full-screen Snake game"
       >
         {renderScreenHeader('02', 'Snake Game')}
-        <div className="play-game-screen-content">
-          <div className="play-active-game">
+        <div className="play-game-screen-content" style={gameScreenContentStyle}>
+          <div className="play-active-game" style={activeGameFrameStyle}>
             <section
               className="snake-game-embed"
               style={snakeGameEmbedStyle}
@@ -284,6 +364,7 @@ export default function GameHub() {
               </div>
               <iframe
                 className="snake-game-frame"
+                style={snakeGameFrameStyle}
                 src={SNAKE_GAME_URL}
                 title="Snake Game"
                 loading="eager"
