@@ -30,7 +30,26 @@ describe('play page', () => {
     ).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Dig Plot 6/ })).toBeEnabled();
     expect(
+      screen.getByRole('region', {
+        name: 'Full-screen AgroGuardAI farm game',
+      }),
+    ).toHaveClass('play-game-screen');
+    expect(
       screen.getByRole('button', { name: /All games/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Enter browser full screen' }),
+    ).toBeEnabled();
+  });
+
+  it('returns to the game library when Escape is pressed outside native fullscreen', () => {
+    render(<PlayPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    expect(
+      screen.getByRole('heading', { name: 'Choose a game.' }),
     ).toBeInTheDocument();
   });
 
@@ -38,6 +57,10 @@ describe('play page', () => {
     render(<PlayPage />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Play Snake Game' }));
+
+    expect(
+      screen.getByRole('region', { name: 'Full-screen Snake game' }),
+    ).toHaveClass('play-game-screen');
 
     const gameFrame = screen.getByTitle('Snake Game');
     expect(gameFrame).toHaveAttribute('src', withBasePath('/Snakegame/'));

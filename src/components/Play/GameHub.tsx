@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { withBasePath } from '@/lib/utils';
 import HarvestRushGame from './HarvestRushGame';
@@ -50,18 +50,6 @@ const snakeArtStyle = {
     'radial-gradient(circle at 82% 18%, rgba(110,231,183,.18), transparent 34%), linear-gradient(135deg,#071a16,#102c23 58%,#071b15)',
   color: '#d8f5df',
 } as const;
-const backButtonStyle = {
-  minHeight: '2.5rem',
-  padding: '.45rem .75rem',
-} as const;
-const activeGameStyle = { display: 'grid', gap: '.85rem' } as const;
-const activeGameNavStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  flexWrap: 'wrap',
-  gap: '1rem',
-} as const;
 const gameGridStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 18rem), 1fr))',
@@ -89,6 +77,9 @@ const gameArtStyle = {
 } as const;
 const gameArtSvgStyle = { width: '100%', maxHeight: '7rem' } as const;
 const snakeGameEmbedStyle = {
+  display: 'flex',
+  minHeight: 'min(78vh, 850px)',
+  flexDirection: 'column',
   overflow: 'hidden',
   border: '1px solid var(--color-border-alt)',
   borderRadius: 'var(--radius-sm)',
@@ -97,8 +88,75 @@ const snakeGameEmbedStyle = {
 const snakeGameFrameStyle = {
   display: 'block',
   width: '100%',
-  height: 'min(860px, max(640px, 80vh))',
+  minHeight: 'min(70vh, 720px)',
+  flex: 1,
   border: 0,
+} as const;
+const gameScreenStyle = {
+  position: 'fixed',
+  zIndex: 9999,
+  inset: 0,
+  display: 'flex',
+  width: '100%',
+  height: '100dvh',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  isolation: 'isolate',
+  background: 'var(--color-bg)',
+  color: 'var(--color-fg)',
+} as const;
+const gameToolbarStyle = {
+  display: 'flex',
+  flex: '0 0 auto',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '.45rem',
+  padding: 'max(.65rem, env(safe-area-inset-top, 0px)) clamp(.45rem, 1vw, .9rem)',
+  borderBottom: 'var(--rule) solid var(--color-border)',
+  background: 'var(--color-bg-alt)',
+} as const;
+const gameScreenBrandStyle = {
+  display: 'grid',
+  minWidth: 0,
+  flex: 1,
+  justifyItems: 'center',
+  gap: '.12rem',
+  textAlign: 'center',
+} as const;
+const gameScreenLabelStyle = {
+  ...monoStyle,
+  color: 'var(--color-fg-light)',
+} as const;
+const gameScreenTitleStyle = {
+  overflow: 'hidden',
+  maxWidth: '100%',
+  color: 'var(--color-fg-bold)',
+  fontFamily: 'var(--font-display)',
+  fontSize: 'var(--text-sm)',
+  fontWeight: 600,
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+} as const;
+const gameScreenButtonStyle = {
+  minHeight: '2.4rem',
+  flex: '0 0 auto',
+  padding: '.4rem .5rem',
+  fontSize: 'var(--text-xs)',
+  whiteSpace: 'nowrap',
+} as const;
+const gameScreenContentStyle = {
+  minHeight: 0,
+  flex: 1,
+  overflow: 'auto',
+  overscrollBehavior: 'contain',
+  padding: 'clamp(.45rem, 1.2vw, .9rem)',
+} as const;
+const activeGameFrameStyle = {
+  display: 'grid',
+  width: '100%',
+  maxWidth: '1800px',
+  gap: '.85rem',
+  marginInline: 'auto',
 } as const;
 const embedHeaderStyle = {
   display: 'flex',
@@ -109,10 +167,6 @@ const embedHeaderStyle = {
   borderBottom: '1px solid rgba(255,255,255,.12)',
   background: '#0b1714',
   color: '#dbe7df',
-} as const;
-const activeLabelStyle = {
-  ...monoStyle,
-  color: 'var(--color-fg-light)',
 } as const;
 const sectionKickerStyle = {
   ...monoStyle,
@@ -160,72 +214,165 @@ const libraryNoteStyle = {
 
 export default function GameHub() {
   const [activeGame, setActiveGame] = useState<GameId | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const screenRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!activeGame) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      // Let the browser leave native fullscreen first. A second Escape returns
+      // the player to the game library.
+      if (event.key === 'Escape' && !document.fullscreenElement) {
+        setActiveGame(null);
+      }
+    };
+    const handleFullscreenChange = () => {
+      setIsFullscreen(document.fullscreenElement === screenRef.current);
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      if (
+        document.fullscreenElement === screenRef.current &&
+        typeof document.exitFullscreen === 'function'
+      ) {
+        void document.exitFullscreen().catch(() => undefined);
+      }
+    };
+  }, [activeGame]);
+
+  async function toggleFullscreen() {
+    const screen = screenRef.current;
+    if (!screen) return;
+
+    try {
+      if (document.fullscreenElement === screen) {
+        await document.exitFullscreen();
+      } else if (typeof screen.requestFullscreen === 'function') {
+        await screen.requestFullscreen();
+      }
+    } catch {
+      // The immersive viewport still works when native fullscreen is blocked.
+    }
+  }
+
+  function returnToLibrary() {
+    if (
+      document.fullscreenElement === screenRef.current &&
+      typeof document.exitFullscreen === 'function'
+    ) {
+      void document.exitFullscreen().catch(() => undefined);
+    }
+    setActiveGame(null);
+  }
+
+  function renderScreenHeader(gameNumber: string, title: string) {
+    return (
+      <header className="play-game-screen-toolbar" style={gameToolbarStyle}>
+        <button
+          type="button"
+          className="button button-secondary button-compact play-screen-action"
+          style={gameScreenButtonStyle}
+          onClick={returnToLibrary}
+        >
+          <span aria-hidden="true">←</span> All games
+        </button>
+        <div className="play-game-screen-brand" style={gameScreenBrandStyle}>
+          <span className="play-game-screen-label" style={gameScreenLabelStyle}>
+            NOW PLAYING / {gameNumber}
+          </span>
+          <strong className="play-game-screen-title" style={gameScreenTitleStyle}>{title}</strong>
+        </div>
+        <button
+          type="button"
+          className="button button-secondary button-compact play-screen-action"
+          style={gameScreenButtonStyle}
+          onClick={() => void toggleFullscreen()}
+          aria-label={
+            isFullscreen
+              ? 'Exit browser full screen'
+              : 'Enter browser full screen'
+          }
+        >
+          <span aria-hidden="true">⛶</span>
+          {isFullscreen ? 'Exit full screen' : 'Full screen'}
+        </button>
+      </header>
+    );
+  }
 
   if (activeGame === 'agroguardai-farm') {
     return (
-      <div className="play-active-game" style={activeGameStyle}>
-        <div className="play-active-game-nav" style={activeGameNavStyle}>
-          <button
-            type="button"
-            className="button button-secondary button-compact play-back-button"
-            style={backButtonStyle}
-            onClick={() => setActiveGame(null)}
-          >
-            <span aria-hidden="true">←</span> All games
-          </button>
-          <span className="play-active-game-label" style={activeLabelStyle}>
-            NOW PLAYING / 01
-          </span>
+      <div
+        ref={screenRef}
+        className="play-game-screen"
+        style={gameScreenStyle}
+        role="region"
+        aria-label="Full-screen AgroGuardAI farm game"
+      >
+        {renderScreenHeader('01', 'AgroGuardAI')}
+        <div className="play-game-screen-content" style={gameScreenContentStyle}>
+          <div className="play-active-game" style={activeGameFrameStyle}>
+            <HarvestRushGame />
+          </div>
         </div>
-        <HarvestRushGame />
       </div>
     );
   }
 
   if (activeGame === 'snake') {
     return (
-      <div className="play-active-game" style={activeGameStyle}>
-        <div className="play-active-game-nav" style={activeGameNavStyle}>
-          <button
-            type="button"
-            className="button button-secondary button-compact play-back-button"
-            style={backButtonStyle}
-            onClick={() => setActiveGame(null)}
-          >
-            <span aria-hidden="true">←</span> All games
-          </button>
-          <span className="play-active-game-label" style={activeLabelStyle}>
-            NOW PLAYING / 02
-          </span>
-        </div>
-
-        <section
-          className="snake-game-embed"
-          style={snakeGameEmbedStyle}
-          aria-label="Snake game"
-        >
-          <div className="snake-game-embed-heading" style={embedHeaderStyle}>
-            <p style={embedParagraphStyle}>
-              Snake runs entirely in your browser. Your scores and settings stay
-              on this device.
-            </p>
-            <a
-              href={SNAKE_GAME_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={openGameLinkStyle}
+      <div
+        ref={screenRef}
+        className="play-game-screen"
+        style={gameScreenStyle}
+        role="region"
+        aria-label="Full-screen Snake game"
+      >
+        {renderScreenHeader('02', 'Snake Game')}
+        <div className="play-game-screen-content" style={gameScreenContentStyle}>
+          <div className="play-active-game" style={activeGameFrameStyle}>
+            <section
+              className="snake-game-embed"
+              style={snakeGameEmbedStyle}
+              aria-label="Snake game"
             >
-              Open in new tab <span aria-hidden="true">↗</span>
-            </a>
+              <div
+                className="snake-game-embed-heading"
+                style={embedHeaderStyle}
+              >
+                <p style={embedParagraphStyle}>
+                  Snake runs entirely in your browser. Your scores and settings
+                  stay on this device.
+                </p>
+                <a
+                  href={SNAKE_GAME_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={openGameLinkStyle}
+                >
+                  Open in new tab <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+              <iframe
+                className="snake-game-frame"
+                style={snakeGameFrameStyle}
+                src={SNAKE_GAME_URL}
+                title="Snake Game"
+                loading="eager"
+                allow="autoplay"
+              />
+            </section>
           </div>
-          <iframe
-            style={snakeGameFrameStyle}
-            src={SNAKE_GAME_URL}
-            title="Snake Game"
-            loading="lazy"
-            allow="autoplay"
-          />
-        </section>
+        </div>
       </div>
     );
   }
