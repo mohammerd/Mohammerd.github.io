@@ -98,7 +98,7 @@ const gameScreenStyle = {
   inset: 0,
   display: 'flex',
   width: '100%',
-  height: '100vh',
+  height: '100dvh',
   flexDirection: 'column',
   overflow: 'hidden',
   isolation: 'isolate',
