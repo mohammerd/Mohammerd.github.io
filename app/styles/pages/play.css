@@ -1749,3 +1749,153 @@
     animation: none;
   }
 }
+
+
+/* Immersive game screen: the selected game takes over the viewport. */
+.play-game-screen {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--color-bg);
+  color: var(--color-fg);
+}
+
+.play-game-screen-toolbar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: max(0.65rem, env(safe-area-inset-top, 0px))
+    clamp(0.75rem, 2vw, 2rem) 0.65rem;
+  border-bottom: var(--rule) solid var(--color-border);
+  background: var(--color-bg-alt);
+}
+
+.play-game-screen-brand {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  justify-items: center;
+  gap: 0.12rem;
+  text-align: center;
+}
+
+.play-game-screen-label {
+  color: var(--color-fg-light);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.045em;
+}
+
+.play-game-screen-title {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--color-fg-bold);
+  font-family: var(--font-display);
+  font-size: var(--text-md);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.play-screen-action {
+  display: inline-flex;
+  min-height: 2.65rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  white-space: nowrap;
+}
+
+.play-game-screen-content {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: clamp(0.55rem, 1.2vw, 1.35rem);
+}
+
+.play-game-screen .play-active-game {
+  display: grid;
+  width: 100%;
+  max-width: 1800px;
+  gap: 0.85rem;
+  margin-inline: auto;
+}
+
+.play-game-screen .harvest-game.farm-sim {
+  min-height: 100%;
+}
+
+.play-game-screen .farm-game-layout {
+  grid-template-columns: minmax(0, 1.65fr) minmax(20rem, 0.78fr);
+  gap: clamp(0.85rem, 1.5vw, 1.5rem);
+}
+
+.play-game-screen .farm-world {
+  min-height: clamp(13rem, 32vw, 38rem);
+}
+
+.play-game-screen .snake-game-embed {
+  display: flex;
+  min-height: min(78vh, 850px);
+  flex-direction: column;
+}
+
+.play-game-screen .snake-game-frame {
+  display: block;
+  width: 100%;
+  min-height: min(70vh, 720px);
+  flex: 1;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .play-game-screen .farm-game-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .play-game-screen-toolbar {
+    gap: 0.45rem;
+    padding-right: 0.55rem;
+    padding-left: 0.55rem;
+  }
+
+  .play-screen-action {
+    min-height: 2.4rem;
+    gap: 0.25rem;
+    padding: 0.4rem 0.5rem;
+    font-size: var(--text-xs);
+  }
+
+  .play-game-screen-title {
+    font-size: var(--text-sm);
+  }
+
+  .play-game-screen-content {
+    padding: 0.45rem;
+  }
+
+  .play-game-screen .snake-game-frame {
+    min-height: 26rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play-game-screen,
+  .play-game-screen * {
+    scroll-behavior: auto;
+  }
+}
