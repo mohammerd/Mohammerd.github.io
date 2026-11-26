@@ -113,6 +113,11 @@ function readSavedFarm(): FarmState {
   }
 }
 
+function getRecommendedTool(plot: FarmPlot): FarmTool {
+  if (!plot.crop) return plot.tilled ? 'seeds' : 'hoe';
+  return isCropReady(plot) ? 'basket' : 'water';
+}
+
 function getPointDistance(
   player: PlayerPosition,
   point: { x: number; y: number },
@@ -347,6 +352,10 @@ export default function HarvestRushGame() {
   const plantedCount = farm.plots.filter((plot) => plot.crop !== null).length;
   const readyCount = farm.plots.filter(isCropReady).length;
   const goalProgress = Math.min(farm.harvested, FARM_GOAL);
+
+  useEffect(() => {
+    setTool(getRecommendedTool(selectedPlot));
+  }, [selectedPlot, farm.day]);
 
   function selectPlot(plotId: number) {
     setSelectedPlotId(plotId);
