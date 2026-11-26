@@ -42,6 +42,41 @@ describe('play page', () => {
     ).toBeEnabled();
   });
 
+  it('automatically equips the next tool as a plot moves through a growing cycle', () => {
+    window.localStorage.clear();
+    render(<PlayPage />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
+
+    expect(
+      screen.getByRole('button', { name: 'Tool: Hoe' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dig Plot 6' }));
+    expect(
+      screen.getByRole('button', { name: 'Tool: Seed bag' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Plant tomatoes' }));
+    expect(
+      screen.getByRole('button', { name: 'Tool: Water' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Water Plot 6' }));
+    fireEvent.click(screen.getByRole('button', { name: /End day/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Water Plot 6' }));
+    fireEvent.click(screen.getByRole('button', { name: /End day/ }));
+
+    expect(
+      screen.getByRole('button', { name: 'Tool: Basket' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Harvest Plot 6' }));
+    expect(
+      screen.getByRole('button', { name: 'Tool: Seed bag' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
   it('returns to the game library when Escape is pressed outside native fullscreen', () => {
     render(<PlayPage />);
 
