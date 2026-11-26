@@ -238,11 +238,11 @@ export default function GameHub() {
         aria-label="Full-screen AgroGuardAI farm game"
       >
         {renderScreenHeader('01', 'AgroGuardAI')}
-        <main className="play-game-screen-content">
+        <div className="play-game-screen-content">
           <div className="play-active-game">
             <HarvestRushGame />
           </div>
-        </main>
+        </div>
       </div>
     );
   }
@@ -256,7 +256,7 @@ export default function GameHub() {
         aria-label="Full-screen Snake game"
       >
         {renderScreenHeader('02', 'Snake Game')}
-        <main className="play-game-screen-content">
+        <div className="play-game-screen-content">
           <div className="play-active-game">
             <section
               className="snake-game-embed"
@@ -286,7 +286,7 @@ export default function GameHub() {
               />
             </section>
           </div>
-        </main>
+        </div>
       </div>
     );
   }
