@@ -1750,7 +1750,6 @@
   }
 }
 
-
 /* Immersive game screen: the selected game takes over the viewport. */
 .play-game-screen {
   position: fixed;
@@ -1773,8 +1772,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: max(0.65rem, env(safe-area-inset-top, 0px))
-    clamp(0.75rem, 2vw, 2rem) 0.65rem;
+  padding: max(0.65rem, env(safe-area-inset-top, 0px)) clamp(0.75rem, 2vw, 2rem) 0.65rem;
   border-bottom: var(--rule) solid var(--color-border);
   background: var(--color-bg-alt);
 }
