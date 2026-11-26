@@ -48,9 +48,10 @@ describe('play page', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Play AgroGuardAI' }));
 
-    expect(
-      screen.getByRole('button', { name: 'Tool: Hoe' }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Tool: Hoe' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Dig Plot 6' }));
     expect(
@@ -58,9 +59,10 @@ describe('play page', () => {
     ).toHaveAttribute('aria-pressed', 'true');
 
     fireEvent.click(screen.getByRole('button', { name: 'Plant tomatoes' }));
-    expect(
-      screen.getByRole('button', { name: 'Tool: Water' }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Tool: Water' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Water Plot 6' }));
     fireEvent.click(screen.getByRole('button', { name: /End day/ }));
