@@ -219,7 +219,9 @@ export default function GameHub() {
           className="button button-secondary button-compact play-screen-action"
           onClick={() => void toggleFullscreen()}
           aria-label={
-            isFullscreen ? 'Exit browser full screen' : 'Enter browser full screen'
+            isFullscreen
+              ? 'Exit browser full screen'
+              : 'Enter browser full screen'
           }
         >
           <span aria-hidden="true">⛶</span>
@@ -263,7 +265,10 @@ export default function GameHub() {
               style={snakeGameEmbedStyle}
               aria-label="Snake game"
             >
-              <div className="snake-game-embed-heading" style={embedHeaderStyle}>
+              <div
+                className="snake-game-embed-heading"
+                style={embedHeaderStyle}
+              >
                 <p style={embedParagraphStyle}>
                   Snake runs entirely in your browser. Your scores and settings
                   stay on this device.
